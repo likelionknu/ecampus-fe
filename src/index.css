@@ -1,0 +1,151 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(html.dark, html.dark *));
+
+@theme {
+  --font-pretendard:
+    "Pretendard",
+    "Pretendard Variable",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  --font-intel-one-mono: "Intel One Mono", "SFMono-Regular", Menlo, monospace;
+
+  --color-ec-black: #17171b;
+  --color-ec-blue: #3d67c2;
+  --color-ec-white: #ffffff;
+  --color-ec-sub: #717171;
+  --color-ec-box: #fafafc;
+  --color-ec-outline: #f7f7f7;
+  --color-ec-table: #666666;
+  --color-ec-disable: #a9a9a9;
+  --color-ec-red: #ff0000;
+  --color-ec-outline-dark: #e4e4e4;
+  --color-ec-gnb-white: #ffffff;
+  --color-ec-table-topic: #9da0b3;
+  --color-ec-table-header: #f4f4fb;
+  --color-ec-gnb-unselected: #b0b0b0;
+  --color-ec-loading: #f0f0f0;
+  --color-ec-pink-background: #ffe0eb;
+  --color-ec-pink-item: #ff82ac;
+  --color-ec-blue-background: #e7edff;
+  --color-ec-blue-item: #396aff;
+  --color-ec-orange-background: #fff5d9;
+  --color-ec-orange-item: #ffbb38;
+
+  --text-large-title: 32px;
+  --text-large-title--line-height: normal;
+  --text-large-title--letter-spacing: -0.02em;
+  --text-large-title--font-weight: 600;
+
+  --text-title: 24px;
+  --text-title--line-height: normal;
+  --text-title--letter-spacing: -0.02em;
+  --text-title--font-weight: 600;
+
+  --text-sub-title: 18px;
+  --text-sub-title--line-height: normal;
+  --text-sub-title--letter-spacing: -0.02em;
+  --text-sub-title--font-weight: 500;
+
+  --text-body-1: 16px;
+  --text-body-1--line-height: normal;
+  --text-body-1--letter-spacing: -0.02em;
+  --text-body-1--font-weight: 500;
+
+  --text-body-2: 14px;
+  --text-body-2--line-height: normal;
+  --text-body-2--letter-spacing: -0.02em;
+  --text-body-2--font-weight: 500;
+
+  --text-caption: 12px;
+  --text-caption--line-height: normal;
+  --text-caption--letter-spacing: -0.02em;
+  --text-caption--font-weight: 500;
+
+  --text-markdown-h1: 32px;
+  --text-markdown-h1--line-height: 40px;
+  --text-markdown-h1--letter-spacing: -0.02em;
+  --text-markdown-h1--font-weight: 600;
+
+  --text-markdown-h2: 24px;
+  --text-markdown-h2--line-height: 35px;
+  --text-markdown-h2--letter-spacing: -0.02em;
+  --text-markdown-h2--font-weight: 600;
+
+  --text-markdown-h3: 20px;
+  --text-markdown-h3--line-height: 35px;
+  --text-markdown-h3--letter-spacing: -0.02em;
+  --text-markdown-h3--font-weight: 600;
+
+  --text-markdown-p: 16px;
+  --text-markdown-p--line-height: 30px;
+  --text-markdown-p--letter-spacing: -0.02em;
+  --text-markdown-p--font-weight: 500;
+
+  --text-markdown-code: 14px;
+  --text-markdown-code--line-height: 20px;
+  --text-markdown-code--letter-spacing: -0.02em;
+  --text-markdown-code--font-weight: 400;
+}
+
+:root {
+  margin: 0;
+  padding: 0;
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-white font-pretendard text-ec-black dark:bg-ec-black dark:text-ec-white;
+  }
+}
+
+@utility typo-large-title {
+  @apply font-pretendard text-large-title;
+}
+
+@utility typo-title {
+  @apply font-pretendard text-title;
+}
+
+@utility typo-sub-title {
+  @apply font-pretendard text-sub-title;
+}
+
+@utility typo-body-1 {
+  @apply font-pretendard text-body-1;
+}
+
+@utility typo-body-2 {
+  @apply font-pretendard text-body-2;
+}
+
+@utility typo-caption {
+  @apply font-pretendard text-caption;
+}
+
+@utility typo-markdown-h1 {
+  @apply font-pretendard text-markdown-h1;
+}
+
+@utility typo-markdown-h2 {
+  @apply font-pretendard text-markdown-h2;
+}
+
+@utility typo-markdown-h3 {
+  @apply font-pretendard text-markdown-h3;
+}
+
+@utility typo-markdown-p {
+  @apply font-pretendard text-markdown-p;
+}
+
+@utility typo-markdown-code {
+  @apply font-intel-one-mono text-markdown-code;
+}
