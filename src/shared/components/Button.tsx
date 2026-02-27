@@ -1,7 +1,9 @@
 type ButtonVariant = "primary" | "danger";
+type ButtontSize = "modal" | "primary" | "large";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  size: ButtontSize;
   variant?: ButtonVariant;
   className?: string;
   isLoading?: boolean;
@@ -10,6 +12,12 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 const VariantClasses: Record<ButtonVariant, string> = {
   primary: "bg-ec-blue",
   danger: "bg-ec-red",
+};
+
+const TypeClaseese: Record<ButtontSize, string> = {
+  modal: "py-1.5 text-[12px]",
+  primary: "px-4.25 py-2.25 text-[14px]",
+  large: "px-6 py-2.5 text-[15px]",
 };
 
 const Loading = () => {
@@ -26,13 +34,13 @@ const Loading = () => {
 function Button({
   children,
   variant = "primary",
-  className = "text-[14px]",
+  size,
   isLoading,
   ...props
 }: ButtonProps) {
   const baseClass =
-    "min-w-14.5 min-h-8.75 tracking-ec-tight relative inline-flex items-center justify-center px-3 py-2 leading-120 font-medium rounded-[10px] text-ec-white cursor-pointer";
-  const combinedClass = `${baseClass} ${VariantClasses[variant]} ${className || ""}`;
+    "min-w-13.25 min-h-6.5 tracking-ec-tight relative inline-flex items-center justify-center leading-120 font-medium rounded-[10px] text-ec-white cursor-pointer";
+  const combinedClass = `${baseClass} ${VariantClasses[variant]} ${TypeClaseese[size]}`;
 
   return (
     <button
