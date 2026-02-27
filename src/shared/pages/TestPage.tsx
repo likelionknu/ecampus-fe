@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "../components/Button";
 import SerachBar from "../components/SerachBar";
+import TabBar from "../components/TabBar";
 // import Modal from "../components/Modal";
 
 function TestPage() {
@@ -15,9 +16,17 @@ function TestPage() {
     setValue((prev) => (prev === e.target.value ? prev : e.target.value));
   };
 
+  const testTabItems = [
+    { label: "자료", path: "/test" },
+    { label: "과제", path: "/user/session" },
+    { label: "사용자 및 그룹", path: "/user/dashboard" },
+    { label: "질문 및 답변", path: "/admin/sessions" },
+  ];
+
   return (
-    <div>
-      <div className="mt-20 ml-10 w-107.5">
+    <div className="flex-row- flex gap-2">
+      <TabBar items={testTabItems} />
+      <div className="w-107.5">
         <SerachBar value={value} onChange={handleChange} />
       </div>
       {/* <Modal>
@@ -32,18 +41,20 @@ function TestPage() {
           <Modal.Cancle />
         </Modal.ButtonLayout>
       </Modal> */}
-      <Button size="primary" onClick={handleClick}>
-        확인
-      </Button>
-      <Button size="primary" isLoading={isLoading}>
-        확인ㅇㄴㅁㅇㄴㅁㅇㅁ
-      </Button>
-      <Button size="primary" variant="danger" isLoading={isLoading}>
-        확인
-      </Button>
-      <Button size="large" isLoading={isLoading}>
-        확인
-      </Button>
+      <div className="w-100">
+        <Button size="primary" onClick={handleClick}>
+          확인
+        </Button>
+        <Button size="primary" isLoading={isLoading}>
+          확인ㅇㄴㅁㅇㄴㅁㅇㅁ
+        </Button>
+        <Button size="primary" variant="danger" isLoading={isLoading}>
+          확인
+        </Button>
+        <Button size="large" isLoading={isLoading}>
+          확인
+        </Button>
+      </div>
     </div>
   );
 }

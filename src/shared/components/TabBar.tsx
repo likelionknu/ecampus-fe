@@ -7,7 +7,7 @@ interface TabItem {
 
 function TabBar({ items }: { items: TabItem[] }) {
   return (
-    <div className="bg-ec-white border-ec-outline flex h-237.25 w-49.25 flex-col border px-7.5 py-7.5">
+    <nav className="bg-ec-white border-ec-outline flex h-237.25 w-49.25 flex-col border px-7.5 py-7.5">
       <ul className="flex flex-col gap-5">
         {items.map((item) => (
           <li key={item.path}>
@@ -24,7 +24,7 @@ function TabBar({ items }: { items: TabItem[] }) {
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 }
 export default TabBar;
