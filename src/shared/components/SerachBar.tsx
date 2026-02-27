@@ -9,7 +9,7 @@ function SerachBar({ value, onChange }: SerachBarProps) {
   const iconFillClass = value ? "fill-ec-black" : "fill-ec-sub";
 
   return (
-    <div className="relative mt-20 ml-10 max-w-107.5">
+    <div className="relative w-full">
       <input
         type="text"
         value={value}

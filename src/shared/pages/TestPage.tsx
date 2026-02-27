@@ -17,7 +17,9 @@ function TestPage() {
 
   return (
     <div>
-      <SerachBar value={value} onChange={handleChange} />
+      <div className="mt-20 ml-10 w-107.5">
+        <SerachBar value={value} onChange={handleChange} />
+      </div>
       {/* <Modal>
         <Modal.Header>삭제 버튼 있는 모달</Modal.Header>
         <Modal.Description>
