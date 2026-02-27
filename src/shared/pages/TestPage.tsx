@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "../components/Button";
+import Modal from "../components/Modal";
 
 function TestPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -10,12 +11,28 @@ function TestPage() {
 
   return (
     <div>
-      <Button onClick={handleClick}>확인</Button>
-      <Button isLoading={isLoading}>확인ㅇㄴㅁㅇㄴㅁㅇㅁ</Button>
-      <Button variant="danger" isLoading={isLoading}>
+      <Modal>
+        <Modal.Header>삭제 버튼 있는 모달</Modal.Header>
+        <Modal.Description>
+          삭제 버튼이 있는 Modal이고 여기에는 Modal에 대한 설명이 들어가요
+        </Modal.Description>
+        <Modal.ButtonLayout>
+          <Button variant="danger" size="modal">
+            삭제
+          </Button>
+          <Modal.Cancle />
+        </Modal.ButtonLayout>
+      </Modal>
+      <Button size="primary" onClick={handleClick}>
         확인
       </Button>
-      <Button className="py-2.5 text-[15px]" isLoading={isLoading}>
+      <Button size="primary" isLoading={isLoading}>
+        확인ㅇㄴㅁㅇㄴㅁㅇㅁ
+      </Button>
+      <Button size="primary" variant="danger" isLoading={isLoading}>
+        확인
+      </Button>
+      <Button size="large" isLoading={isLoading}>
         확인
       </Button>
     </div>
