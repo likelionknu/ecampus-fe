@@ -32,7 +32,7 @@ function Header() {
 
   return (
     <div className="flex">
-      <header className="border-ec-outline-dark sticky top-0 flex h-20 w-full items-center justify-between border-b py-6.75 pr-29.25 pl-8">
+      <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8">
         <h1 className="typo-sub-title">{pageTitle}</h1>
         <button
           type="button"
@@ -45,7 +45,7 @@ function Header() {
               handleToggleTheme();
             }
           }}
-          className="border-ec-outline-dark bg-ec-white relative flex h-9.5 w-27.5 cursor-pointer overflow-hidden rounded-xl border-2"
+          className="border-ec-outline bg-ec-white relative flex h-9.5 w-27.5 cursor-pointer overflow-hidden rounded-xl border-2"
         >
           <span
             aria-hidden
