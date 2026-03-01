@@ -25,7 +25,7 @@ const NavBar = () => {
   }: NavItemsProps) => {
     return (
       <div
-        className="group bg-ec-blue flex h-17 w-17 cursor-pointer items-center justify-center rounded-2xl duration-500 hover:bg-[#2D4F99]"
+        className="group bg-ec-blue flex h-17 w-17 cursor-pointer items-center justify-center rounded-2xl duration-700 hover:bg-[#2D4F99]"
         onClick={onClick}
       >
         <div className="flex flex-col items-center gap-2.5">
@@ -33,7 +33,7 @@ const NavBar = () => {
             <img
               src={iconSrc}
               alt={iconAlt}
-              className={`max-h-full max-w-full object-contain transition-all duration-500 ${
+              className={`max-h-full max-w-full object-contain transition-all duration-700 ${
                 selected
                   ? "brightness-0 invert filter"
                   : "group-hover:brightness-0 group-hover:invert group-hover:filter"
@@ -41,7 +41,7 @@ const NavBar = () => {
             />
           </div>
           <div
-            className={`justify-start text-center text-sm font-medium transition-colors duration-500 ${
+            className={`justify-start text-center text-sm font-medium transition-colors duration-700 ${
               selected
                 ? "text-ec-gnb-white"
                 : "text-ec-gnb-unselected group-hover:text-ec-gnb-white"
@@ -102,7 +102,7 @@ const NavBar = () => {
               alt="NavUserProfileImg"
               src={UserProfileImg}
             />
-            <div className="text-ec-gnb-white justify-start text-center text-xs font-medium">
+            <div className="text-ec-gnb-white cursor-alias justify-start text-center text-xs font-medium">
               황형진
             </div>
           </div>

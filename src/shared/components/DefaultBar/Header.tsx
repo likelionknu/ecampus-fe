@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useMatches } from "react-router-dom";
-import LightModeImg from "@shared/assets/LightModeImg.png";
 import DarkModeImg from "@shared/assets/DarkModeImg.png";
+import LightModeImg from "@shared/assets/LightModeImg.png";
 
 type HeaderRouteHandle = {
   title?: string;
@@ -31,8 +31,8 @@ function Header() {
   };
 
   return (
-    <div className="flexl">
-      <header className="border-ec-outline-dark sticky top-0 flex h-20 w-screen min-w-screen items-center justify-between border-b p-4">
+    <div className="flex">
+      <header className="border-ec-outline-dark sticky top-0 flex h-20 w-full items-center justify-between border-b py-6.75 pr-29.25 pl-8">
         <h1 className="typo-sub-title">{pageTitle}</h1>
         <button
           type="button"
@@ -45,22 +45,23 @@ function Header() {
               handleToggleTheme();
             }
           }}
-          className="border-ec-outline relative flex h-9.5 w-27.5 cursor-pointer overflow-hidden rounded-xl border-2"
+          className="border-ec-outline-dark bg-ec-white relative flex h-9.5 w-27.5 cursor-pointer overflow-hidden rounded-xl border-2"
         >
-          {/* sliding white background */}
           <span
             aria-hidden
-            className="absolute inset-0 bg-white transition-transform duration-300"
-            style={{ transform: isDark ? "translateX(50%)" : "translateX(0)" }}
+            className="bg-ec-outline-dark rounded- absolute inset-0 w-1/2 cursor-pointer rounded-md transition-transform duration-500"
+            style={{
+              transform: isDark ? "translateX(100%)" : "translateX(0%)",
+            }}
           />
-          <div className="border-ec-outline bg-ec-white relative flex w-1/2 items-center justify-center border-r">
+          <div className="border-ec-outline-dark relative flex w-1/2 items-center justify-center">
             <img
               className="h-4.5 w-4.5"
               alt="NavLightModeImg"
               src={LightModeImg}
             />
           </div>
-          <div className="border-ec-outline relative flex w-1/2 items-center justify-center border-l">
+          <div className="border-ec-outline-dark relative flex w-1/2 items-center justify-center">
             <img className="h-4.5 w-4" alt="NavDarkModeImg" src={DarkModeImg} />
           </div>
         </button>
