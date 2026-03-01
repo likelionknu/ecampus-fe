@@ -18,7 +18,7 @@ function BaseLayout() {
     count,
   }: DashboardMainComponentProps) => {
     return (
-      <div className="bg-ec-white border-ec-outline flex h-21.5 w-52 cursor-pointer items-center rounded-full border">
+      <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-52 cursor-pointer items-center rounded-full border-2">
         <div className="flex items-center gap-2.5">
           <img
             className="ml-2.5 h-17.25 w-17.25 rounded-full"
@@ -47,14 +47,14 @@ function BaseLayout() {
   return (
     <>
       <DefaultBar>
-        <div className="flex h-full w-full items-center justify-center">
+        <div className="flex h-full w-full items-center justify-center pb-50">
           {/* <div className="flex h-full w-full flex-col items-center px-29.25"> */}
           <div className="flex h-full w-280 flex-col items-center">
             <div className="text-ec-black w-full justify-start py-7.5 text-3xl font-semibold">
               환영해요!
             </div>
             <div className="flex h-21.5 w-full items-center justify-between">
-              <div className="bg-ec-white border-ec-outline flex h-21.5 w-109 cursor-pointer items-center justify-between rounded-full border pr-7.5">
+              <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-109 cursor-pointer items-center justify-between rounded-full border-2 pr-7.5">
                 <div className="flex items-center gap-5">
                   <img
                     className="ml-2.5 h-17.25 w-17.25 rounded-full"
