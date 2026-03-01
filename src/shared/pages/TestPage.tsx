@@ -1,22 +1,22 @@
-import { useState } from "react";
-import Button from "../components/Button";
-import SerachBar from "../components/SerachBar";
+// import { useState } from "react";
+// import Button from "../components/Button";
+// import SerachBar from "../components/SerachBar";
 import TabBar from "../components/TabBar";
 import DefaultBar from "../components/DefaultBar/DefaultBar";
 
 // import Modal from "../components/Modal";
 
 function TestPage() {
-  const [value, setValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  // const [value, setValue] = useState("");
+  // const [isLoading, setIsLoading] = useState(false);
 
-  const handleClick = () => {
-    setIsLoading(true);
-  };
+  // const handleClick = () => {
+  //   setIsLoading(true);
+  // };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((prev) => (prev === e.target.value ? prev : e.target.value));
-  };
+  // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setValue((prev) => (prev === e.target.value ? prev : e.target.value));
+  // };
 
   const testTabItems = [
     { label: "자료", path: "/test" },
@@ -28,22 +28,7 @@ function TestPage() {
   return (
     <DefaultBar>
       <TabBar items={testTabItems} />
-      <div className="w-107.5">
-        <SerachBar value={value} onChange={handleChange} />
-      </div>
-      {/* <Modal>
-        <Modal.Header>삭제 버튼 있는 모달</Modal.Header>
-        <Modal.Description>
-          삭제 버튼이 있는 Modal이고 여기에는 Modal에 대한 설명이 들어가요
-        </Modal.Description>
-        <Modal.ButtonLayout>
-          <Button variant="danger" size="modal">
-            삭제
-          </Button>
-          <Modal.Cancle />
-        </Modal.ButtonLayout>
-      </Modal> */}
-      <div className="w-100">
+      {/* <div className="w-100">
         <Button size="primary" onClick={handleClick}>
           확인
         </Button>
@@ -56,7 +41,7 @@ function TestPage() {
         <Button size="large" isLoading={isLoading}>
           확인
         </Button>
-      </div>
+      </div> */}
     </DefaultBar>
   );
 }
