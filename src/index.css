@@ -3,12 +3,13 @@
 
 @theme {
   --font-pretendard:
-    "Pretendard", "Pretendard Variable", -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+    "Pretendard",
+    "Pretendard Variable",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
   --font-intel-one-mono: "Intel One Mono", "SFMono-Regular", Menlo, monospace;
-  --tracking-ec-normal: -0.02em;
-  --tracking-ec-tight: -0.025em;
-  --leading-120: 120%;
 
   --color-ec-black: #17171b;
   --color-ec-blue: #3d67c2;
@@ -34,57 +35,57 @@
 
   --text-large-title: 32px;
   --text-large-title--line-height: normal;
-  --text-large-title--letter-spacing: var(--tracking-ec-normal);
+  --text-large-title--letter-spacing: -0.02em;
   --text-large-title--font-weight: 600;
 
   --text-title: 24px;
   --text-title--line-height: normal;
-  --text-title--letter-spacing: var(--tracking-ec-normal);
+  --text-title--letter-spacing: -0.02em;
   --text-title--font-weight: 600;
 
   --text-sub-title: 18px;
   --text-sub-title--line-height: normal;
-  --text-sub-title--letter-spacing: var(--tracking-ec-normal);
+  --text-sub-title--letter-spacing: -0.02em;
   --text-sub-title--font-weight: 500;
 
   --text-body-1: 16px;
   --text-body-1--line-height: normal;
-  --text-body-1--letter-spacing: var(--tracking-ec-normal);
+  --text-body-1--letter-spacing: -0.02em;
   --text-body-1--font-weight: 500;
 
   --text-body-2: 14px;
   --text-body-2--line-height: normal;
-  --text-body-2--letter-spacing: var(--tracking-ec-normal);
+  --text-body-2--letter-spacing: -0.02em;
   --text-body-2--font-weight: 500;
 
   --text-caption: 12px;
   --text-caption--line-height: normal;
-  --text-caption--letter-spacing: var(--tracking-ec-normal);
+  --text-caption--letter-spacing: -0.02em;
   --text-caption--font-weight: 500;
 
   --text-markdown-h1: 32px;
   --text-markdown-h1--line-height: 40px;
-  --text-markdown-h1--letter-spacing: var(--tracking-ec-normal);
+  --text-markdown-h1--letter-spacing: -0.02em;
   --text-markdown-h1--font-weight: 600;
 
   --text-markdown-h2: 24px;
   --text-markdown-h2--line-height: 35px;
-  --text-markdown-h2--letter-spacing: var(--tracking-ec-normal);
+  --text-markdown-h2--letter-spacing: -0.02em;
   --text-markdown-h2--font-weight: 600;
 
   --text-markdown-h3: 20px;
   --text-markdown-h3--line-height: 35px;
-  --text-markdown-h3--letter-spacing: var(--tracking-ec-normal);
+  --text-markdown-h3--letter-spacing: -0.02em;
   --text-markdown-h3--font-weight: 600;
 
   --text-markdown-p: 16px;
   --text-markdown-p--line-height: 30px;
-  --text-markdown-p--letter-spacing: var(--tracking-ec-normal);
+  --text-markdown-p--letter-spacing: -0.02em;
   --text-markdown-p--font-weight: 500;
 
   --text-markdown-code: 14px;
   --text-markdown-code--line-height: 20px;
-  --text-markdown-code--letter-spacing: var(--tracking-ec-normal);
+  --text-markdown-code--letter-spacing: -0.02em;
   --text-markdown-code--font-weight: 400;
 }
 
@@ -101,7 +102,7 @@
   }
 
   body {
-    @apply font-pretendard text-ec-black dark:bg-ec-black dark:text-ec-white bg-white;
+    @apply bg-white font-pretendard text-ec-black dark:bg-ec-black dark:text-ec-white;
   }
 }
 

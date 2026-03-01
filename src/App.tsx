@@ -7,13 +7,8 @@ import AdminRoutes from "@admin/AdminRoutes";
 import BaseLayout from "@shared/layouts/BaseLayout";
 import ErrorPage from "@shared/pages/ErrorPage";
 import UserRoutes from "@user/UserRoutes";
-import TestPage from "./shared/pages/TestPage";
 
 const router = createBrowserRouter([
-  {
-    path: "/test",
-    element: <TestPage />,
-  },
   {
     path: "/user",
     element: <BaseLayout />,
