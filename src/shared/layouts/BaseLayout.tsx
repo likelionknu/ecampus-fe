@@ -5,9 +5,9 @@ function BaseLayout() {
   return (
     <>
       <DefaultBar>
-        <main>
+        <>
           <Outlet />
-        </main>
+        </>
       </DefaultBar>
     </>
   );
