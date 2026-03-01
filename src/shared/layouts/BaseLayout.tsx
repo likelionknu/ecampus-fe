@@ -1,15 +1,14 @@
 import { Outlet } from "react-router-dom";
-import Header from "@shared/components/Header";
-import NavBar from "@shared/components/NavBar";
+import DefaultBar from "../components/DefaultBar/DefaultBar";
 
 function BaseLayout() {
   return (
     <>
-      <NavBar />
-      <Header />
-      <main>
-        <Outlet />
-      </main>
+      <DefaultBar>
+        <main>
+          <Outlet />
+        </main>
+      </DefaultBar>
     </>
   );
 }

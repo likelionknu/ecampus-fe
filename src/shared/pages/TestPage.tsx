@@ -2,6 +2,8 @@ import { useState } from "react";
 import Button from "../components/Button";
 import SerachBar from "../components/SerachBar";
 import TabBar from "../components/TabBar";
+import DefaultBar from "../components/DefaultBar/DefaultBar";
+
 // import Modal from "../components/Modal";
 
 function TestPage() {
@@ -24,7 +26,7 @@ function TestPage() {
   ];
 
   return (
-    <div className="flex-row- flex gap-2">
+    <DefaultBar>
       <TabBar items={testTabItems} />
       <div className="w-107.5">
         <SerachBar value={value} onChange={handleChange} />
@@ -55,7 +57,7 @@ function TestPage() {
           확인
         </Button>
       </div>
-    </div>
+    </DefaultBar>
   );
 }
 
