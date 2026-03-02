@@ -1,8 +1,10 @@
 import Button from "@/shared/components/Button";
+import type { ButtonVariant } from "@/shared/types/Button";
 
 interface UserTitleSectionProps {
   title: string;
   subText?: string;
+  buttonType?: ButtonVariant;
   buttonText?: string;
 }
 
@@ -13,6 +15,7 @@ const SubText = ({ children }: { children: React.ReactNode }) => {
 function UserTitleSection({
   title,
   subText,
+  buttonType = "primary",
   buttonText,
 }: UserTitleSectionProps) {
   return (
@@ -22,7 +25,7 @@ function UserTitleSection({
           {title}
         </span>
         {buttonText && (
-          <Button variant="primary" size="large">
+          <Button variant={buttonType} size="large">
             {buttonText}
           </Button>
         )}

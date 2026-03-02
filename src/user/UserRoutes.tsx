@@ -1,9 +1,9 @@
 import type { RouteObject } from "react-router-dom";
 import UserDashBoardPage from "@/user/domains/dashboard/pages/UserDashboardPage";
 import UserSessionsPage from "./domains/session/pages/UserSeesionPage";
-import SessionQuestionListPage from "./domains/session/pages/SessionQuestionListPage";
-import SessionQuestionDetailPage from "./domains/session/pages/SessionQuestionDetailPage";
-import SessionQuestionCreatePage from "./domains/session/pages/SessionQuestionCreatePage";
+import UserSessionQuestionListPage from "./domains/session/pages/UserSessionQuestionListPage";
+import UserSessionQuestionDetailPage from "./domains/session/pages/UserSessionQuestionDetailPage";
+import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
 
 const userRoutes: RouteObject[] = [
@@ -21,10 +21,10 @@ const userRoutes: RouteObject[] = [
     path: "session/questions",
     element: <SessionLayout />,
     children: [
-      { index: true, element: <SessionQuestionListPage /> },
+      { index: true, element: <UserSessionQuestionListPage /> },
       // path: "questions/list/:id",
-      { path: "detail", element: <SessionQuestionDetailPage /> },
-      { path: "new", element: <SessionQuestionCreatePage /> },
+      { path: "detail", element: <UserSessionQuestionDetailPage /> },
+      { path: "new", element: <UserSessionQuestionCreatePage /> },
     ],
   },
 ];

@@ -1,9 +1,8 @@
-type ButtonVariant = "primary" | "danger";
-type ButtontSize = "modal" | "primary" | "large";
+import type { ButtonSize, ButtonVariant } from "@/shared/types/Button";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  size: ButtontSize;
+  size: ButtonSize;
   variant?: ButtonVariant;
   className?: string;
   isLoading?: boolean;
@@ -14,7 +13,7 @@ const VariantClasses: Record<ButtonVariant, string> = {
   danger: "bg-ec-red",
 };
 
-const TypeClaseese: Record<ButtontSize, string> = {
+const TypeClaseese: Record<ButtonSize, string> = {
   modal: "py-1.5 text-[12px]",
   primary: "px-4.25 py-2.25 text-[14px]",
   large: "px-6 py-2.5 text-[15px]",
