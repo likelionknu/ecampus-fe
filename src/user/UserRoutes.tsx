@@ -18,11 +18,11 @@ const userRoutes: RouteObject[] = [
     handle: { title: "세션" },
   },
   {
-    path: "session/list",
+    path: "session/questions",
     element: <SessionLayout />,
     children: [
       { index: true, element: <SessionQuestionListPage /> },
-      // path: "session/list/:id",
+      // path: "questions/list/:id",
       { path: "detail", element: <SessionQuestionDetailPage /> },
       { path: "new", element: <SessionQuestionCreatePage /> },
     ],
