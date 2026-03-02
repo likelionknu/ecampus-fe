@@ -1,3 +1,4 @@
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
 import QuestionTableHeader from "../components/QuestionTableHeader";
 import QuestionTableRows from "../components/QuestionTableRows";
@@ -85,8 +86,8 @@ function UserSessionQuestionListPage() {
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
           <QuestionTableHeader />
         </div>
-
-        <QuestionTableRows questions={mockQuestions} />
+        <TableEmptyState label="등록된 세션 자료가 없어요." />
+        {/* <QuestionTableRows questions={mockQuestions} /> */}
       </section>
     </div>
   );

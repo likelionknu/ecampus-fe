@@ -1,4 +1,4 @@
-import TableHeaderLabel from "@/shared/components/TableHeaderLabel";
+import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
 
 function QuestionTableHeader() {
   return (
