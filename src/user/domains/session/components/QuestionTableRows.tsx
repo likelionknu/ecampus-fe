@@ -1,5 +1,5 @@
 ﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import { formatKoreanDateTime } from "@/shared/utils/formatKoreanDateTime";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
 export interface SessionQuestionRow {
   answer: string | null;
@@ -51,7 +51,7 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
           </div>
           <div className="flex gap-13">
             <span className="text-body-2 text-ec-black">
-              {formatKoreanDateTime(question.createdAt)}
+              {formatKoreanDateTime12(question.createdAt)}
             </span>
             <span className="text-body-2 text-ec-black">
               {question.createdUserName ?? "없음"}

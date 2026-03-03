@@ -20,7 +20,7 @@ function QuestionCommentItem({ isMy }: { isMy?: boolean }) {
           </span>
         </div>
         {isMy && (
-          <span className="text-ec-red tracking-ec-normal text-[14px]/[23px] font-medium">
+          <span className="text-ec-red tracking-ec-normal cursor-pointer text-[14px]/[23px] font-medium">
             삭제
           </span>
         )}

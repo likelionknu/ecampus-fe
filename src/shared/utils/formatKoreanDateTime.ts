@@ -1,16 +1,12 @@
-﻿function formatFromDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const minute = String(date.getMinutes()).padStart(2, "0");
-  const hour24 = date.getHours();
-  const period = hour24 < 12 ? "오전" : "오후";
-  const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
-
-  return `${year}년 ${month}월 ${day}일 ${period} ${hour12}시 ${minute}분`;
+﻿interface DateTimeParts {
+  day: number;
+  hour24: number;
+  minute: string;
+  month: number;
+  year: number;
 }
 
-export function formatKoreanDateTime(value: string): string {
+function parseDateTimeParts(value: string): DateTimeParts | null {
   const normalized = value.trim();
 
   // Handles inputs like: 2026-03-03T01:51:40.664772
@@ -19,21 +15,52 @@ export function formatKoreanDateTime(value: string): string {
   );
 
   if (parts) {
-    const year = Number(parts[1]);
-    const month = Number(parts[2]);
-    const day = Number(parts[3]);
-    const hour24 = Number(parts[4]);
-    const minute = parts[5];
-    const period = hour24 < 12 ? "오전" : "오후";
-    const hour12 = hour24 % 12 === 0 ? 12 : hour24 % 12;
-
-    return `${year}년 ${month}월 ${day}일 ${period} ${hour12}시 ${minute}분`;
+    return {
+      year: Number(parts[1]),
+      month: Number(parts[2]),
+      day: Number(parts[3]),
+      hour24: Number(parts[4]),
+      minute: parts[5],
+    };
   }
 
   const fallbackDate = new Date(normalized);
   if (Number.isNaN(fallbackDate.getTime())) {
+    return null;
+  }
+
+  return {
+    year: fallbackDate.getFullYear(),
+    month: fallbackDate.getMonth() + 1,
+    day: fallbackDate.getDate(),
+    hour24: fallbackDate.getHours(),
+    minute: String(fallbackDate.getMinutes()).padStart(2, "0"),
+  };
+}
+
+export function formatKoreanDateTime12(value: string): string {
+  const parsed = parseDateTimeParts(value);
+  if (!parsed) {
     return value;
   }
 
-  return formatFromDate(fallbackDate);
+  const period = parsed.hour24 < 12 ? "오전" : "오후";
+  const hour12 = parsed.hour24 % 12 === 0 ? 12 : parsed.hour24 % 12;
+
+  return `${parsed.year}년 ${parsed.month}월 ${parsed.day}일 ${period} ${hour12}시 ${parsed.minute}분`;
+}
+
+export function formatKoreanDateTime24(value: string): string {
+  const parsed = parseDateTimeParts(value);
+  if (!parsed) {
+    return value;
+  }
+
+  const hour = String(parsed.hour24).padStart(2, "0");
+  return `${parsed.year}년 ${parsed.month}월 ${parsed.day}일 ${hour}시 ${parsed.minute}분`;
+}
+
+// Backward compatibility: defaults to 12-hour format.
+export function formatKoreanDateTime(value: string): string {
+  return formatKoreanDateTime12(value);
 }
