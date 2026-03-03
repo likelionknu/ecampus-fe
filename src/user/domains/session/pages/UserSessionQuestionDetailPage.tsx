@@ -2,6 +2,8 @@
 import QuestionMetaRow from "@/user/domains/session/components/QuestionMetaRow";
 import UserTitleSection from "@/user/shared/components/UserTitleSection";
 import QuestionContentSection from "../components/QuestionContentSection";
+import QuestionCommentItem from "@/shared/components/comment/QuestionCommentItem";
+import CommentInput from "@/shared/components/comment/CommentInput";
 
 const mockQuestionDetail = {
   title: "질문합니다",
@@ -30,7 +32,6 @@ function UserSessionQuestionDetailPage() {
         buttonText="삭제"
         buttonType="danger"
       />
-
       <TextBox>
         <div className="flex flex-col gap-2">
           {questionMetaRows.map((row) => (
@@ -42,7 +43,6 @@ function UserSessionQuestionDetailPage() {
           ))}
         </div>
       </TextBox>
-
       <QuestionContentSection
         label="질문"
         content={mockQuestionDetail.question}
@@ -51,6 +51,17 @@ function UserSessionQuestionDetailPage() {
         label="답변"
         content={mockQuestionDetail.answer}
       />
+
+      <div className="flex flex-col gap-2">
+        <span className="text-body-2 text-ec-sub">2개의 댓글</span>
+        <TextBox>
+          <div>
+            <QuestionCommentItem />
+            <QuestionCommentItem isMy={true} />
+          </div>
+          <CommentInput />
+        </TextBox>
+      </div>
     </div>
   );
 }
