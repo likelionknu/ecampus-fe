@@ -5,7 +5,8 @@ import UserSessionQuestionListPage from "./domains/session/pages/UserSessionQues
 import UserSessionQuestionDetailPage from "./domains/session/pages/UserSessionQuestionDetailPage";
 import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
-import UserMaterialsPage from "./domains/session/pages/UserMaterialsPage";
+import UserSessionFilesPage from "./domains/session/pages/UserSessionFilesPage";
+import UserSessionFilesViewPage from "./domains/session/pages/UserSessionFilesViewPage";
 
 const userRoutes: RouteObject[] = [
   {
@@ -29,13 +30,12 @@ const userRoutes: RouteObject[] = [
     ],
   },
   {
-    path: "session/materials",
+    path: "session/files",
     element: <SessionLayout />,
     children: [
-      { index: true, element: <UserMaterialsPage /> },
-      // path: "materials/list/:id",
-      // { path: "detail", element: <UserSessionQuestionDetailPage /> },
-      // { path: "new", element: <UserSessionQuestionCreatePage /> },
+      { index: true, element: <UserSessionFilesPage /> },
+      // path: "files/list/:id",
+      { path: "detail", element: <UserSessionFilesViewPage /> },
     ],
   },
 ];
