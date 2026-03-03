@@ -12,7 +12,7 @@ interface QuestionTableRowsProps {
 
 function QuestionTableRows({ questions }: QuestionTableRowsProps) {
   return (
-    <div className="flex flex-col">
+    <div className="text-ec-black flex flex-col">
       {questions.map((question, index) => (
         <div
           key={`${question.id}-${question.author}-${index}`}
@@ -21,14 +21,14 @@ function QuestionTableRows({ questions }: QuestionTableRowsProps) {
           }`}
         >
           <div className="flex gap-7">
-            <span className="text-body-2">{question.id}</span>
-            <span className="text-body-2 max-w-115 overflow-hidden text-ellipsis whitespace-nowrap">
+            <span className="text-body-2 text-ec-black">{question.id}</span>
+            <span className="text-body-2 text-ec-black max-w-115 overflow-hidden text-ellipsis whitespace-nowrap">
               {question.title}
             </span>
           </div>
           <div className="flex gap-13">
-            <span className="text-body-2">{question.createdAt}</span>
-            <span className="text-body-2">{question.author}</span>
+            <span className="text-body-2 text-ec-black">{question.createdAt}</span>
+            <span className="text-body-2 text-ec-black">{question.author}</span>
             <span
               className={`text-body-2 ${
                 question.status === "완료" ? "text-ec-blue" : "text-ec-sub"

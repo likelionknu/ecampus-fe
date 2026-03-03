@@ -10,8 +10,8 @@ function QuestionContentSection({
   content,
 }: QustionContentSectionProps) {
   return (
-    <div>
-      <span>{label}</span>
+    <div className="flex flex-col gap-2">
+      <span className="text-body-2 text-ec-sub">{label}</span>
       <TextBox>{content}</TextBox>
     </div>
   );

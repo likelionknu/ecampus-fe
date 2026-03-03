@@ -7,7 +7,7 @@ interface TabItem {
 
 function TabBar({ items }: { items: TabItem[] }) {
   return (
-    <nav className="bg-ec-white border-ec-outline dark:bg-ec-black flex h-237.25 w-49.25 flex-col border-r px-7.5 py-7.5">
+    <nav className="bg-ec-white border-ec-outline flex h-237.25 w-49.25 flex-col border-r px-7.5 py-7.5">
       <ul className="flex flex-col gap-5">
         {items.map((item) => (
           <li key={item.path}>

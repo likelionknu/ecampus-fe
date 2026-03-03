@@ -32,8 +32,8 @@ function Header() {
 
   return (
     <div className="flex">
-      <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8">
-        <h1 className="typo-sub-title">{pageTitle}</h1>
+      <header className="border-ec-outline bg-ec-white sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8">
+        <h1 className="typo-sub-title text-ec-black">{pageTitle}</h1>
         <button
           type="button"
           role="switch"
@@ -49,7 +49,7 @@ function Header() {
         >
           <span
             aria-hidden
-            className="bg-ec-outline-dark rounded- absolute inset-0 w-1/2 cursor-pointer rounded-md transition-transform duration-500"
+            className="bg-ec-outline-dark absolute inset-y-0 left-0 w-1/2 cursor-pointer rounded-md transition-transform duration-500"
             style={{
               transform: isDark ? "translateX(100%)" : "translateX(0%)",
             }}
