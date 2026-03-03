@@ -1,5 +1,5 @@
 function UserSessionQuestionCreatePage() {
-  return <div>Session Question Create Page</div>;
+  return <div className="text-ec-black">Session Question Create Page</div>;
 }
 
 export default UserSessionQuestionCreatePage;

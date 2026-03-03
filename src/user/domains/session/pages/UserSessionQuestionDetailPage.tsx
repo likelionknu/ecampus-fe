@@ -24,7 +24,7 @@ const questionMetaRows = [
 
 function UserSessionQuestionDetailPage() {
   return (
-    <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
+    <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
       <UserTitleSection
         title={mockQuestionDetail.title}
         buttonText="삭제"

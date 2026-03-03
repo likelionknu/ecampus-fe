@@ -74,7 +74,7 @@ const mockQuestions: MockQuestion[] = [
 
 function UserSessionQuestionListPage() {
   return (
-    <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
+    <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
       <UserTitleSection
         title="질문 및 답변(6)"
         subText="궁금한 내용이 있다면 질문하고, 답변받을 수 있어요"
@@ -87,7 +87,7 @@ function UserSessionQuestionListPage() {
           <QuestionTableHeader />
         </div>
         <TableEmptyState label="등록된 세션 자료가 없어요." />
-        {/* <QuestionTableRows questions={mockQuestions} /> */}
+        <QuestionTableRows questions={mockQuestions} />
       </section>
     </div>
   );

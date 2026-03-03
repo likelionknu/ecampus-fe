@@ -21,7 +21,7 @@ function UserTitleSection({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
-        <span className="text-large-title text-ec-black dark:text-ec-white">
+        <span className="text-large-title text-ec-black">
           {title}
         </span>
         {buttonText && (
