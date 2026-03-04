@@ -1,9 +1,9 @@
-﻿import { useState } from "react";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
+﻿import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
 import QuestionTableHeader from "../components/QuestionTableHeader";
 import QuestionTableRows from "../components/QuestionTableRows";
 import type { SessionQuestionRow } from "../types/SessionQuestionRow";
+import { useNavigate } from "react-router-dom";
 
 const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
   {
@@ -88,7 +88,8 @@ const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
   };
 
 function UserSessionQuestionListPage() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const isLoading = false;
 
   return (
     <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
@@ -97,7 +98,7 @@ function UserSessionQuestionListPage() {
         subText="궁금한 내용이 있다면 질문하고, 답변받을 수 있어요"
         buttonType="primary"
         buttonText="새 질문 등록"
-        onClick={() => setIsLoading((prev) => (prev = !prev))}
+        onClick={() => navigate("new")}
       />
 
       <section>
