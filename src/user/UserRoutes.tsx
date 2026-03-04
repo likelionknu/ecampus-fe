@@ -1,11 +1,11 @@
-import type { RouteObject } from "react-router-dom";
+﻿import type { RouteObject } from "react-router-dom";
 import UserDashBoardPage from "@/user/domains/dashboard/pages/UserDashboardPage";
 import UserSessionsPage from "./domains/session/pages/UserSeesionPage";
-import UserSessionQuestionListPage from "./domains/session/pages/UserSessionQuestionListPage";
+import UserSessionQuestionsPage from "./domains/session/pages/UserSessionQuestionsPage";
 import UserSessionQuestionDetailPage from "./domains/session/pages/UserSessionQuestionDetailPage";
 import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
-import UserQuestionPage from "./domains/question/pages/UserQuestionPage";
+import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
 
 const userRoutes: RouteObject[] = [
   {
@@ -20,14 +20,14 @@ const userRoutes: RouteObject[] = [
   },
   {
     path: "questions",
-    element: <UserQuestionPage />,
+    element: <UserQuestionsPage />,
     handle: { title: "질문" },
   },
   {
     path: "session/questions",
     element: <SessionLayout />,
     children: [
-      { index: true, element: <UserSessionQuestionListPage /> },
+      { index: true, element: <UserSessionQuestionsPage /> },
       // path: "questions/list/:id",
       { path: "detail", element: <UserSessionQuestionDetailPage /> },
       { path: "new", element: <UserSessionQuestionCreatePage /> },
@@ -36,3 +36,4 @@ const userRoutes: RouteObject[] = [
 ];
 
 export default userRoutes;
+

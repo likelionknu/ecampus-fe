@@ -7,6 +7,10 @@ interface QuestionTableRowsProps {
   questions: SessionQuestionRow[];
 }
 
+const sessionNameById: Record<number, string> = {
+  14: "[14기] 아기사자 - 백엔드 파트",
+};
+
 function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
   return (
     <div className="text-ec-black flex flex-col">
@@ -25,7 +29,7 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
       {questions.map((question, index) => (
         <div
           key={`${question.id}-${question.createdUserName ?? "anonymous"}-${index}`}
-          className={`flex max-w-251 items-center justify-between px-7.5 py-4 ${
+          className={`flex w-full items-center justify-between px-6 py-4 ${
             index % 2 === 1 ? "bg-ec-box" : ""
           }`}
         >
@@ -33,23 +37,26 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
             <span className="text-body-2 text-ec-black w-6 text-center">
               {question.id}
             </span>
-            <span className="text-body-2 text-ec-black w-20 truncate">
-              {`세션 ${question.sessionId}`}
+            <span className="text-body-2 text-ec-black 5 truncate">
+              {sessionNameById[question.sessionId] ??
+                `세션 ${question.sessionId}`}
             </span>
-            <span className="text-body-2 text-ec-black max-w-64 truncate">
+            <span className="text-body-2 text-ec-black .5 ml-27 max-w-74.5 truncate">
               {question.title}
             </span>
           </div>
 
           <div className="flex items-center gap-5">
-            <span className="text-body-2 text-ec-black w-22">
+            <span className="text-body-2 text-ec-black mr-6">
               {formatKoreanDateTime12(question.createdAt)}
             </span>
-            <span className="text-body-2 text-ec-black w-14 truncate">
+            <span className="text-body-2 text-ec-black mr-6 truncate">
               {question.createdUserName ?? "-"}
             </span>
-            <span className="text-body-2 text-ec-black w-14 truncate">
-              {question.answeredUserName ?? "-"}
+            <span
+              className={`${question.answeredUserName ? "text-ec-black" : "text-ec-sub"} text-body-2 text-ec-black mr-8 truncate`}
+            >
+              {question.answeredUserName ?? "미답변"}
             </span>
             <span
               className={`text-body-2 ${

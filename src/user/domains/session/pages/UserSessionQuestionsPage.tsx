@@ -87,7 +87,7 @@ const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
     totalElements: 4,
   };
 
-function UserSessionQuestionListPage() {
+function UserSessionQuestionsPage() {
   const navigate = useNavigate();
   const isLoading = false;
 
@@ -116,6 +116,7 @@ function UserSessionQuestionListPage() {
   );
 }
 
-export default UserSessionQuestionListPage;
+export default UserSessionQuestionsPage;
+
 
 
