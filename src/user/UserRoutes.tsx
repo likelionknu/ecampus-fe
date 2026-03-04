@@ -5,6 +5,8 @@ import UserSessionQuestionListPage from "./domains/session/pages/UserSessionQues
 import UserSessionQuestionDetailPage from "./domains/session/pages/UserSessionQuestionDetailPage";
 import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
+import UserSessionAssignments from "./domains/session/pages/UserSessionAssignments";
+import UserSessionAssignmentsView from "./domains/session/pages/UserSessionAssignmentsView";
 
 const userRoutes: RouteObject[] = [
   {
@@ -25,6 +27,15 @@ const userRoutes: RouteObject[] = [
       // path: "questions/list/:id",
       { path: "detail", element: <UserSessionQuestionDetailPage /> },
       { path: "new", element: <UserSessionQuestionCreatePage /> },
+    ],
+  },
+  {
+    path: "session/assignments",
+    element: <SessionLayout />,
+    children: [
+      { index: true, element: <UserSessionAssignments /> },
+      // path: "questions/list/:id",
+      { path: "detail", element: <UserSessionAssignmentsView /> },
     ],
   },
 ];
