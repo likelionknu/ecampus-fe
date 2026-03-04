@@ -32,7 +32,7 @@ function Header() {
 
   return (
     <div className="flex">
-      <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8">
+      <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8 dark:border-[#323232]">
         <h1 className="typo-sub-title">{pageTitle}</h1>
         <button
           type="button"
@@ -45,13 +45,13 @@ function Header() {
               handleToggleTheme();
             }
           }}
-          className="border-ec-outline bg-ec-white relative flex h-9.5 w-27.5 cursor-pointer overflow-hidden rounded-xl border-2"
+          className="border-ec-outline bg-ec-white relative flex h-9.5 w-27.5 cursor-pointer items-center overflow-hidden rounded-xl border-2 dark:border-[#323232] dark:bg-[#131313]"
         >
           <span
             aria-hidden
-            className="bg-ec-outline-dark rounded- absolute inset-0 w-1/2 cursor-pointer rounded-md transition-transform duration-500"
+            className="bg-ec-outline absolute inset-0 h-full w-1/2 cursor-pointer rounded-md transition-transform duration-500 dark:bg-[#323232]"
             style={{
-              transform: isDark ? "translateX(100%)" : "translateX(0%)",
+              transform: isDark ? "translateX(100.5%)" : "translateX(0%)",
             }}
           />
           <div className="border-ec-outline-dark relative flex w-1/2 items-center justify-center">
