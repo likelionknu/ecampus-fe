@@ -1,6 +1,6 @@
 ﻿import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
-import QuestionTableHeader from "../components/QuestionTableHeader";
+import SessionQuestionTableHeader from "../components/SessionQuestionTableHeader";
 import QuestionTableRows from "../components/QuestionTableRows";
 import type { SessionQuestionRow } from "../types/SessionQuestionRow";
 import { useNavigate } from "react-router-dom";
@@ -103,7 +103,7 @@ function UserSessionQuestionListPage() {
 
       <section>
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
-          <QuestionTableHeader />
+          <SessionQuestionTableHeader />
         </div>
         <TableEmptyState label="등록된 세션 자료가 없어요." />
 
@@ -117,3 +117,4 @@ function UserSessionQuestionListPage() {
 }
 
 export default UserSessionQuestionListPage;
+

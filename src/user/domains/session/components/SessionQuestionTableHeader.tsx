@@ -1,6 +1,6 @@
 ﻿import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
 
-function QuestionTableHeader() {
+function SessionQuestionTableHeader() {
   return (
     <>
       <div className="flex gap-7">
@@ -16,4 +16,5 @@ function QuestionTableHeader() {
   );
 }
 
-export default QuestionTableHeader;
+export default SessionQuestionTableHeader;
+
