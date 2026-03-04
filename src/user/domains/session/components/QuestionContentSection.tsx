@@ -1,4 +1,5 @@
 import TextBox from "@/shared/components/TextBox";
+import BoxLayout from "@/user/shared/components/BoxLayout";
 
 interface QustionContentSectionProps {
   label: string;
@@ -10,10 +11,10 @@ function QuestionContentSection({
   content,
 }: QustionContentSectionProps) {
   return (
-    <div className="flex flex-col gap-2">
+    <BoxLayout>
       <span className="text-body-2 text-ec-sub">{label}</span>
       <TextBox>{content}</TextBox>
-    </div>
+    </BoxLayout>
   );
 }
 

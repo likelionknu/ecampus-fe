@@ -6,6 +6,7 @@ interface UserTitleSectionProps {
   subText?: string;
   buttonType?: ButtonVariant;
   buttonText?: string;
+  onClick?: () => void;
 }
 
 const SubText = ({ children }: { children: React.ReactNode }) => {
@@ -17,15 +18,14 @@ function UserTitleSection({
   subText,
   buttonType = "primary",
   buttonText,
+  onClick,
 }: UserTitleSectionProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
-        <span className="text-large-title text-ec-black">
-          {title}
-        </span>
+        <span className="text-large-title text-ec-black">{title}</span>
         {buttonText && (
-          <Button variant={buttonType} size="large">
+          <Button variant={buttonType} size="large" onClick={onClick}>
             {buttonText}
           </Button>
         )}
