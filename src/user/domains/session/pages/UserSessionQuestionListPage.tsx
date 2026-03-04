@@ -1,10 +1,9 @@
-﻿import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import { useState } from "react";
+﻿import { useState } from "react";
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
 import QuestionTableHeader from "../components/QuestionTableHeader";
-import QuestionTableRows, {
-  type SessionQuestionRow,
-} from "../components/QuestionTableRows";
+import QuestionTableRows from "../components/QuestionTableRows";
+import type { SessionQuestionRow } from "../types/SessionQuestionRow";
 
 const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
   {

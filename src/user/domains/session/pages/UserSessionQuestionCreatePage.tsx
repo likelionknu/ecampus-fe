@@ -1,7 +1,8 @@
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
-import SessionQuestionWarning from "../components/SessionQuestionWarning";
-import BoxLayout from "@/user/shared/components/BoxLayout";
+// import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
+import UserTitleSection from "@/user/shared/components/UserTitleSection";
+import BoxLayout from "@/user/shared/components/BoxLayout";
+import SessionQuestionWarning from "../components/SessionQuestionWarning";
 
 const BoxWarrper = ({ children }: { children: React.ReactNode }) => {
   return <div className="flex justify-between">{children}</div>;
@@ -29,6 +30,19 @@ const TextAreaField = ({ placeholder }: { placeholder: string }) => {
 function UserSessionQuestionCreatePage() {
   return (
     <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
+      {/* <Modal>
+        <Modal.Header>새 질문 등록</Modal.Header>
+        <Modal.Description>
+          새로운 질문 게시글을 업로드할까요?
+        </Modal.Description>
+        <Modal.ButtonLayout>
+          <Button size="modal" variant="primary">
+            확인
+          </Button>
+          <Modal.Cancle />
+        </Modal.ButtonLayout>
+      </Modal> */}
+
       <UserTitleSection title="새 질문 등록" />
       <SessionQuestionWarning />
 

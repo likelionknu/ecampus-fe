@@ -1,21 +1,6 @@
 ﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-
-export interface SessionQuestionRow {
-  answer: string | null;
-  answeredAt: string | null;
-  answeredUserId: number | null;
-  answeredUserName: string | null;
-  content: string;
-  createdAt: string;
-  createdUserId: number | null;
-  createdUserName: string | null;
-  id: number;
-  isMyQuestion: boolean;
-  sessionId: number;
-  status: "대기" | "완료";
-  title: string;
-}
+import type { SessionQuestionRow } from "../types/SessionQuestionRow";
 
 interface QuestionTableRowsProps {
   isLoading: boolean;
