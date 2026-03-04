@@ -1,7 +1,7 @@
 ﻿import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
 import SessionQuestionTableHeader from "../components/SessionQuestionTableHeader";
-import QuestionTableRows from "../components/QuestionTableRows";
+import SessionQuestionTableRows from "../components/SessionQuestionTableRows";
 import type { SessionQuestionRow } from "../types/SessionQuestionRow";
 import { useNavigate } from "react-router-dom";
 
@@ -107,7 +107,7 @@ function UserSessionQuestionListPage() {
         </div>
         <TableEmptyState label="등록된 세션 자료가 없어요." />
 
-        <QuestionTableRows
+        <SessionQuestionTableRows
           isLoading={isLoading}
           questions={mockQuestions.content}
         />
@@ -117,4 +117,5 @@ function UserSessionQuestionListPage() {
 }
 
 export default UserSessionQuestionListPage;
+
 
