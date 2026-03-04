@@ -15,14 +15,14 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
   return (
     <div className="text-ec-black flex flex-col">
       {isLoading && (
-        <div className="flex animate-pulse items-center gap-4 rounded-2xl px-7.5 py-4">
-          <SkeletonCell className="h-4 w-6" />
-          <SkeletonCell className="h-4 w-20" />
-          <SkeletonCell className="h-4 w-32" />
-          <SkeletonCell className="h-4 w-22" />
-          <SkeletonCell className="h-4 w-14" />
-          <SkeletonCell className="h-4 w-14" />
-          <SkeletonCell className="h-4 w-10" />
+        <div className="flex animate-pulse items-center gap-4 rounded-2xl px-5.5 py-4">
+          <SkeletonCell className="ml-1 h-4 w-6" />
+          <SkeletonCell className="h-4 w-42" />
+          <SkeletonCell className="ml-25 h-4 w-76" />
+          <SkeletonCell className="h-4 w-50" />
+          <SkeletonCell className="ml-2 h-4 w-14" />
+          <SkeletonCell className="ml-2 h-4 w-14" />
+          <SkeletonCell className="ml-3 h-4 w-10" />
         </div>
       )}
 
@@ -59,7 +59,7 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
               {question.answeredUserName ?? "미답변"}
             </span>
             <span
-              className={`text-body-2 ${
+              className={`text-body-2 mr-0.5 ${
                 question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
               }`}
             >

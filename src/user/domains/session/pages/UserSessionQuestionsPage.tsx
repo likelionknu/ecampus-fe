@@ -1,4 +1,4 @@
-﻿import TableEmptyState from "@/shared/components/table/TableEmptyState";
+﻿// import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
 import SessionQuestionTableHeader from "../components/SessionQuestionTableHeader";
 import SessionQuestionTableRows from "../components/SessionQuestionTableRows";
@@ -89,7 +89,7 @@ const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
 
 function UserSessionQuestionsPage() {
   const navigate = useNavigate();
-  const isLoading = false;
+  const isLoading = true;
 
   return (
     <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
@@ -105,7 +105,7 @@ function UserSessionQuestionsPage() {
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
           <SessionQuestionTableHeader />
         </div>
-        <TableEmptyState label="등록된 세션 자료가 없어요." />
+        {/* <TableEmptyState label="등록된 세션 자료가 없어요." /> */}
 
         <SessionQuestionTableRows
           isLoading={isLoading}
@@ -117,6 +117,3 @@ function UserSessionQuestionsPage() {
 }
 
 export default UserSessionQuestionsPage;
-
-
-
