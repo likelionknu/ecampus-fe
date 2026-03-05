@@ -1,9 +1,9 @@
-﻿// import TableEmptyState from "@/shared/components/table/TableEmptyState";
+﻿import { useNavigate } from "react-router-dom";
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
 import SessionQuestionTableHeader from "../components/SessionQuestionTableHeader";
 import SessionQuestionTableRows from "../components/SessionQuestionTableRows";
 import type { SessionQuestionRow } from "../types/SessionQuestionRow";
-import { useNavigate } from "react-router-dom";
 
 const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
   {
@@ -109,7 +109,7 @@ function UserSessionQuestionsPage() {
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
           <SessionQuestionTableHeader />
         </div>
-        {/* <TableEmptyState label="등록된 세션 자료가 없어요." /> */}
+        <TableEmptyState label="등록된 세션 자료가 없어요." />
 
         <SessionQuestionTableRows
           isLoading={isLoading}

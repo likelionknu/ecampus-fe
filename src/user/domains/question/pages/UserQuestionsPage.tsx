@@ -3,7 +3,7 @@ import UserTitleSection from "@/user/shared/components/UserTitleSection";
 import QuestionTableHeader from "../components/QuestionTableHeader";
 import QuestionTableRows from "../components/QuestionTableRows";
 import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
-// import TableEmptyState from "@/shared/components/table/TableEmptyState";
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
 
 const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
   {
@@ -151,7 +151,7 @@ function UserQuestionsPage() {
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex items-center justify-between px-8 py-4">
           <QuestionTableHeader />
         </div>
-        {/* <TableEmptyState label="등록된 질문을 찾을 수 없거나 존재하지 않아요" /> */}
+        <TableEmptyState label="등록된 질문을 찾을 수 없거나 존재하지 않아요" />
 
         <QuestionTableRows
           isLoading={isLoading}

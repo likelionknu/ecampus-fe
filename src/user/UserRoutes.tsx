@@ -31,7 +31,6 @@ const userRoutes: RouteObject[] = [
     handle: { title: "질문 상세" },
   },
   {
-    // path: "questions/:id",
     path: "notification",
     element: <NotificationPage />,
     handle: { title: "세션" },
