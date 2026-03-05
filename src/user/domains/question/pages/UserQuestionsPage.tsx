@@ -136,7 +136,7 @@ function UserQuestionsPage() {
   const isLoading = true;
 
   return (
-    <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 pt-7 pb-120 pl-30">
+    <div className="text-ec-black flex w-full flex-col gap-5 pt-7 pb-120 pl-30">
       <UserTitleSection
         title={`질문(${mockQuestions.totalElements})`}
         subText="이캠퍼스에서 생성된 모든 질문을 확인할 수 있어요"

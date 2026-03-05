@@ -96,9 +96,13 @@ function UserSessionQuestionsPage() {
       <UserTitleSection
         title={`질문 및 답변(${mockQuestions.totalElements})`}
         subText="궁금한 내용이 있다면 질문하고, 답변받을 수 있어요"
-        buttonType="primary"
-        buttonText="새 질문 등록"
-        onClick={() => navigate("new")}
+        actions={[
+          {
+            label: "새 질문 등록",
+            buttonType: "primary",
+            onClick: () => navigate("new"),
+          },
+        ]}
       />
 
       <section>

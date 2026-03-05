@@ -66,11 +66,15 @@ function UserQuestionDetailPage() {
           title={mockQuestionDetail.title}
           {...(shouldShowDeleteButton
             ? {
-                buttonText: "삭제",
-                buttonType: "danger" as const,
-                onClick: () => {
-                  setIsLoading((prev) => !prev);
-                },
+                actions: [
+                  {
+                    label: "삭제",
+                    buttonType: "danger" as const,
+                    onClick: () => {
+                      setIsLoading((prev) => !prev);
+                    },
+                  },
+                ],
               }
             : {})}
         />
