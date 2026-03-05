@@ -6,6 +6,7 @@ import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQu
 import SessionLayout from "./layouts/SessionLayout";
 import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
 import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
+import NotificationPage from "./domains/notification/pages/NotificationPage";
 
 const userRoutes: RouteObject[] = [
   {
@@ -28,6 +29,12 @@ const userRoutes: RouteObject[] = [
     path: "questions/detail",
     element: <UserQuestionDetailPage />,
     handle: { title: "질문 상세" },
+  },
+  {
+    // path: "questions/:id",
+    path: "notification",
+    element: <NotificationPage />,
+    handle: { title: "세션" },
   },
   {
     path: "sessions/questions",
