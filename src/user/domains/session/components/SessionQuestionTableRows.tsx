@@ -2,12 +2,12 @@
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import type { SessionQuestionRow } from "../types/SessionQuestionRow";
 
-interface QuestionTableRowsProps {
+interface SessionQuestionTableRowsProps {
   isLoading: boolean;
   questions: SessionQuestionRow[];
 }
 
-function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
+function SessionQuestionTableRows({ isLoading, questions }: SessionQuestionTableRowsProps) {
   return (
     <div className="text-ec-black flex flex-col">
       {isLoading && (
@@ -55,4 +55,5 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
   );
 }
 
-export default QuestionTableRows;
+export default SessionQuestionTableRows;
+

@@ -1,7 +1,7 @@
-﻿import TableEmptyState from "@/shared/components/table/TableEmptyState";
+﻿// import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "../../../shared/components/UserTitleSection";
-import QuestionTableHeader from "../components/QuestionTableHeader";
-import QuestionTableRows from "../components/QuestionTableRows";
+import SessionQuestionTableHeader from "../components/SessionQuestionTableHeader";
+import SessionQuestionTableRows from "../components/SessionQuestionTableRows";
 import type { SessionQuestionRow } from "../types/SessionQuestionRow";
 import { useNavigate } from "react-router-dom";
 
@@ -87,9 +87,9 @@ const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
     totalElements: 4,
   };
 
-function UserSessionQuestionListPage() {
+function UserSessionQuestionsPage() {
   const navigate = useNavigate();
-  const isLoading = false;
+  const isLoading = true;
 
   return (
     <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
@@ -103,11 +103,11 @@ function UserSessionQuestionListPage() {
 
       <section>
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
-          <QuestionTableHeader />
+          <SessionQuestionTableHeader />
         </div>
-        <TableEmptyState label="등록된 세션 자료가 없어요." />
+        {/* <TableEmptyState label="등록된 세션 자료가 없어요." /> */}
 
-        <QuestionTableRows
+        <SessionQuestionTableRows
           isLoading={isLoading}
           questions={mockQuestions.content}
         />
@@ -116,4 +116,4 @@ function UserSessionQuestionListPage() {
   );
 }
 
-export default UserSessionQuestionListPage;
+export default UserSessionQuestionsPage;
