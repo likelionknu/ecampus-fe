@@ -1,6 +1,52 @@
 import UserTitleSection from "@/user/shared/components/UserTitleSection";
 import AssignmentsTableHeader from "../components/AssignmentsTableHeader";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
+// import TableEmptyState from "@/shared/components/table/TableEmptyState";
+import AssignmentsTableRow from "../components/AssignmentsTableRow";
+
+const mockGroups = [
+  {
+    id: 2,
+    name: "기본 CRUD 예제를 안정적인 API로 개선하기기본 CRUD 예제를 안정적인 API로 개선하기기본 CRUD 예제를 안정적인 API로 개선하기",
+    endAt: "2026-02-14T00:38:00",
+    assignmentStatus: "SUBMITTED",
+    evaluate: "PASS",
+  },
+  {
+    id: 1,
+    name: "REST API 설계 과제",
+    endAt: "2026-02-20T23:59:59",
+    assignmentStatus: "NOT_SUBMITTED",
+    evaluate: null,
+  },
+  {
+    id: 2,
+    name: "기본 CRUD 예제를 안정적인 API로 개선하기",
+    endAt: "2026-02-14T00:38:00",
+    assignmentStatus: "SUBMITTED",
+    evaluate: "PASS",
+  },
+  {
+    id: 1,
+    name: "REST API 설계 과제",
+    endAt: "2026-02-20T23:59:59",
+    assignmentStatus: "NOT_SUBMITTED",
+    evaluate: null,
+  },
+  {
+    id: 2,
+    name: "기본 CRUD 예제를 안정적인 API로 개선하기",
+    endAt: "2026-02-14T00:38:00",
+    assignmentStatus: "SUBMITTED",
+    evaluate: "PASS",
+  },
+  {
+    id: 1,
+    name: "REST API 설계 과제",
+    endAt: "2026-02-20T23:59:59",
+    assignmentStatus: "NOT_SUBMITTED",
+    evaluate: null,
+  },
+] as const;
 
 function UserSessionAssignments() {
   return (
@@ -10,7 +56,8 @@ function UserSessionAssignments() {
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
           <AssignmentsTableHeader />
         </div>
-        <TableEmptyState label="등록된 과제가 없어요." />
+        {/* <TableEmptyState label="등록된 과제가 없어요." /> */}
+        <AssignmentsTableRow assignments={mockGroups} />
       </section>
     </div>
   );
