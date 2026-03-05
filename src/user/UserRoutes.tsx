@@ -7,6 +7,7 @@ import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQu
 import SessionLayout from "./layouts/SessionLayout";
 import UserSessionAssignments from "./domains/session/pages/UserSessionAssignments";
 import UserSessionAssignmentsView from "./domains/session/pages/UserSessionAssignmentsView";
+import UserSessionGroupPage from "./domains/session/pages/UserSessionGroupPage";
 
 const userRoutes: RouteObject[] = [
   {
@@ -37,6 +38,11 @@ const userRoutes: RouteObject[] = [
       // path: "questions/list/:id",
       { path: "detail", element: <UserSessionAssignmentsView /> },
     ],
+  },
+  {
+    path: "session/group",
+    element: <SessionLayout />,
+    children: [{ index: true, element: <UserSessionGroupPage /> }],
   },
 ];
 
