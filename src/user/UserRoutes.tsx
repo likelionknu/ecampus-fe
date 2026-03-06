@@ -4,6 +4,9 @@ import UserSessionsPage from "./domains/session/pages/UserSeesionPage";
 import UserSessionQuestionsPage from "./domains/session/pages/UserSessionQuestionsPage";
 import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
+import UserSessionAssignments from "./domains/session/pages/UserSessionAssignments";
+import UserSessionAssignmentsView from "./domains/session/pages/UserSessionAssignmentsView";
+import UserSessionGroupPage from "./domains/session/pages/UserSessionGroupPage";
 import UserSessionFilesPage from "./domains/session/pages/UserSessionFilesPage";
 import UserSessionFilesViewPage from "./domains/session/pages/UserSessionFilesViewPage";
 import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
@@ -53,6 +56,21 @@ const userRoutes: RouteObject[] = [
     ],
   },
   {
+
+    path: "session/assignments",
+    element: <SessionLayout />,
+    children: [
+      { index: true, element: <UserSessionAssignments /> },
+      // path: "questions/list/:id",
+      { path: "detail", element: <UserSessionAssignmentsView /> },
+    ],
+  },
+  {
+    path: "session/group",
+    element: <SessionLayout />,
+    children: [{ index: true, element: <UserSessionGroupPage /> }],
+  },
+
     path: "session/files",
     element: <SessionLayout />,
     children: [
@@ -61,6 +79,7 @@ const userRoutes: RouteObject[] = [
       { path: "detail", element: <UserSessionFilesViewPage /> },
     ],
   },
+
 ];
 
 export default userRoutes;
