@@ -35,7 +35,7 @@ function UserSessionFilesViewPage() {
  `;
 
   return (
-    <div className="prosebg-ec-white w-full max-w-251.5 px-12 py-12">
+    <div className="prose bg-ec-white w-full max-w-251.5 px-12 py-12">
       <div className="text-ec-black text-3xl font-semibold">{name}</div>
       <ReactMarkdown
         components={{

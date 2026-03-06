@@ -12,7 +12,7 @@ const SelectSessionItem = ({
   assignmentCount,
 }: SelectSessionItemProps) => {
   return (
-    <div className="flex h-30.25 w-85.5 flex-col">
+    <div className="flex h-30.25 w-85.5 cursor-pointer flex-col">
       <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex h-9 w-32 items-center justify-center">
         <div className="flex w-full items-center justify-center gap-1.25">
           <img src={TwoManIcon} alt="Two Man Icon" className="h-3.5 w-4.25" />
