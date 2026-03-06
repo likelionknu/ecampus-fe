@@ -3,16 +3,18 @@ import { NavLink } from "react-router-dom";
 interface TabItem {
   label: string;
   path: string;
+  end?: boolean;
 }
 
 function TabBar({ items }: { items: TabItem[] }) {
   return (
-    <nav className="bg-ec-white border-ec-outline dark:bg-ec-black flex h-237.25 w-49.25 flex-col border-r px-7.5 py-7.5">
+    <nav className="bg-ec-white border-ec-outline flex h-237.25 w-49.25 flex-col border-r px-7.5 py-7.5">
       <ul className="flex flex-col gap-5">
         {items.map((item) => (
           <li key={item.path}>
             <NavLink
               to={item.path}
+              end={item.end}
               className={({ isActive }) =>
                 `text-[18px] transition-colors ${
                   isActive ? "text-ec-blue" : "text-ec-sub hover:text-ec-blue"

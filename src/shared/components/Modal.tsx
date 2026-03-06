@@ -45,7 +45,7 @@ function ModalMain({ children }: ModalProps) {
   return (
     <>
       <div className="fixed inset-0 z-90 bg-black/20 backdrop-blur-[3px]" />
-      <div className="bg-ec-white fixed top-1/2 left-1/2 z-100 min-h-46 max-w-95 -translate-x-1/2 -translate-y-1/2 rounded-ec-10 px-10 py-8">
+      <div className="bg-ec-white rounded-ec-10 fixed top-1/2 left-1/2 z-100 min-h-46 min-w-95 -translate-x-1/2 -translate-y-1/2 px-10 py-8">
         {children}
       </div>
     </>

@@ -1,4 +1,6 @@
 @import "tailwindcss";
+/* 마크다운 스타일 */
+@plugin "@tailwindcss/typography";
 @custom-variant dark (&:where(html.dark, html.dark *));
 
 @theme {
@@ -10,27 +12,27 @@
   --tracking-ec-tight: -0.025em;
   --leading-120: 120%;
 
-  --color-ec-black: #17171b;
-  --color-ec-blue: #3d67c2;
-  --color-ec-white: #ffffff;
-  --color-ec-sub: #717171;
-  --color-ec-box: #fafafc;
-  --color-ec-outline: #f7f7f7;
-  --color-ec-table: #666666;
-  --color-ec-disable: #a9a9a9;
-  --color-ec-red: #ff0000;
-  --color-ec-outline-dark: #e4e4e4;
-  --color-ec-gnb-white: #ffffff;
-  --color-ec-table-topic: #9da0b3;
-  --color-ec-table-header: #f4f4fb;
-  --color-ec-gnb-unselected: #b0b0b0;
-  --color-ec-loading: #f0f0f0;
-  --color-ec-pink-background: #ffe0eb;
-  --color-ec-pink-item: #ff82ac;
-  --color-ec-blue-background: #e7edff;
-  --color-ec-blue-item: #396aff;
-  --color-ec-orange-background: #fff5d9;
-  --color-ec-orange-item: #ffbb38;
+  --color-ec-black: var(--ec-black);
+  --color-ec-blue: var(--ec-blue);
+  --color-ec-white: var(--ec-white);
+  --color-ec-sub: var(--ec-sub);
+  --color-ec-box: var(--ec-box);
+  --color-ec-outline: var(--ec-outline);
+  --color-ec-table: var(--ec-table);
+  --color-ec-disable: var(--ec-disable);
+  --color-ec-red: var(--ec-red);
+  --color-ec-outline-dark: var(--ec-outline-dark);
+  --color-ec-gnb-white: var(--ec-gnb-white);
+  --color-ec-table-topic: var(--ec-table-topic);
+  --color-ec-table-header: var(--ec-table-header);
+  --color-ec-gnb-unselected: var(--ec-gnb-unselected);
+  --color-ec-loading: var(--ec-loading);
+  --color-ec-pink-background: var(--ec-pink-background);
+  --color-ec-pink-item: var(--ec-pink-item);
+  --color-ec-blue-background: var(--ec-blue-background);
+  --color-ec-blue-item: var(--ec-blue-item);
+  --color-ec-orange-background: var(--ec-orange-background);
+  --color-ec-orange-item: var(--ec-orange-item);
   --radius-ec-10: 10px;
 
   --text-large-title: 32px;
@@ -92,6 +94,51 @@
 :root {
   margin: 0;
   padding: 0;
+  --ec-black: #17171b;
+  --ec-blue: #3d67c2;
+  --ec-white: #ffffff;
+  --ec-sub: #717171;
+  --ec-box: #fafafc;
+  --ec-outline: #f7f7f7;
+  --ec-table: #666666;
+  --ec-disable: #a9a9a9;
+  --ec-red: #ff0000;
+  --ec-outline-dark: #e4e4e4;
+  --ec-gnb-white: #ffffff;
+  --ec-table-topic: #9da0b3;
+  --ec-table-header: #f4f4fb;
+  --ec-gnb-unselected: #b0b0b0;
+  --ec-loading: #f0f0f0;
+  --ec-pink-background: #ffe0eb;
+  --ec-pink-item: #ff82ac;
+  --ec-blue-background: #e7edff;
+  --ec-blue-item: #396aff;
+  --ec-orange-background: #fff5d9;
+  --ec-orange-item: #ffbb38;
+}
+
+html.dark {
+  --ec-black: #fafaf8;
+  --ec-blue: #5c85e5;
+  --ec-white: #131313;
+  --ec-sub: #717171;
+  --ec-box: #1d1d1d;
+  --ec-outline: #323232;
+  --ec-table: #666666;
+  --ec-disable: #a9a9a9;
+  --ec-red: #ff6b6b;
+  --ec-outline-dark: #e4e4e4;
+  --ec-gnb-white: #c8c8c8;
+  --ec-table-topic: #9da0b3;
+  --ec-table-header: #1d1d1d;
+  --ec-gnb-unselected: #999999;
+  --ec-loading: #222222;
+  --ec-pink-background: #3a242b;
+  --ec-pink-item: #ff9ebd;
+  --ec-blue-background: #1e2a4a;
+  --ec-blue-item: #6d92ff;
+  --ec-orange-background: #332d1e;
+  --ec-orange-item: #ffc966;
 }
 
 @layer base {
@@ -102,7 +149,7 @@
   }
 
   body {
-    @apply font-pretendard text-ec-black dark:bg-ec-black dark:text-ec-white bg-white;
+    @apply font-pretendard bg-ec-white text-ec-black;
   }
 }
 

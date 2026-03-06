@@ -38,7 +38,7 @@ function Button({
   ...props
 }: ButtonProps) {
   const baseClass =
-    "min-w-13.25 min-h-6.5 tracking-ec-tight relative inline-flex items-center justify-center leading-120 font-medium rounded-ec-10 text-ec-white cursor-pointer dark:text-ec-black";
+    "min-w-13.25 min-h-6.5 tracking-ec-tight relative inline-flex items-center justify-center leading-120 font-medium rounded-ec-10 text-ec-white cursor-pointer ";
   const combinedClass = `${baseClass} ${VariantClasses[variant]} ${TypeClaseese[size]}`;
 
   return (
