@@ -1,4 +1,4 @@
-import { formatDateTime } from "@/shared/utils/data";
+import { formatDateTime } from "@/shared/utils/date";
 
 interface FilesRow {
   id: number;

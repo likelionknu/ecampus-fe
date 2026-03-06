@@ -9,7 +9,6 @@
 function parseDateTimeParts(value: string): DateTimeParts | null {
   const normalized = value.trim();
 
-  // Handles inputs like: 2026-03-03T01:51:40.664772
   const parts = normalized.match(
     /^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})(?::\d{2}(?:\.\d+)?)?$/,
   );
@@ -60,7 +59,6 @@ export function formatKoreanDateTime24(value: string): string {
   return `${parsed.year}년 ${parsed.month}월 ${parsed.day}일 ${hour}시 ${parsed.minute}분`;
 }
 
-// Backward compatibility: defaults to 12-hour format.
 export function formatKoreanDateTime(value: string): string {
   return formatKoreanDateTime12(value);
 }
