@@ -5,7 +5,7 @@ const testTabItems = [
   { label: "자료", path: "/user/sessions/files" },
   { label: "과제", path: "/user/sessions/assignments" },
   { label: "사용자 및 그룹", path: "/user/sessions/group" },
-  { label: "질문 및 답변", path: "/user/sessionss/questions" },
+  { label: "질문 및 답변", path: "/user/sessions/questions" },
 ];
 
 function SessionLayout() {

@@ -32,8 +32,8 @@ const Loading = () => {
 
 function Button({
   children,
-  variant = "primary",
   size,
+  variant = "primary",
   isLoading,
   ...props
 }: ButtonProps) {

@@ -47,7 +47,11 @@ function UserSessionGroupPage() {
         subText="이 세션에 추가된 사용자를 확인하세요"
       />
       <div className="w-107.5">
-        <SerachBar value={search} onChange={(e) => setSearch(e.target.value)} />
+        <SerachBar
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="사용자 이름으로 검색"
+        />
       </div>
       <section>
         <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
