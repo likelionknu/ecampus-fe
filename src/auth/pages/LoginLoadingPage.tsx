@@ -1,8 +1,19 @@
-import { Link } from "react-router-dom";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import NavLogo from "@shared/assets/NavLogo.png";
+import { Link } from "react-router-dom";
 
-// 공통 404(Not Found) 페이지입니다.
-function ErrorPage() {
+function LoginLoadingIllustration() {
+  return (
+    <DotLottieReact
+      src="https://lottie.host/a0af71af-aeea-4df1-b5fe-b3d1f70de699/GhdBSyp6rv.lottie"
+      loop
+      autoplay
+      className="h-20.25 w-46.75"
+    />
+  );
+}
+
+function LoginLoadingPage() {
   return (
     <main className="bg-ec-white min-h-screen">
       <div className="mx-auto flex min-h-screen w-full max-w-360">
@@ -11,7 +22,7 @@ function ErrorPage() {
           className="from-ec-blue-item to-ec-blue-item/40 hidden flex-1 bg-linear-to-r lg:block"
         />
 
-        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:w-135.75 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:w-136.5 lg:px-13.75 lg:pt-15 lg:pb-12.5">
           <div className="flex items-center gap-4">
             <img
               src={NavLogo}
@@ -23,20 +34,14 @@ function ErrorPage() {
             </span>
           </div>
 
-          <div className="mt-14 lg:mt-21.5">
-            <h1 className="typo-title text-ec-black">
-              페이지를 찾을 수 없어요
+          <div className="mt-14 lg:mt-15.5">
+            <LoginLoadingIllustration />
+            <h1 className="typo-title text-ec-black mt-7.5">
+              소셜 로그인 진행 중
             </h1>
-            <p className="typo-body-1 text-ec-sub mt-4">
-              찾고 있는 페이지를 찾을 수 없거나, 일시적으로 사용할 수 없어요
+            <p className="typo-body-1 text-ec-sub mt-3">
+              페이지를 이동하지 말고 기다려주세요
             </p>
-
-            <Link
-              to="/user/dashboard"
-              className="bg-ec-blue text-ec-gnb-white typo-body-1 rounded-ec-10 focus-visible:outline-ec-blue hover:bg-ec-blue-item mt-11 inline-flex items-center justify-center px-6 py-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-              대시보드로 돌아가기
-            </Link>
           </div>
 
           <footer className="mt-auto flex flex-col items-end gap-2 pt-16 lg:pt-0">
@@ -56,4 +61,4 @@ function ErrorPage() {
   );
 }
 
-export default ErrorPage;
+export default LoginLoadingPage;

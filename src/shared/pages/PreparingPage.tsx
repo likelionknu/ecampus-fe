@@ -1,8 +1,19 @@
-import { Link } from "react-router-dom";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import NavLogo from "@shared/assets/NavLogo.png";
+import { Link } from "react-router-dom";
 
-// 공통 404(Not Found) 페이지입니다.
-function ErrorPage() {
+function PreparingIllustration() {
+  return (
+    <DotLottieReact
+      src="https://lottie.host/9ae5b434-3698-40c2-9751-7d9c84f570b1/nY3kQWTdZE.lottie"
+      loop
+      autoplay
+      className="h-48.25 w-40.25"
+    />
+  );
+}
+
+function PreparingPage() {
   return (
     <main className="bg-ec-white min-h-screen">
       <div className="mx-auto flex min-h-screen w-full max-w-360">
@@ -23,20 +34,16 @@ function ErrorPage() {
             </span>
           </div>
 
-          <div className="mt-14 lg:mt-21.5">
-            <h1 className="typo-title text-ec-black">
-              페이지를 찾을 수 없어요
+          <div className="mt-14 lg:mt-17">
+            <PreparingIllustration />
+            <h1 className="typo-title text-ec-black mt-5">
+              서비스를 준비하고 있어요
             </h1>
-            <p className="typo-body-1 text-ec-sub mt-4">
-              찾고 있는 페이지를 찾을 수 없거나, 일시적으로 사용할 수 없어요
+            <p className="typo-body-1 text-ec-sub mt-4 leading-6">
+              편리한 이캠퍼스 환경을 위해 지금은 준비하고 있어요
+              <br />
+              나중에 다시 방문해주세요!
             </p>
-
-            <Link
-              to="/user/dashboard"
-              className="bg-ec-blue text-ec-gnb-white typo-body-1 rounded-ec-10 focus-visible:outline-ec-blue hover:bg-ec-blue-item mt-11 inline-flex items-center justify-center px-6 py-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
-            >
-              대시보드로 돌아가기
-            </Link>
           </div>
 
           <footer className="mt-auto flex flex-col items-end gap-2 pt-16 lg:pt-0">
@@ -56,4 +63,4 @@ function ErrorPage() {
   );
 }
 
-export default ErrorPage;
+export default PreparingPage;

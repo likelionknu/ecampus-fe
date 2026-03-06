@@ -1,11 +1,12 @@
 ﻿import SearchIcon from "../assets/serach.svg?react";
 
 interface SerachBarProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
+  value?: string;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function SerachBar({ value, onChange }: SerachBarProps) {
+function SerachBar({ placeholder, value, onChange }: SerachBarProps) {
   const iconFillClass = value ? "fill-ec-black" : "fill-ec-sub";
 
   return (
@@ -13,8 +14,8 @@ function SerachBar({ value, onChange }: SerachBarProps) {
       <input
         type="text"
         value={value}
-        placeholder="여기에 검색어를 입력"
-        className="tracking-ec-normal text-body-2 text-ec-black placeholder:text-ec-sub bg-ec-box w-full rounded-ec-10 px-7 py-3 outline-none"
+        placeholder={placeholder}
+        className="tracking-ec-normal text-body-2 text-ec-black placeholder:text-ec-sub bg-ec-box rounded-ec-10 w-full px-7 py-3 outline-none"
         onChange={onChange}
       />
       <SearchIcon

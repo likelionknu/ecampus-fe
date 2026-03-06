@@ -1,5 +1,5 @@
 import NavLogo from "@shared/assets/NavLogo.png";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 function GoogleIcon() {
   return (
@@ -24,7 +24,15 @@ function GoogleIcon() {
   );
 }
 
-function LoginPage() {
+function LoginErrorPage() {
+  // `?error=social` 쿼리 파라미터가 있으면 소셜 로그인 오류 문구를 노출
+  const [searchParams] = useSearchParams();
+  const errorType = searchParams.get("error");
+  const errorMessage =
+    errorType === "social"
+      ? "소셜 로그인 진행 중 오류가 발생했어요"
+      : "이 계정은 승인되지 않은 계정이에요";
+
   return (
     <main className="bg-ec-white min-h-screen">
       <div className="mx-auto flex min-h-screen w-full max-w-360">
@@ -45,11 +53,18 @@ function LoginPage() {
             </span>
           </div>
 
-          <div className="mt-14 lg:mt-21.5">
-            <h1 className="typo-title text-ec-black">
+          <div className="mt-14 lg:mt-15.5">
+            <div
+              role="alert"
+              className="border-ec-red text-ec-red rounded-ec-10 flex h-12 w-full max-w-96 items-center border px-4.5 text-sm leading-6 font-medium"
+            >
+              {errorMessage}
+            </div>
+
+            <h1 className="typo-title text-ec-black mt-4.75">
               다시 돌아온 걸 환영해요!
             </h1>
-            <p className="typo-body-1 text-ec-sub mt-4">
+            <p className="typo-body-1 text-ec-sub mt-5">
               멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
             </p>
 
@@ -79,4 +94,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default LoginErrorPage;

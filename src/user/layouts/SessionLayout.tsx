@@ -2,10 +2,10 @@ import TabBar from "@/shared/components/TabBar";
 import { Outlet } from "react-router-dom";
 
 const testTabItems = [
-  { label: "자료", path: "/test" },
-  { label: "과제", path: "/user/sessions" },
-  { label: "사용자 및 그룹", path: "/user/dashboard" },
-  { label: "질문 및 답변", path: "/user/session/questions" },
+  { label: "자료", path: "/user/session/files" },
+  { label: "과제", path: "/user/session/assignments" },
+  { label: "사용자 및 그룹", path: "/user/session/group" },
+  { label: "질문 및 답변", path: "/user/sessions/questions" },
 ];
 
 function SessionLayout() {
