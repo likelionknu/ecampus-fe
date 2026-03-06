@@ -4,6 +4,7 @@ import UserSessionsPage from "./domains/session/pages/UserSeesionPage";
 import UserSessionQuestionsPage from "./domains/session/pages/UserSessionQuestionsPage";
 import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
+import UserSessionSelect from "./domains/session/pages/UserSessionSelect";
 import UserSessionAssignments from "./domains/session/pages/UserSessionAssignments";
 import UserSessionAssignmentsView from "./domains/session/pages/UserSessionAssignmentsView";
 import UserSessionGroupPage from "./domains/session/pages/UserSessionGroupPage";
@@ -11,7 +12,6 @@ import UserSessionFilesPage from "./domains/session/pages/UserSessionFilesPage";
 import UserSessionFilesViewPage from "./domains/session/pages/UserSessionFilesViewPage";
 import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
 import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
-import NotificationPage from "./domains/notification/pages/NotificationPage";
 
 
 const userRoutes: RouteObject[] = [
@@ -56,6 +56,11 @@ const userRoutes: RouteObject[] = [
     ],
   },
   {
+    path: "sessions/select",
+    element: <UserSessionSelect />,
+    handle: { title: "세션" },
+  },
+
 
     path: "session/assignments",
     element: <SessionLayout />,
