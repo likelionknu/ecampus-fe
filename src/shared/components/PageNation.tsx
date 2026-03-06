@@ -53,7 +53,7 @@ export const PageNationFrame = ({
   const currentItems = useMemo(
     () =>
       Array.from({ length: Math.max(itemNum, 0) }, (_, index) => {
-        return `아이템 페이지 ${index + 1}`;
+        return ` ${index + 1}`;
       }).slice(startIndex, startIndex + itemSumNum),
     [itemNum, itemSumNum, startIndex],
   );
@@ -94,7 +94,7 @@ export const PageNationFrame = ({
 
 export const PageNationMenu = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="bg-ec-table-header text-ec-black flex h-10 w-full items-center rounded-tl-[10px] rounded-tr-[10px]">
+    <div className="bg-ec-table-header text-ec-black rounded-tl-ec-10 rounded-tr-ec-10 flex h-10 w-full items-center">
       {children}
     </div>
   );
@@ -104,13 +104,19 @@ export const PageNationMenu = ({ children }: { children: ReactNode }) => {
 /* ====================== 아이템 시작 ====================== */
 
 interface PageNationItemProps {
+  absoluteIndex: number;
   children: ReactNode;
 }
 
-export const PageNationItem = ({ children }: PageNationItemProps) => {
+export const PageNationItem = ({
+  absoluteIndex,
+  children,
+}: PageNationItemProps) => {
+  const bgClass = (absoluteIndex + 1) % 2 === 0 ? "bg-ec-box" : "bg-ec-white";
+
   return (
     <div
-      className={`bg-ec-white text-ec-black flex h-12.75 w-full items-center`}
+      className={`${bgClass} text-ec-black flex h-12.75 w-full items-center`}
     >
       {children}
     </div>

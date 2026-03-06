@@ -14,7 +14,7 @@ function SerachBar({ value, onChange }: SerachBarProps) {
         type="text"
         value={value}
         placeholder="여기에 검색어를 입력"
-        className="tracking-ec-normal text-body-2 text-ec-black placeholder:text-ec-sub bg-ec-box w-full rounded-[10px] px-7 py-3 outline-none"
+        className="tracking-ec-normal text-body-2 text-ec-black placeholder:text-ec-sub bg-ec-box w-full rounded-ec-10 px-7 py-3 outline-none"
         onChange={onChange}
       />
       <SearchIcon
