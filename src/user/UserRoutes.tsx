@@ -4,9 +4,12 @@ import UserSessionsPage from "./domains/session/pages/UserSeesionPage";
 import UserSessionQuestionsPage from "./domains/session/pages/UserSessionQuestionsPage";
 import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
+import UserSessionFilesPage from "./domains/session/pages/UserSessionFilesPage";
+import UserSessionFilesViewPage from "./domains/session/pages/UserSessionFilesViewPage";
 import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
 import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
 import NotificationPage from "./domains/notification/pages/NotificationPage";
+
 
 const userRoutes: RouteObject[] = [
   {
@@ -47,6 +50,15 @@ const userRoutes: RouteObject[] = [
         handle: { title: "질문 상세", showDeleteButton: true },
       },
       { path: "new", element: <UserSessionQuestionCreatePage /> },
+    ],
+  },
+  {
+    path: "session/files",
+    element: <SessionLayout />,
+    children: [
+      { index: true, element: <UserSessionFilesPage /> },
+      // path: "files/list/:id",
+      { path: "detail", element: <UserSessionFilesViewPage /> },
     ],
   },
 ];
