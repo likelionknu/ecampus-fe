@@ -26,8 +26,13 @@ function GoogleIcon() {
 
 function LoginPage() {
   return (
-    <main className="bg-ec-white min-h-screen">
-      <div className="mx-auto flex min-h-screen w-full max-w-360">
+    <main className="bg-ec-white relative min-h-screen overflow-x-clip">
+      <div
+        aria-hidden="true"
+        className="bg-ec-blue-item pointer-events-none absolute inset-y-0 left-0 hidden lg:block"
+        style={{ width: "max(calc((100vw - 90rem) / 2), 0px)" }}
+      />
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-360">
         <div
           aria-hidden="true"
           className="from-ec-blue-item to-ec-blue-item/40 hidden flex-1 bg-linear-to-r lg:block"
@@ -61,8 +66,7 @@ function LoginPage() {
               <span className="typo-body-1">구글 계정으로 시작하기</span>
             </button>
           </div>
-
-          <footer className="mt-auto flex flex-col items-end gap-2 pt-16 lg:pt-0">
+          <footer className="fixed right-8 bottom-8 z-20 flex flex-col items-end gap-2">
             <Link
               to="/privacy-policy"
               className="typo-caption text-ec-blue transition-opacity hover:underline hover:opacity-80"
