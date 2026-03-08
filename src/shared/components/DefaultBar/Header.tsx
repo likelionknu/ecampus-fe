@@ -19,7 +19,7 @@ interface HeaderRouterButtonProps {
 }
 
 function Header() {
-  const isTablet = useMediaQuery({ maxWidth: 1230 });
+  const isTablet = useMediaQuery({ maxWidth: 1280 });
 
   const navigate = useNavigate();
   const matches = useMatches();
@@ -65,7 +65,7 @@ function Header() {
   };
 
   return (
-    <div className="flex flex-col">
+    <>
       {isTablet ? (
         <div className="fixed top-0 left-0 z-60 w-full">
           <div
@@ -146,46 +146,48 @@ function Header() {
           </div>
         </div>
       ) : (
-        <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8 dark:border-[#323232]">
-          <h1 className="typo-sub-title">{pageTitle}</h1>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={isDark}
-            onClick={handleToggleTheme}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleToggleTheme();
-              }
-            }}
-            className="border-ec-outline bg-ec-white relative flex h-9.5 w-27.5 cursor-pointer items-center overflow-hidden rounded-xl border-2 dark:border-[#323232] dark:bg-[#131313]"
-          >
-            <span
-              aria-hidden
-              className="bg-ec-outline absolute inset-0 h-full w-1/2 cursor-pointer rounded-md transition-transform duration-500 dark:bg-[#323232]"
-              style={{
-                transform: isDark ? "translateX(100.5%)" : "translateX(0%)",
+        <div className="flex flex-col">
+          <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8 dark:border-[#323232]">
+            <h1 className="typo-sub-title">{pageTitle}</h1>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={isDark}
+              onClick={handleToggleTheme}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  handleToggleTheme();
+                }
               }}
-            />
-            <div className="border-ec-outline-dark relative flex w-1/2 items-center justify-center">
-              <img
-                className="h-4.5 w-4.5"
-                alt="NavLightModeImg"
-                src={LightModeImg}
+              className="border-ec-outline bg-ec-white relative flex h-9.5 w-27.5 cursor-pointer items-center overflow-hidden rounded-xl border-2 dark:border-[#323232] dark:bg-[#131313]"
+            >
+              <span
+                aria-hidden
+                className="bg-ec-outline absolute inset-0 h-full w-1/2 cursor-pointer rounded-md transition-transform duration-500 dark:bg-[#323232]"
+                style={{
+                  transform: isDark ? "translateX(100.5%)" : "translateX(0%)",
+                }}
               />
-            </div>
-            <div className="border-ec-outline-dark relative flex w-1/2 items-center justify-center">
-              <img
-                className="h-4.5 w-4"
-                alt="NavDarkModeImg"
-                src={DarkModeImg}
-              />
-            </div>
-          </button>
-        </header>
+              <div className="border-ec-outline-dark relative flex w-1/2 items-center justify-center">
+                <img
+                  className="h-4.5 w-4.5"
+                  alt="NavLightModeImg"
+                  src={LightModeImg}
+                />
+              </div>
+              <div className="border-ec-outline-dark relative flex w-1/2 items-center justify-center">
+                <img
+                  className="h-4.5 w-4"
+                  alt="NavDarkModeImg"
+                  src={DarkModeImg}
+                />
+              </div>
+            </button>
+          </header>
+        </div>
       )}
-    </div>
+    </>
   );
 }
 

@@ -8,16 +8,13 @@ interface DefaultBarProps {
 }
 
 const DefaultBar = ({ children }: DefaultBarProps) => {
-  const isTablet = useMediaQuery({ maxWidth: 1230 });
+  const isTablet = useMediaQuery({ maxWidth: 1280 });
   return (
     <>
       {isTablet ? (
         <div className="flex min-h-screen">
-          <main className="flex flex-1 flex-col">
-            <Header />
-
-            <div className="flex h-full w-full justify-start">{children}</div>
-          </main>
+          <Header />
+          <div className="flex h-full w-full justify-start">{children}</div>
         </div>
       ) : (
         <div className="flex h-full min-h-screen">
