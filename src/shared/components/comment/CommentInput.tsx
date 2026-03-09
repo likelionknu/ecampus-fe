@@ -2,7 +2,7 @@
 
 function CommentInput() {
   return (
-    <div className="mt-5 flex gap-4">
+    <div className="flex gap-4 xl:mt-5">
       <input
         type="text"
         placeholder="댓글을 남겨보세요"
