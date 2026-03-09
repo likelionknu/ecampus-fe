@@ -13,12 +13,12 @@ const sessionNameById: Record<number, string> = {
 
 function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
   return (
-    <div className="text-ec-black flex flex-col">
+    <div className="text-ec-black flex w-full flex-col">
       {isLoading && (
         <div className="flex animate-pulse items-center gap-4 rounded-2xl px-5.5 py-4">
           <SkeletonCell className="ml-1 h-4 w-6" />
-          <SkeletonCell className="h-4 w-42" />
-          <SkeletonCell className="ml-25 h-4 w-76" />
+          <SkeletonCell className="h-4 w-65" />
+          <SkeletonCell className="ml-2 h-4 w-76" />
           <SkeletonCell className="h-4 w-50" />
           <SkeletonCell className="ml-2 h-4 w-14" />
           <SkeletonCell className="ml-2 h-4 w-14" />

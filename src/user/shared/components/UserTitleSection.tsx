@@ -14,18 +14,20 @@ interface UserTitleSectionProps {
 }
 
 const SubText = ({ children }: { children: React.ReactNode }) => {
-  return <span className="text-body-1 text-ec-sub">{children}</span>;
+  return (
+    <span className="font-pretendard tracking-ec-normal xl:text-body-1 text-ec-sub text-[14px] font-medium">
+      {children}
+    </span>
+  );
 };
 
-function UserTitleSection({
-  title,
-  subText,
-  actions,
-}: UserTitleSectionProps) {
+function UserTitleSection({ title, subText, actions }: UserTitleSectionProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between">
-        <span className="text-large-title text-ec-black">{title}</span>
+        <span className="text-title xl:text-large-title text-ec-black">
+          {title}
+        </span>
         <div className="flex items-center gap-2.5">
           {actions?.map((action, index) => (
             <Button
