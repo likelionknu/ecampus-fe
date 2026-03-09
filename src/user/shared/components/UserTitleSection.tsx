@@ -24,11 +24,12 @@ const SubText = ({ children }: { children: React.ReactNode }) => {
 
 function UserTitleSection({ title, subText, actions }: UserTitleSectionProps) {
   const isMobile = useMediaQuery({ maxWidth: 479 });
+
   const hasActions = Boolean(actions?.length);
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between xl:gap-0">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-0">
         <span className="text-title xl:text-large-title text-ec-black">
           {title}
         </span>

@@ -99,10 +99,11 @@ function UserSessionQuestionsPage() {
   const itemSumNum = 4;
   const itemNum = mockQuestions.totalElements;
   const isLoading = false;
-  const isMobile = useMediaQuery({ maxWidth: 479 });
+  // const isMobile = useMediaQuery({ maxWidth: 479 });
+  const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 xl:mx-0 xl:max-w-251 xl:px-8">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 md:max-w-187.5 xl:mx-0 xl:max-w-251 xl:px-8">
       <UserTitleSection
         title={`질문 및 답변(${mockQuestions.totalElements})`}
         subText="궁금한 내용이 있다면 질문하고, 답변받을 수 있어요"
@@ -125,14 +126,14 @@ function UserSessionQuestionsPage() {
 
             return (
               <>
-                {!isMobile && (
+                {!isTablet && (
                   <PageNationMenu>
                     <SessionQuestionTableHeader />
                   </PageNationMenu>
                 )}
                 {pagedQuestions.length === 0 && !isLoading ? (
                   <TableEmptyState label="등록된 세션 자료가 없어요." />
-                ) : isMobile ? (
+                ) : isTablet ? (
                   <SessionMobileQuestionTableRows questions={pagedQuestions} />
                 ) : (
                   <SessionQuestionTableRows
