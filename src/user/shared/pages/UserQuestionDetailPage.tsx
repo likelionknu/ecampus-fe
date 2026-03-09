@@ -9,6 +9,7 @@ import QuestionMetaRow from "@/user/domains/session/components/question/Question
 import QuestionCommentSkeleton from "@/user/domains/session/components/skeleton/QuestionCommentSkeleton";
 import QuestionMetaRowSkeleton from "@/user/domains/session/components/skeleton/QuestionMetaRowSkeleton";
 import UserTitleSection from "../components/UserTitleSection";
+import { useMediaQuery } from "react-responsive";
 
 const mockQuestionDetail = {
   answer: null,
@@ -45,6 +46,7 @@ const questionMetaRows = [
 const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답변자", "상태"];
 
 function UserQuestionDetailPage() {
+  const isMobile = useMediaQuery({ maxWidth: 479 });
   const [isLoading, setIsLoading] = useState(false);
   const matches = useMatches();
   const shouldShowDeleteButton =
@@ -59,9 +61,9 @@ function UserQuestionDetailPage() {
 
   return (
     <div
-      className={`${shouldShowDeleteButton ? "px-8" : "pb-120 pl-30"} text-ec-black w-full pt-7`}
+      className={`${shouldShowDeleteButton ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 pt-7 pb-120 xl:mx-0 xl:max-w-280`}
     >
-      <div className="flex max-w-251 flex-col gap-5">
+      <div className="flex flex-col gap-5">
         <UserTitleSection
           title={mockQuestionDetail.title}
           {...(shouldShowDeleteButton
@@ -78,17 +80,28 @@ function UserQuestionDetailPage() {
               }
             : {})}
         />
-        <TextBox>
-          <div className="flex flex-col gap-2">
+        <TextBox px={!isMobile} py={!isMobile}>
+          <div className="flex flex-col gap-0 xl:gap-2">
             {isLoading
               ? skeletonRows.map((row) => (
                   <QuestionMetaRowSkeleton key={row} label={row} />
                 ))
-              : questionMetaRows.map((row) => (
+              : questionMetaRows.map((row, index) => (
                   <QuestionMetaRow
                     key={row.label}
                     label={row.label}
                     value={row.value}
+                    className={
+                      isMobile
+                        ? `px-5 py-4 ${index % 2 === 0 ? "bg-ec-box" : "bg-ec-white border-ec-outline border"} ${
+                            index === 0 ? "rounded-t-ec-10" : ""
+                          } ${
+                            index === questionMetaRows.length - 1
+                              ? "rounded-b-ec-10"
+                              : ""
+                          }`
+                        : ""
+                    }
                   />
                 ))}
           </div>
@@ -104,28 +117,42 @@ function UserQuestionDetailPage() {
         />
 
         <div className="flex flex-col gap-2">
-          <span className="text-body-2 text-ec-sub">2개의 댓글</span>
-          <TextBox>
-            <div>
-              <div className="border-ec-outline-dark flex items-center justify-center border-b py-5">
-                <span className="text-ec-sub font-pretendard tracking-ec-normal bg-ec-box text-[14px]/[23px] font-medium">
-                  첫 댓글을 남겨보세요!
-                </span>
+          <span className="text-body-2 xl:text-ec-sub text-ec-black">
+            2개의 댓글
+          </span>
+          {isMobile ? (
+            <>
+              <TextBox px={false} py={false}>
+                <QuestionCommentItem />
+              </TextBox>
+              <TextBox px={false} py={false}>
+                <QuestionCommentItem isMy={true} />
+              </TextBox>
+              <CommentInput />
+            </>
+          ) : (
+            <TextBox>
+              <div>
+                <div className="border-ec-outline-dark flex items-center justify-center border-b py-5">
+                  <span className="text-ec-sub font-pretendard tracking-ec-normal bg-ec-box text-[14px]/[23px] font-medium">
+                    첫 댓글을 남겨보세요!
+                  </span>
+                </div>
+                {isLoading ? (
+                  <>
+                    <QuestionCommentSkeleton />
+                    <QuestionCommentSkeleton />
+                  </>
+                ) : (
+                  <>
+                    <QuestionCommentItem />
+                    <QuestionCommentItem isMy={true} />
+                  </>
+                )}
               </div>
-              {isLoading ? (
-                <>
-                  <QuestionCommentSkeleton />
-                  <QuestionCommentSkeleton />
-                </>
-              ) : (
-                <>
-                  <QuestionCommentItem />
-                  <QuestionCommentItem isMy={true} />
-                </>
-              )}
-            </div>
-            <CommentInput />
-          </TextBox>
+              <CommentInput />
+            </TextBox>
+          )}
         </div>
       </div>
     </div>

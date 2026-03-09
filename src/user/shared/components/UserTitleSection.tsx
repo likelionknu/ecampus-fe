@@ -24,26 +24,29 @@ const SubText = ({ children }: { children: React.ReactNode }) => {
 
 function UserTitleSection({ title, subText, actions }: UserTitleSectionProps) {
   const isMobile = useMediaQuery({ maxWidth: 479 });
+  const hasActions = Boolean(actions?.length);
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col justify-between gap-4 xl:flex-row xl:gap-0">
+      <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between xl:gap-0">
         <span className="text-title xl:text-large-title text-ec-black">
           {title}
         </span>
-        {isMobile && <SubText>{subText}</SubText>}
-        <div className="flex flex-wrap items-center gap-2.5">
-          {actions?.map((action, index) => (
-            <Button
-              key={`${action.label}-${index}`}
-              variant={action.buttonType ?? "primary"}
-              size="large"
-              onClick={action.onClick}
-            >
-              {action.label}
-            </Button>
-          ))}
-        </div>
+        {isMobile && subText && <SubText>{subText}</SubText>}
+        {hasActions && (
+          <div className="flex flex-wrap items-center gap-2.5">
+            {actions?.map((action, index) => (
+              <Button
+                key={`${action.label}-${index}`}
+                variant={action.buttonType ?? "primary"}
+                size="large"
+                onClick={action.onClick}
+              >
+                {action.label}
+              </Button>
+            ))}
+          </div>
+        )}
       </div>
       {!isMobile && subText && <SubText>{subText}</SubText>}
     </div>

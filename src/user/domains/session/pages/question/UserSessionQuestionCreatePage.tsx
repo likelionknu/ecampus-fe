@@ -13,7 +13,7 @@ const InputField = ({ placeholder }: { placeholder: string }) => {
     <input
       type="text"
       placeholder={placeholder}
-      className="bg-ec-table-header rounded-ec-10 w-full resize-none px-7 py-4"
+      className="bg-ec-table-header rounded-ec-10 w-full resize-none px-7 py-4 text-[14px] placeholder:text-[14px] xl:text-[16px] xl:placeholder:text-[16px]"
     />
   );
 };
@@ -22,14 +22,14 @@ const TextAreaField = ({ placeholder }: { placeholder: string }) => {
   return (
     <textarea
       placeholder={placeholder}
-      className="bg-ec-table-header rounded-ec-10 min-h-71 w-full resize-none px-7 py-4"
+      className="bg-ec-table-header rounded-ec-10 min-h-71 w-full resize-none px-7 py-4 text-[14px] placeholder:text-[14px] xl:text-[16px] xl:placeholder:text-[16px]"
     />
   );
 };
 
 function UserSessionQuestionCreatePage() {
   return (
-    <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 xl:mx-0 xl:max-w-251 xl:px-8">
       {/* <Modal>
         <Modal.Header>새 질문 등록</Modal.Header>
         <Modal.Description>

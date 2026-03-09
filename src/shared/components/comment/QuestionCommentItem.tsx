@@ -8,7 +8,7 @@
 
 function QuestionCommentItem({ isMy }: { isMy?: boolean }) {
   return (
-    <div className="border-ec-outline border-b py-2">
+    <div className="border-ec-outline border-b px-4 py-2 xl:px-0">
       <div className="font-pretendard flex justify-between">
         <div className="flex gap-2">
           {isMy && <CommentStatus />}
