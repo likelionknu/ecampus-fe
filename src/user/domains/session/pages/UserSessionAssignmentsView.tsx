@@ -1,6 +1,6 @@
 import TextBox from "@/shared/components/TextBox";
 import UserTitleSection from "@/user/shared/components/UserTitleSection";
-import QuestionContentSection from "../components/QuestionContentSection";
+import QuestionContentSection from "../components/question/QuestionContentSection";
 import { formatDateTime } from "@/shared/utils/date";
 import {
   formatAssignmentStatus,

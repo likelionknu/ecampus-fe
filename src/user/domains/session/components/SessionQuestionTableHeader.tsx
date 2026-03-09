@@ -2,19 +2,14 @@
 
 function SessionQuestionTableHeader() {
   return (
-    <>
-      <div className="flex gap-7">
-        <TableHeaderLabel>ID</TableHeaderLabel>
-        <TableHeaderLabel>질문 명</TableHeaderLabel>
-      </div>
-      <div className="flex gap-14.5">
-        <TableHeaderLabel className="mr-19">등록일</TableHeaderLabel>
-        <TableHeaderLabel>질문자</TableHeaderLabel>
-        <TableHeaderLabel>상태</TableHeaderLabel>
-      </div>
-    </>
+    <div>
+      <TableHeaderLabel className="ml-9">ID</TableHeaderLabel>
+      <TableHeaderLabel className="ml-5">질문 명</TableHeaderLabel>
+      <TableHeaderLabel className="ml-135">등록일</TableHeaderLabel>
+      <TableHeaderLabel className="ml-32.5">질문자</TableHeaderLabel>
+      <TableHeaderLabel className="ml-13.5">상태</TableHeaderLabel>
+    </div>
   );
 }
 
 export default SessionQuestionTableHeader;
-

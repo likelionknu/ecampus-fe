@@ -1,10 +1,10 @@
-﻿import TableEmptyState from "@/shared/components/table/TableEmptyState";
+﻿import { useMediaQuery } from "react-responsive";
 import {
   PageNationButton,
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import { useMediaQuery } from "react-responsive";
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "@/user/shared/components/UserTitleSection";
 import MobileNotifitcationTableRows from "../components/MobileNotificationTableRows";
 import NotificationTableHeader from "../components/NotificationTableHeader";
@@ -45,7 +45,7 @@ const mockNotifications: NotificationRow[] = [
   { id: 8, content: notificationContent, status: "읽음", receivedAt: "3일 전" },
 ];
 
-function NotificationPage() {
+function UserNotificationPage() {
   const itemSumNum = 8;
   const itemNum = mockNotifications.length;
   const isLoading = false;
@@ -111,4 +111,4 @@ function NotificationPage() {
   );
 }
 
-export default NotificationPage;
+export default UserNotificationPage;

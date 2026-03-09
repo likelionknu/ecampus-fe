@@ -1,8 +1,8 @@
 ﻿import type { RouteObject } from "react-router-dom";
 import UserDashBoardPage from "@/user/domains/dashboard/pages/UserDashboardPage";
 import UserSessionsPage from "./domains/session/pages/UserSeesionPage";
-import UserSessionQuestionsPage from "./domains/session/pages/UserSessionQuestionsPage";
-import UserSessionQuestionCreatePage from "./domains/session/pages/UserSessionQuestionCreatePage";
+import UserSessionQuestionsPage from "./domains/session/pages/question/UserSessionQuestionsPage";
+import UserSessionQuestionCreatePage from "./domains/session/pages/question/UserSessionQuestionCreatePage";
 import SessionLayout from "./layouts/SessionLayout";
 import UserSessionSelect from "./domains/session/pages/UserSessionSelect";
 import UserSessionAssignments from "./domains/session/pages/UserSessionAssignments";
@@ -12,7 +12,7 @@ import UserSessionFilesPage from "./domains/session/pages/UserSessionFilesPage";
 import UserSessionFilesViewPage from "./domains/session/pages/UserSessionFilesViewPage";
 import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
 import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
-import NotificationPage from "./domains/notification/pages/NotificationPage";
+import UserNotificationPage from "./domains/notification/pages/NotificationPage";
 
 const userRoutes: RouteObject[] = [
   {
@@ -71,7 +71,7 @@ const userRoutes: RouteObject[] = [
 
   {
     path: "notification",
-    element: <NotificationPage />,
+    element: <UserNotificationPage />,
     handle: { title: "세션" },
   },
   {

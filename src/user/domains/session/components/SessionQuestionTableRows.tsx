@@ -7,9 +7,12 @@ interface SessionQuestionTableRowsProps {
   questions: SessionQuestionRow[];
 }
 
-function SessionQuestionTableRows({ isLoading, questions }: SessionQuestionTableRowsProps) {
+function SessionQuestionTableRows({
+  isLoading,
+  questions,
+}: SessionQuestionTableRowsProps) {
   return (
-    <div className="text-ec-black flex flex-col">
+    <div className="text-ec-black flex w-full flex-col">
       {isLoading && (
         <div className="flex animate-pulse gap-4 rounded-2xl px-4 py-4">
           <SkeletonCell className="ml-2 h-4 w-7" />
@@ -56,4 +59,3 @@ function SessionQuestionTableRows({ isLoading, questions }: SessionQuestionTable
 }
 
 export default SessionQuestionTableRows;
-
