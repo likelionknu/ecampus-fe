@@ -1,35 +1,19 @@
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+﻿import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import type { SessionQuestionRow } from "@/user/domains/session/types/SessionQuestionRow";
 import TableIcon from "../assets/tableIcon.png";
+import MobileItem from "./MobileItem";
 
-interface MobileQuestionsRowsProps {
+interface MobileQuestionsTableRowsProps {
   questions: SessionQuestionRow[];
-}
-
-interface MobileQuestionItemProps {
-  label: string;
-  value: string;
-  valueClassName?: string;
 }
 
 const sessionNameById: Record<number, string> = {
   14: "[14기] 아기사자 - 백엔드 파트",
 };
 
-function MobileQuestionItem({
-  label,
-  value,
-  valueClassName = "text-ec-sub",
-}: MobileQuestionItemProps) {
-  return (
-    <div className="flex gap-2">
-      <span className="text-caption text-ec-table-topic">{label}</span>
-      <span className={`text-caption ${valueClassName}`}>{value}</span>
-    </div>
-  );
-}
-
-function MobileQuestionsRows({ questions }: MobileQuestionsRowsProps) {
+function MobileQuestionsTableRows({
+  questions,
+}: MobileQuestionsTableRowsProps) {
   return (
     <div className="flex flex-col gap-3">
       {questions.map((question, index) => (
@@ -49,19 +33,19 @@ function MobileQuestionsRows({ questions }: MobileQuestionsRowsProps) {
           </div>
 
           <div className="mt-2 flex flex-wrap gap-4">
-            <MobileQuestionItem
+            <MobileItem
               label="질문자"
               value={question.createdUserName ?? "-"}
             />
-            <MobileQuestionItem
+            <MobileItem
               label="등록일"
               value={formatKoreanDateTime12(question.createdAt)}
             />
-            <MobileQuestionItem
+            <MobileItem
               label="답변자"
               value={question.answeredUserName ?? "-"}
             />
-            <MobileQuestionItem
+            <MobileItem
               label="상태"
               value={question.status}
               valueClassName={
@@ -75,4 +59,4 @@ function MobileQuestionsRows({ questions }: MobileQuestionsRowsProps) {
   );
 }
 
-export default MobileQuestionsRows;
+export default MobileQuestionsTableRows;

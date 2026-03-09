@@ -16,7 +16,7 @@ const VariantClasses: Record<ButtonVariant, string> = {
 const TypeClaseese: Record<ButtonSize, string> = {
   modal: "py-1.5 text-[12px]",
   primary: "px-4.25 py-2.25 text-[14px]",
-  large: "px-6 py-2.5 text-[15px]",
+  large: "px-6 py-2.5 xl:text-[15px] text-[14px]",
 };
 
 const Loading = () => {

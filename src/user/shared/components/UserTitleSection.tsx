@@ -1,5 +1,6 @@
 import Button from "@/shared/components/Button";
 import type { ButtonVariant } from "@/shared/types/Button";
+import { useMediaQuery } from "react-responsive";
 
 interface UserTitleAction {
   label: string;
@@ -22,13 +23,16 @@ const SubText = ({ children }: { children: React.ReactNode }) => {
 };
 
 function UserTitleSection({ title, subText, actions }: UserTitleSectionProps) {
+  const isMobile = useMediaQuery({ maxWidth: 479 });
+
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex justify-between">
+      <div className="flex flex-col justify-between gap-4 xl:flex-row xl:gap-0">
         <span className="text-title xl:text-large-title text-ec-black">
           {title}
         </span>
-        <div className="flex items-center gap-2.5">
+        {isMobile && <SubText>{subText}</SubText>}
+        <div className="flex flex-wrap items-center gap-2.5">
           {actions?.map((action, index) => (
             <Button
               key={`${action.label}-${index}`}
@@ -41,7 +45,7 @@ function UserTitleSection({ title, subText, actions }: UserTitleSectionProps) {
           ))}
         </div>
       </div>
-      {subText && <SubText>{subText}</SubText>}
+      {!isMobile && subText && <SubText>{subText}</SubText>}
     </div>
   );
 }

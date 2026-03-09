@@ -1,4 +1,4 @@
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import type { NotificationRow } from "../types/NotificationRow";
 
 interface NotificationTableRowsProps {
@@ -11,7 +11,7 @@ function NotificationTableRows({
   notifications,
 }: NotificationTableRowsProps) {
   return (
-    <div className="text-ec-black flex flex-col">
+    <div className="text-ec-black flex w-full flex-col">
       {isLoading && (
         <div className="flex animate-pulse items-center justify-between px-6 py-5">
           <SkeletonCell className="h-4 w-220" />
