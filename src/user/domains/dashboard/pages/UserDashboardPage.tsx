@@ -14,6 +14,7 @@ import DashboardModal from "../components/DashboardModal";
 function UserDashBoardPage() {
   const itemSumNum = 4;
   const itemNum = 18;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   interface DashboardMainComponentProps {
