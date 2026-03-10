@@ -2,7 +2,7 @@
 import Button from "@/shared/components/Button";
 import UserTitleSection from "@/user/shared/components/UserTitleSection";
 import BoxLayout from "@/user/shared/components/BoxLayout";
-import SessionQuestionWarning from "../../components/SessionQuestionWarning";
+import SessionQuestionWarning from "../../components/question/SessionQuestionWarning";
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
 

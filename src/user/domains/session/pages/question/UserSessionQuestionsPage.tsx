@@ -6,8 +6,8 @@ import {
   PageNationMenu,
 } from "@/shared/components/PageNation";
 import UserTitleSection from "../../../../shared/components/UserTitleSection";
-import SessionQuestionTableHeader from "../../components/SessionQuestionTableHeader";
-import SessionQuestionTableRows from "../../components/SessionQuestionTableRows";
+import SessionQuestionTableHeader from "../../components/question/SessionQuestionTableHeader";
+import SessionQuestionTableRows from "../../components/question/SessionQuestionTableRows";
 import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
 import { useMediaQuery } from "react-responsive";
 import SessionMobileQuestionTableRows from "../../components/question/SessionMobileQuestionTableRows";
@@ -116,37 +116,35 @@ function UserSessionQuestionsPage() {
         ]}
       />
 
-      <section>
-        <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-          {({ currentItems, startIndex }) => {
-            const pagedQuestions = mockQuestions.content.slice(
-              startIndex,
-              startIndex + currentItems.length,
-            );
+      <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
+        {({ currentItems, startIndex }) => {
+          const pagedQuestions = mockQuestions.content.slice(
+            startIndex,
+            startIndex + currentItems.length,
+          );
 
-            return (
-              <>
-                {!isTablet && (
-                  <PageNationMenu>
-                    <SessionQuestionTableHeader />
-                  </PageNationMenu>
-                )}
-                {pagedQuestions.length === 0 && !isLoading ? (
-                  <TableEmptyState label="등록된 세션 자료가 없어요." />
-                ) : isTablet ? (
-                  <SessionMobileQuestionTableRows questions={pagedQuestions} />
-                ) : (
-                  <SessionQuestionTableRows
-                    isLoading={isLoading}
-                    questions={pagedQuestions}
-                  />
-                )}
-                <PageNationButton />
-              </>
-            );
-          }}
-        </PageNationFrame>
-      </section>
+          return (
+            <>
+              {!isTablet && (
+                <PageNationMenu>
+                  <SessionQuestionTableHeader />
+                </PageNationMenu>
+              )}
+              {pagedQuestions.length === 0 && !isLoading ? (
+                <TableEmptyState label="등록된 세션 자료가 없어요." />
+              ) : isTablet ? (
+                <SessionMobileQuestionTableRows questions={pagedQuestions} />
+              ) : (
+                <SessionQuestionTableRows
+                  isLoading={isLoading}
+                  questions={pagedQuestions}
+                />
+              )}
+              <PageNationButton />
+            </>
+          );
+        }}
+      </PageNationFrame>
     </div>
   );
 }

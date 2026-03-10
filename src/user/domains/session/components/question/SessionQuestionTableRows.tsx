@@ -1,6 +1,6 @@
 ﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import type { SessionQuestionRow } from "../types/SessionQuestionRow";
+import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
 
 interface SessionQuestionTableRowsProps {
   isLoading: boolean;
