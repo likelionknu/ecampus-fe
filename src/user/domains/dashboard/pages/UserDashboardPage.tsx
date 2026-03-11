@@ -9,6 +9,9 @@ import { PageNationFrame } from "@shared/components/PageNation";
 import { PageNationItem } from "@shared/components/PageNation";
 import { PageNationMenu } from "@shared/components/PageNation";
 import { PageNationButton } from "@shared/components/PageNation";
+import { PageNationMobileFrame } from "@/shared/components/PageNationMobile";
+import { PageNationMobileItem } from "@/shared/components/PageNationMobile";
+import { PageNationMobileButton } from "@/shared/components/PageNationMobile";
 import DashboardModal from "../components/DashboardModal";
 
 import { useMediaQuery } from "react-responsive";
@@ -90,6 +93,33 @@ function UserDashBoardPage() {
     );
   };
 
+  type NotionMoblieComponentProps = {
+    title: string;
+    date: string;
+  };
+
+  const NotionMoblieComponent = ({
+    title,
+    date,
+  }: NotionMoblieComponentProps) => {
+    return (
+      <div className="flex flex-col justify-between gap-2.5 p-5">
+        <div className="text-ec-black line-clamp-1 w-80 justify-start text-sm font-medium">
+          {title}
+        </div>
+
+        <div className="flex items-center gap-2.5">
+          <div className="text-ec-sub line-clamp-1 justify-start text-xs font-medium">
+            작성일
+          </div>
+          <div className="text-ec-sub line-clamp-1 justify-start text-xs font-medium">
+            {date}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   interface MissAlartComponentProps {
     alartContent: string;
     alartStatus: string;
@@ -119,13 +149,13 @@ function UserDashBoardPage() {
 
   return (
     <>
-      <div className="flex h-full w-full items-center justify-center pb-5 min-[1024px]:scale-85 min-[1280px]:scale-100">
-        <div className="mt-16.5 flex h-full w-187.5 flex-col items-center lg:mt-0 lg:w-280">
+      <div className="flex h-full w-full items-center justify-center min-[1024px]:scale-85 min-[1280px]:scale-100">
+        <div className="mt-16.5 flex h-full max-w-87.5 flex-col items-center md:max-w-187.5 md:px-0 lg:mt-0 lg:max-w-280">
           <div className="text-ec-black w-full justify-start py-7.5 text-2xl font-semibold lg:text-3xl">
             환영해요!
           </div>
 
-          <div className="flex h-47 w-full flex-wrap justify-between lg:h-21.5 lg:items-center">
+          <div className="flex h-93.5 w-full flex-wrap justify-between md:h-47 lg:h-21.5 lg:items-center">
             <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109">
               <div className="flex items-center gap-5">
                 <img
@@ -172,7 +202,35 @@ function UserDashBoardPage() {
           </div>
           <DashboardMainTitle title="최근 공지사항을 확인하세요" />
           {isTablet ? (
-            <></>
+            <>
+              <PageNationMobileFrame>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+              </PageNationMobileFrame>
+              <PageNationMobileButton />
+            </>
           ) : (
             <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
               {({ currentItems, startIndex }) => (
@@ -212,7 +270,35 @@ function UserDashBoardPage() {
           <DashboardMainTitle title="놓친 알림이 없는지 확인하세요" />
 
           {isTablet ? (
-            <></>
+            <>
+              <PageNationMobileFrame>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+                <PageNationMobileItem>
+                  <NotionMoblieComponent
+                    title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
+                    date="2026년 2월 14일 오전 12시 38분"
+                  />
+                </PageNationMobileItem>
+              </PageNationMobileFrame>
+              <PageNationMobileButton />
+            </>
           ) : (
             <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
               {({ currentItems, startIndex }) => (

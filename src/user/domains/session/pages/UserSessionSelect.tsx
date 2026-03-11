@@ -45,16 +45,16 @@ const UserSessionSelect = () => {
 
   return (
     <div className="flex h-full w-full items-center justify-center pb-50 lg:scale-85 xl:scale-100">
-      <div className="mt-24 flex h-full w-187.5 flex-col items-center lg:mt-0 lg:w-280">
+      <div className="mt-24 flex h-full w-88 flex-col items-center md:w-187.5 lg:mt-0 lg:w-280">
         <div className="flex w-full flex-col gap-3.75 pt-0 lg:pt-7.5">
-          <div className="text-ec-black justify-start self-stretch text-3xl font-semibold">
+          <div className="text-EC-BLACK justify-start text-2xl font-semibold md:text-3xl">
             사용할 수 있는 세션(2)
           </div>
-          <div className="text-ec-sub justify-start self-stretch text-base font-medium">
+          <div className="text-ec-sub justify-start self-stretch text-sm font-medium md:text-base">
             내가 추가된 세션만 확인할 수 있어요
           </div>
         </div>
-        <div className="flex w-187.5 flex-wrap justify-between pt-8.25 lg:w-full xl:gap-11.75">
+        <div className="flex w-full flex-wrap justify-between pt-8.25 md:w-187.5 lg:w-full xl:gap-11.75">
           {sessionItems.map((item, index) => (
             <SelectSessionItem
               key={`${item.sessionTitle}-${index}`}

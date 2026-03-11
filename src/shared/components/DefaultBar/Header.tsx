@@ -67,9 +67,9 @@ function Header() {
   return (
     <>
       {isTablet ? (
-        <div className="fixed top-0 left-0 z-60 w-full">
+        <div className="fixed top-0 left-0 z-60 h-16.25 w-full">
           <div
-            className={`fixed inset-0 top-16.25 z-40 bg-black/20 backdrop-blur-[3px] transition-opacity duration-300 ${
+            className={`fixed inset-0 top-16.25 z-40 bg-black/20 backdrop-blur-[3px] transition-opacity duration-0 ${
               isMobileMenuOpen ? "opacity-100" : "pointer-events-none opacity-0"
             }`}
             onClick={() => setIsMobileMenuOpen(false)}
@@ -97,8 +97,8 @@ function Header() {
           <div
             className={`bg-ec-white border-ec-outline rounded-br-ec-10 rounded-bl-ec-10 relative top-16.25 z-50 w-full overflow-hidden border-r border-b border-l transition-all duration-500 ${
               isMobileMenuOpen
-                ? "opacity-100"
-                : "pointer-events-none -translate-y-full opacity-100"
+                ? "translate-y-0 opacity-100"
+                : "pointer-events-none -translate-y-full opacity-0"
             }`}
           >
             <div className="flex flex-col gap-3.75 px-6 py-5.5">
