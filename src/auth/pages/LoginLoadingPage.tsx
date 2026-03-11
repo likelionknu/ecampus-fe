@@ -1,6 +1,6 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import NavLogo from "@shared/assets/NavLogo.png";
-import { Link } from "react-router-dom";
+import LegalFooter from "@shared/components/LegalFooter";
 
 function LoginLoadingIllustration() {
   return (
@@ -18,16 +18,10 @@ function LoginLoadingPage() {
     <main className="bg-ec-white relative min-h-screen overflow-x-clip">
       <div
         aria-hidden="true"
-        className="bg-ec-blue-item pointer-events-none absolute inset-y-0 left-0 hidden lg:block"
-        style={{ width: "max(calc((100vw - 90rem) / 2), 0px)" }}
+        className="from-ec-blue-item to-ec-blue-item/40 pointer-events-none fixed inset-y-0 left-0 hidden w-223.5 bg-linear-to-r lg:block"
       />
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-360">
-        <div
-          aria-hidden="true"
-          className="from-ec-blue-item to-ec-blue-item/40 hidden flex-1 bg-linear-to-r lg:block"
-        />
-
-        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:w-136.5 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-360 lg:pr-136.5">
+        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:fixed lg:top-0 lg:left-223.5 lg:z-10 lg:h-190 lg:w-136.5 lg:px-13.75 lg:pt-15 lg:pb-12.5">
           <div className="flex items-center gap-4">
             <img
               src={NavLogo}
@@ -48,17 +42,7 @@ function LoginLoadingPage() {
               페이지를 이동하지 말고 기다려주세요
             </p>
           </div>
-          <footer className="fixed right-8 bottom-8 z-20 flex flex-col items-end gap-2">
-            <Link
-              to="/privacy-policy"
-              className="typo-caption text-ec-blue transition-opacity hover:underline hover:opacity-80"
-            >
-              개인정보 처리방침
-            </Link>
-            <p className="typo-caption text-ec-sub">
-              LIKELION KNU 2026. 모든 권리 보유.
-            </p>
-          </footer>
+          <LegalFooter />
         </section>
       </div>
     </main>
