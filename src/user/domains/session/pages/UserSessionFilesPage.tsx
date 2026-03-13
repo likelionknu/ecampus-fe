@@ -54,6 +54,7 @@ const mockfiles = [
 ];
 
 function UserSessionFilesPage() {
+  const isLoading = true;
   return (
     <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
       <UserTitleSection title="자료" subText="이 세션에 추가된 자료에요" />
@@ -62,7 +63,7 @@ function UserSessionFilesPage() {
           <FilesTableHeader />
         </div>
         {/* <TableEmptyState label="등록된 세션 자료가 없어요." /> */}
-        <FilesTableRow files={mockfiles} />
+        <FilesTableRow files={mockfiles} isLoading={isLoading} />
       </section>
     </div>
   );
