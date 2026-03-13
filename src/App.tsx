@@ -12,6 +12,7 @@ import ErrorPage from "@shared/pages/ErrorPage";
 import MaintenancePage from "@shared/pages/MaintenancePage";
 import PreparingPage from "@shared/pages/PreparingPage";
 import PrivacyPolicyPage from "@shared/pages/PrivacyPolicyPage";
+import ScreenSizeErrorPage from "@shared/pages/ScreenSizeErrorPage";
 import UserRoutes from "@user/UserRoutes";
 import TestPage from "./shared/pages/TestPage";
 
@@ -49,6 +50,11 @@ const router = createBrowserRouter([
     path: "/privacy-policy",
     element: <PrivacyPolicyPage />,
     handle: { title: "Privacy Policy" },
+  },
+  {
+    path: "/screen-size-error",
+    element: <ScreenSizeErrorPage />,
+    handle: { title: "화면 크기 에러 페이지" },
   },
   {
     path: "/user",

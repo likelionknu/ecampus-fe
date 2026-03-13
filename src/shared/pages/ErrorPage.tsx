@@ -11,19 +11,59 @@ function ErrorPage() {
         className="from-ec-blue-item to-ec-blue-item/40 pointer-events-none fixed inset-y-0 left-0 hidden w-224.25 bg-linear-to-r lg:block"
       />
       <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-360 lg:pr-135.75">
-        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:fixed lg:top-0 lg:left-224.25 lg:z-10 lg:h-190 lg:w-135.75 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+        {/*모바일*/}
+        <section className="relative flex min-h-screen w-full flex-col px-6 pt-14 pb-8 sm:px-14 sm:pt-16 lg:hidden">
+          {/*모바일 로고*/}
+          <div className="flex items-center gap-2.5 sm:gap-4">
+            <img
+              src={NavLogo}
+              alt="LIKELION KNU 로고"
+              className="h-6 w-4 shrink-0 brightness-0 sm:h-9 sm:w-6"
+            />
+            <span className="text-ec-black tracking-ec-tight text-[19px] leading-none font-semibold sm:text-3xl">
+              LIKELION KNU
+            </span>
+          </div>
+
+          {/*모바일 내용*/}
+          <div className="mt-14">
+            <h1 className="text-ec-black font-pretendard text-[24px]/[1.35] font-semibold tracking-ec-normal">
+              페이지를 찾을 수 없어요
+            </h1>
+            <p className="text-ec-sub font-pretendard mt-4 text-[14px]/[1.57] font-medium tracking-ec-normal">
+              찾고 있는 페이지를 찾을 수 없거나, 일시적으로 사용할 수 없어요
+            </p>
+
+            <Link
+              to="/user/dashboard"
+              className="bg-ec-blue text-ec-gnb-white rounded-xl font-pretendard focus-visible:outline-ec-blue hover:bg-ec-blue-item mt-10 inline-flex h-10 items-center justify-center px-6 text-[14px]/[20px] font-medium tracking-ec-normal transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              대시보드로 돌아가기
+            </Link>
+          </div>
+
+          {/*모바일 푸터*/}
+          <div className="mt-auto flex justify-end pt-20">
+            <p className="typo-caption text-ec-sub text-right">
+              LIKELION KNU 2026. 모든 권리 보유.
+            </p>
+          </div>
+        </section>
+
+        {/*웹*/}
+        <section className="relative hidden w-full flex-col lg:fixed lg:top-0 lg:left-224.25 lg:z-10 lg:flex lg:h-190 lg:w-135.75 lg:px-13.75 lg:pt-15 lg:pb-12.5">
           <div className="flex items-center gap-4">
             <img
               src={NavLogo}
               alt="LIKELION KNU 로고"
               className="h-9 w-6 shrink-0 brightness-0"
             />
-            <span className="text-ec-black tracking-ec-tight text-3xl leading-none font-semibold sm:text-[44px]">
+            <span className="text-ec-black tracking-ec-tight text-[44px] leading-none font-semibold">
               LIKELION KNU
             </span>
           </div>
 
-          <div className="mt-14 lg:mt-21.5">
+          <div className="mt-21.5">
             <h1 className="typo-title text-ec-black">
               페이지를 찾을 수 없어요
             </h1>
