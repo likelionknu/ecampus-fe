@@ -99,7 +99,6 @@ function UserSessionQuestionsPage() {
   const itemSumNum = 4;
   const itemNum = mockQuestions.totalElements;
   const isLoading = false;
-  // const isMobile = useMediaQuery({ maxWidth: 479 });
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   return (
@@ -150,4 +149,3 @@ function UserSessionQuestionsPage() {
 }
 
 export default UserSessionQuestionsPage;
-
