@@ -27,12 +27,12 @@ const SelectBox: React.FC<SelectBoxProps> = ({
       {/* 선택된 값 */}
       <button
         type="button"
-        className="bg-ec-box rounded-ec-10 flex h-11 w-full items-center justify-between px-3.5"
+        className="bg-ec-box rounded-ec-10 flex h-11 w-full cursor-pointer items-center justify-between px-3.5"
         onClick={() => setIsOpen((prev) => !prev)}
       >
         <span
           className={`text-sm font-medium ${
-            isOpen ? "text-ec-black" : "text-ec-sub"
+            selected === "전체" ? "text-ec-sub" : "text-ec-black"
           }`}
         >
           {selected}

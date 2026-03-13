@@ -1,9 +1,8 @@
-﻿import type { RouteObject } from "react-router-dom";
+import type { RouteObject } from "react-router-dom";
+import SessionTabLayout from "@shared/layouts/SessionTabLayout";
 import UserDashBoardPage from "@/user/domains/dashboard/pages/UserDashboardPage";
-import UserSessionsPage from "./domains/session/pages/UserSeesionPage";
 import UserSessionQuestionsPage from "./domains/session/pages/question/UserSessionQuestionsPage";
 import UserSessionQuestionCreatePage from "./domains/session/pages/question/UserSessionQuestionCreatePage";
-import SessionLayout from "./layouts/SessionLayout";
 import UserSessionSelect from "./domains/session/pages/UserSessionSelect";
 import UserSessionAssignments from "./domains/session/pages/UserSessionAssignments";
 import UserSessionAssignmentsView from "./domains/session/pages/UserSessionAssignmentsView";
@@ -23,17 +22,12 @@ const userRoutes: RouteObject[] = [
   // 쓰레기 경로
   {
     path: "sessions",
-    element: <UserSessionsPage />,
-    handle: { title: "세션" },
-  },
-  {
-    path: "sessions/select",
     element: <UserSessionSelect />,
     handle: { title: "세션" },
   },
   {
     path: "sessions/files",
-    element: <SessionLayout />,
+    element: <SessionTabLayout tabType="userSession" />,
     children: [
       { index: true, element: <UserSessionFilesPage /> },
       // path: "files/:id",
@@ -42,7 +36,7 @@ const userRoutes: RouteObject[] = [
   },
   {
     path: "sessions/assignments",
-    element: <SessionLayout />,
+    element: <SessionTabLayout tabType="userSession" />,
     children: [
       { index: true, element: <UserSessionAssignments /> },
       // path: "assignments/:id",
@@ -51,7 +45,7 @@ const userRoutes: RouteObject[] = [
   },
   {
     path: "sessions/questions",
-    element: <SessionLayout />,
+    element: <SessionTabLayout tabType="userSession" />,
     children: [
       { index: true, element: <UserSessionQuestionsPage /> },
       // path: "sessions/questions/:id",
@@ -65,7 +59,7 @@ const userRoutes: RouteObject[] = [
   },
   {
     path: "sessions/group",
-    element: <SessionLayout />,
+    element: <SessionTabLayout tabType="userSession" />,
     children: [{ index: true, element: <UserSessionGroupPage /> }],
   },
 

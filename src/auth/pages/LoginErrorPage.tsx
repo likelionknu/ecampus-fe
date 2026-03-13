@@ -59,21 +59,21 @@ function LoginErrorPage() {
           <div className="mt-10">
             <div
               role="alert"
-              className="border-ec-red text-ec-red rounded-xl flex h-12 w-full items-center border px-3.5 text-[14px]/[20px] font-medium tracking-ec-normal"
+              className="border-ec-red text-ec-red tracking-ec-normal flex h-12 w-full items-center rounded-xl border px-3.5 text-[14px]/[20px] font-medium"
             >
               {errorMessage}
             </div>
 
-            <h1 className="text-ec-black font-pretendard mt-5 text-[24px]/[1.35] font-semibold tracking-ec-normal">
+            <h1 className="text-ec-black font-pretendard tracking-ec-normal mt-5 text-[24px]/[1.35] font-semibold">
               다시 돌아온 걸 환영해요!
             </h1>
-            <p className="text-ec-sub font-pretendard mt-5 text-[14px]/[1.57] font-medium tracking-ec-normal">
+            <p className="text-ec-sub font-pretendard tracking-ec-normal mt-5 text-[14px]/[1.57] font-medium">
               멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
             </p>
 
             <button
               type="button"
-              className="text-ec-blue border-ec-blue bg-ec-white rounded-xl font-pretendard hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue mt-10 inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 border text-[14px]/[20px] font-medium tracking-ec-normal transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="text-ec-blue border-ec-blue bg-ec-white font-pretendard hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue tracking-ec-normal mt-10 inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border text-[14px]/[20px] font-medium transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
             >
               <GoogleIcon />
               <span>구글 계정으로 시작하기</span>
