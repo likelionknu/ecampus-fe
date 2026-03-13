@@ -8,6 +8,7 @@ import {
 } from "@/user/utils/assignment";
 import Button from "@/shared/components/Button";
 import AssignmentMetaRow from "../components/AssignmentsMetaRow";
+import { useMediaQuery } from "react-responsive";
 interface AssignmentDetail {
   startAt: string;
   endAt: string;
@@ -68,17 +69,21 @@ const questionMetaRows = [
 ] as const;
 
 function UserSessionAssignmentsView() {
+  const isTablet = useMediaQuery({ maxWidth: 1024 });
   return (
     <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
       <UserTitleSection title={mockAssignment.description} />
 
       <TextBox>
-        <div className="flex flex-col gap-2">
-          {questionMetaRows.map((row) => (
+        <div className="flex flex-col">
+          {questionMetaRows.map((row, index) => (
             <AssignmentMetaRow
               key={row.label}
               label={row.label}
               value={row.value}
+              className={`px-2 py-1 ${
+                isTablet && index % 2 === 1 ? "bg-ec-box" : ""
+              }`}
             />
           ))}
         </div>

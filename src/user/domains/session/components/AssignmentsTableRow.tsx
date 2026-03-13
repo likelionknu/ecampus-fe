@@ -44,7 +44,7 @@ function AssignmentsTableRow({
         <div
           key={assignment.id}
           className={`flex items-center px-8 py-4 ${
-            index % 2 === 1 ? "bg-ec-box" : ""
+            index % 2 === 1 ? "bg-ec-table-header" : ""
           }`}
         >
           <div
