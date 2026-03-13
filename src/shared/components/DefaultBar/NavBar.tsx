@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import NavLogo from "@shared/assets/NavLogo.png";
 import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";
@@ -53,7 +53,14 @@ const NavItems = ({
 };
 
 const NavBar = () => {
-  const [selected, setSelected] = useState<string>("세션");
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const pathSegments = pathname.split("/").filter(Boolean);
+  const currentSection = pathSegments[1] ?? "";
+
+  const isSessionSelected = currentSection === "sessions";
+  const isNotificationSelected = currentSection === "notification";
+  const isQuestionSelected = currentSection === "questions";
 
   return (
     <div className="bg-ec-blue sticky top-0 flex h-screen min-h-screen w-21.5">
@@ -65,29 +72,28 @@ const NavBar = () => {
               iconSrc={NavSession}
               iconAlt="NavSession"
               label="세션"
-              selected={selected === "세션"}
-              onClick={() => setSelected("세션")}
+              selected={isSessionSelected}
+              onClick={() => navigate("/user/sessions")}
             />
             <NavItems
               iconSrc={NavGroup}
               iconAlt="NavGroup"
               label="그룹"
-              selected={selected === "그룹"}
-              onClick={() => setSelected("그룹")}
+              selected={false}
             />
             <NavItems
               iconSrc={NavAlart}
               iconAlt="NavAlart"
               label="알림"
-              selected={selected === "알림"}
-              onClick={() => setSelected("알림")}
+              selected={isNotificationSelected}
+              onClick={() => navigate("/user/notification")}
             />
             <NavItems
               iconSrc={NavQuestion}
               iconAlt="NavQuestion"
               label="질문"
-              selected={selected === "질문"}
-              onClick={() => setSelected("질문")}
+              selected={isQuestionSelected}
+              onClick={() => navigate("/user/questions")}
             />
           </div>
         </div>

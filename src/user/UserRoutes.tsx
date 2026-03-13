@@ -66,7 +66,7 @@ const userRoutes: RouteObject[] = [
   {
     path: "notification",
     element: <UserNotificationPage />,
-    handle: { title: "세션" },
+    handle: { title: "알림" },
   },
   {
     path: "questions",

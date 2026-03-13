@@ -61,7 +61,7 @@ function UserQuestionDetailPage() {
 
   return (
     <div
-      className={`${shouldShowDeleteButton ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 pt-7 pb-120 xl:mx-0 xl:max-w-280`}
+      className={`${shouldShowDeleteButton ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280`}
     >
       <div className="flex flex-col gap-5">
         <UserTitleSection
