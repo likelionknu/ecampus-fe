@@ -61,7 +61,7 @@ function UserSessionQuestionCreatePage() {
   });
   const isMobile = useMediaQuery({ maxWidth: 479 });
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 xl:mx-0 xl:max-w-251 xl:px-8">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:mx-0 md:max-w-187.5 md:px-8 xl:max-w-251">
       {/* <Modal>
         <Modal.Header>새 질문 등록</Modal.Header>
         <Modal.Description>

@@ -11,13 +11,13 @@ function QuestionCommentItem({ isMy }: { isMy?: boolean }) {
     <div className="border-ec-outline border-b px-4 py-2 xl:px-0">
       <div className="font-pretendard flex justify-between">
         <div className="flex gap-2">
-          {isMy && <CommentStatus />}
           <span className="text-ec-black tracking-ec-normal text-[14px]/[23px] font-medium">
             김찬주
           </span>
           <span className="text-ec-disable tracking-ec-normal text-[14px]/[23px] font-medium">
             3일전
           </span>
+          {isMy && <CommentStatus />}
         </div>
         {isMy && (
           <span className="text-ec-red tracking-ec-normal cursor-pointer text-[14px]/[23px] font-medium">

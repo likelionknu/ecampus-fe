@@ -52,7 +52,7 @@ function UserNotificationPage() {
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 xl:mx-0 xl:ml-30 xl:max-w-280">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-280 xl:mx-0 xl:ml-30">
       <UserTitleSection
         title="알림"
         subText="최근 받은 알림을 확인해보세요"
