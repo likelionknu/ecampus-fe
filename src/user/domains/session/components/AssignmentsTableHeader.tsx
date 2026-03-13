@@ -1,6 +1,6 @@
 import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
 
-const ASSIGNMENTS_TABLE_COLUMNS = "52px minmax(0,1fr) 208px 72px 56px";
+const ASSIGNMENTS_TABLE_COLUMNS = "80px 420px 208px 72px 56px";
 
 function AssignmentsTableHeader() {
   return (

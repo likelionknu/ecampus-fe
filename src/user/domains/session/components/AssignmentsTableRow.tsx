@@ -1,3 +1,4 @@
+import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatDateTime } from "@/shared/utils/date";
 
 const ASSIGNMENTS_TABLE_COLUMNS = "52px minmax(0,1fr) 208px 72px 56px";
@@ -12,6 +13,7 @@ interface AssignmentRow {
 
 interface AssignmentsTableRowProps {
   assignments: readonly AssignmentRow[];
+  isLoading: boolean;
 }
 
 const ASSIGNMENT_STATUS_MAP: Record<string, string> = {
@@ -23,9 +25,21 @@ const ASSIGNMENT_EVALUATE_MAP: Record<string, string> = {
   FAIL: "-",
 };
 
-function AssignmentsTableRow({ assignments }: AssignmentsTableRowProps) {
+function AssignmentsTableRow({
+  assignments,
+  isLoading,
+}: AssignmentsTableRowProps) {
   return (
     <div className="flex flex-col">
+      {isLoading && (
+        <div className="flex animate-pulse gap-4 rounded-2xl px-4 py-4">
+          <SkeletonCell className="ml-2 h-4 w-7" />
+          <SkeletonCell className="h-4 w-121" />
+          <SkeletonCell className="h-4 w-46" />
+          <SkeletonCell className="h-4 w-20" />
+          <SkeletonCell className="h-4 w-20" />
+        </div>
+      )}
       {assignments.map((assignment, index) => (
         <div
           key={assignment.id}
