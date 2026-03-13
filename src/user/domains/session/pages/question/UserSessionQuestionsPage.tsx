@@ -1,9 +1,16 @@
 ﻿import { useNavigate } from "react-router-dom";
 import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import UserTitleSection from "../../../shared/components/UserTitleSection";
-import SessionQuestionTableHeader from "../components/SessionQuestionTableHeader";
-import SessionQuestionTableRows from "../components/SessionQuestionTableRows";
-import type { SessionQuestionRow } from "../types/SessionQuestionRow";
+import {
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+} from "@/shared/components/PageNation";
+import UserTitleSection from "../../../../shared/components/UserTitleSection";
+import SessionQuestionTableHeader from "../../components/question/SessionQuestionTableHeader";
+import SessionQuestionTableRows from "../../components/question/SessionQuestionTableRows";
+import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
+import { useMediaQuery } from "react-responsive";
+import SessionMobileQuestionTableRows from "../../components/question/SessionMobileQuestionTableRows";
 
 const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
   {
@@ -89,10 +96,14 @@ const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
 
 function UserSessionQuestionsPage() {
   const navigate = useNavigate();
-  const isLoading = true;
+  const itemSumNum = 4;
+  const itemNum = mockQuestions.totalElements;
+  const isLoading = false;
+  // const isMobile = useMediaQuery({ maxWidth: 479 });
+  const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   return (
-    <div className="text-ec-black flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 md:max-w-187.5 xl:mx-0 xl:max-w-251 xl:px-8">
       <UserTitleSection
         title={`질문 및 답변(${mockQuestions.totalElements})`}
         subText="궁금한 내용이 있다면 질문하고, 답변받을 수 있어요"
@@ -105,17 +116,35 @@ function UserSessionQuestionsPage() {
         ]}
       />
 
-      <section>
-        <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
-          <SessionQuestionTableHeader />
-        </div>
-        <TableEmptyState label="등록된 세션 자료가 없어요." />
+      <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
+        {({ currentItems, startIndex }) => {
+          const pagedQuestions = mockQuestions.content.slice(
+            startIndex,
+            startIndex + currentItems.length,
+          );
 
-        <SessionQuestionTableRows
-          isLoading={isLoading}
-          questions={mockQuestions.content}
-        />
-      </section>
+          return (
+            <>
+              {!isTablet && (
+                <PageNationMenu>
+                  <SessionQuestionTableHeader />
+                </PageNationMenu>
+              )}
+              {pagedQuestions.length === 0 && !isLoading ? (
+                <TableEmptyState label="등록된 세션 자료가 없어요." />
+              ) : isTablet ? (
+                <SessionMobileQuestionTableRows questions={pagedQuestions} />
+              ) : (
+                <SessionQuestionTableRows
+                  isLoading={isLoading}
+                  questions={pagedQuestions}
+                />
+              )}
+              <PageNationButton />
+            </>
+          );
+        }}
+      </PageNationFrame>
     </div>
   );
 }

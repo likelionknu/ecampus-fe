@@ -1,11 +1,18 @@
+﻿import { useMediaQuery } from "react-responsive";
+import {
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+} from "@/shared/components/PageNation";
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import UserTitleSection from "@/user/shared/components/UserTitleSection";
+import MobileNotifitcationTableRows from "../components/MobileNotificationTableRows";
 import NotificationTableHeader from "../components/NotificationTableHeader";
 import NotificationTableRows from "../components/NotificationTableRows";
 import type { NotificationRow } from "../types/NotificationRow";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
 
 const notificationContent =
-  "[14기] 아기사자 - 백엔드 파트 세션에 새로운 자료 업로드 됨";
+  "[14기] 아기사자 - 백엔드 파트 세션에 새로운 자료가 업로드되었어요";
 
 const mockNotifications: NotificationRow[] = [
   {
@@ -38,11 +45,14 @@ const mockNotifications: NotificationRow[] = [
   { id: 8, content: notificationContent, status: "읽음", receivedAt: "3일 전" },
 ];
 
-function NotificationPage() {
-  const isLoading = true;
+function UserNotificationPage() {
+  const itemSumNum = 8;
+  const itemNum = mockNotifications.length;
+  const isLoading = false;
+  const isMobile = useMediaQuery({ maxWidth: 479 });
 
   return (
-    <div className="text-ec-black flex w-full flex-col gap-5 px-30 pt-7 pb-120">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 xl:mx-0 xl:ml-30 xl:max-w-280">
       <UserTitleSection
         title="알림"
         subText="최근 받은 알림을 확인해보세요"
@@ -65,19 +75,40 @@ function NotificationPage() {
         ]}
       />
 
-      <section className="w-280">
-        <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex items-center justify-between px-8 py-4">
-          <NotificationTableHeader />
-        </div>
-        <TableEmptyState label="받은 알림이 없어요" />
+      <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
+        {({ currentItems, startIndex }) => {
+          const pagedNotifications = mockNotifications.slice(
+            startIndex,
+            startIndex + currentItems.length,
+          );
 
-        <NotificationTableRows
-          isLoading={isLoading}
-          notifications={mockNotifications}
-        />
-      </section>
+          return (
+            <>
+              {!isMobile && (
+                <PageNationMenu>
+                  <NotificationTableHeader />
+                </PageNationMenu>
+              )}
+
+              {pagedNotifications.length === 0 && !isLoading ? (
+                <TableEmptyState label="받은 알림이 없어요" />
+              ) : isMobile ? (
+                <MobileNotifitcationTableRows
+                  notifications={pagedNotifications}
+                />
+              ) : (
+                <NotificationTableRows
+                  isLoading={isLoading}
+                  notifications={pagedNotifications}
+                />
+              )}
+              <PageNationButton />
+            </>
+          );
+        }}
+      </PageNationFrame>
     </div>
   );
 }
 
-export default NotificationPage;
+export default UserNotificationPage;
