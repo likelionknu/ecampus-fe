@@ -4,6 +4,13 @@ import UserTitleSection from "@/user/shared/components/UserTitleSection";
 import GroupTableHeader from "../components/GroupTableHeader";
 import SerachBar from "@/shared/components/SerachBar";
 import GroupTableRow from "../components/GroupTableRow";
+import {
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+} from "@/shared/components/PageNation";
+import { useMediaQuery } from "react-responsive";
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
 interface MockQuestion {
   course: number;
   name: string;
@@ -13,25 +20,25 @@ interface MockQuestion {
 
 const mockGroups: MockQuestion[] = [
   {
-    course: 14,
+    course: 1,
     name: "김진영",
     part: "BACKEND",
     email: "kim@test.com",
   },
   {
-    course: 13,
+    course: 2,
     name: "박김철",
     part: "BACKEND",
     email: "park@test.com",
   },
   {
-    course: 14,
+    course: 3,
     name: "김진영",
     part: "BACKEND",
     email: "kim@test.com",
   },
   {
-    course: 13,
+    course: 4,
     name: "박김철",
     part: "BACKEND",
     email: "park@test.com",
@@ -39,6 +46,10 @@ const mockGroups: MockQuestion[] = [
 ];
 function UserSessionGroupPage() {
   const [search, setSearch] = useState("");
+  const itemNum = 5;
+  const itemSumNum = mockGroups.length;
+  const isLoading = true;
+  const isTablet = useMediaQuery({ maxWidth: 768 });
 
   return (
     <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
@@ -53,13 +64,29 @@ function UserSessionGroupPage() {
           placeholder="사용자 이름으로 검색"
         />
       </div>
-      <section>
-        <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
-          <GroupTableHeader />
-        </div>
-        {/* <TableEmptyState label="등록된 사용자가 없어요." /> */}
-        <GroupTableRow users={mockGroups} />
-      </section>
+      <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
+        {({ currentItems, startIndex }) => {
+          const pageGroups = mockGroups.slice(
+            startIndex,
+            startIndex + currentItems.length,
+          );
+          return (
+            <>
+              {!isTablet && (
+                <PageNationMenu>
+                  <GroupTableHeader />
+                </PageNationMenu>
+              )}
+              {pageGroups.length === 0 && !isLoading ? (
+                <TableEmptyState label="등록된 사용자가 없어요." />
+              ) : (
+                <GroupTableRow isLoading={isLoading} users={pageGroups} />
+              )}
+              <PageNationButton />
+            </>
+          );
+        }}
+      </PageNationFrame>
     </div>
   );
 }
