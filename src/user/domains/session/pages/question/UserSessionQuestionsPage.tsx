@@ -5,7 +5,7 @@ import {
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import UserTitleSection from "../../../../shared/components/UserTitleSection";
+import TitleSection from "@/shared/components/TitleSection";
 import SessionQuestionTableHeader from "../../components/question/SessionQuestionTableHeader";
 import SessionQuestionTableRows from "../../components/question/SessionQuestionTableRows";
 import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
@@ -99,12 +99,11 @@ function UserSessionQuestionsPage() {
   const itemSumNum = 4;
   const itemNum = mockQuestions.totalElements;
   const isLoading = false;
-  // const isMobile = useMediaQuery({ maxWidth: 479 });
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 md:max-w-187.5 xl:mx-0 xl:max-w-251 xl:px-8">
-      <UserTitleSection
+      <TitleSection
         title={`질문 및 답변(${mockQuestions.totalElements})`}
         subText="궁금한 내용이 있다면 질문하고, 답변받을 수 있어요"
         actions={[

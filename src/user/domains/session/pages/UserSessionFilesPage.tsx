@@ -1,21 +1,21 @@
-// import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
-import FilesTableHeader from "../components/FilesTableHeader";
-import FilesTableRow from "../components/FilesTableRow";
+import { useMediaQuery } from "react-responsive";
+import TitleSection from "@/shared/components/TitleSection";
 import {
   PageNationButton,
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import { useMediaQuery } from "react-responsive";
 import TableEmptyState from "@/shared/components/table/TableEmptyState";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import FilesTableHeader from "../components/FilesTableHeader";
+import FilesTableRow from "../components/FilesTableRow";
 import ListBoxMobile from "../components/application/ListBoxMobile";
 import { InfoMobile } from "../components/application/InfoMobile";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-const mockfiles = [
+
+const mockFiles = [
   {
     id: 2,
-    name: "테스트트트 자료 1테스트트트 자료 1테스트트트 자료 1테스트트트 자료 1테스트트트 자료 1테스트트트 자료 1",
+    name: "테스트 자료 1",
     createdAt: "2026-02-28T16:00:00.111111",
     createdBy: "한종민",
   },
@@ -33,31 +33,31 @@ const mockfiles = [
   },
   {
     id: 5,
-    name: "테스트 4",
+    name: "테스트 자료 4",
     createdAt: "2026-02-28T16:00:00.111111",
     createdBy: "한종민",
   },
   {
     id: 6,
-    name: "테스트 5",
+    name: "테스트 자료 5",
     createdAt: "2026-02-28T16:00:00.111111",
     createdBy: "한종민",
   },
   {
     id: 7,
-    name: "테스트 6",
+    name: "테스트 자료 6",
     createdAt: "2026-02-28T16:00:00.111111",
     createdBy: "한종민",
   },
   {
     id: 8,
-    name: "테스트 7",
+    name: "테스트 자료 7",
     createdAt: "2026-02-28T16:00:00.111111",
     createdBy: "한종민",
   },
   {
     id: 9,
-    name: "테스트 8",
+    name: "테스트 자료 8",
     createdAt: "2026-02-28T16:00:00.111111",
     createdBy: "한종민",
   },
@@ -66,15 +66,16 @@ const mockfiles = [
 function UserSessionFilesPage() {
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 764 });
-  const itemNum = mockfiles.length;
+  const itemNum = mockFiles.length;
   const itemSumNum = 8;
   const isLoading = true;
+
   return (
     <div className="mx-auto flex w-full max-w-251 flex-col gap-5 px-4 pt-7 md:px-8">
-      <UserTitleSection title="자료" subText="이 세션에 추가된 자료에요" />
+      <TitleSection title="자료" subText="이 세션에 추가된 자료예요" />
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
-          const pageFiles = mockfiles.slice(
+          const pageFiles = mockFiles.slice(
             startIndex,
             startIndex + currentItems.length,
           );
@@ -88,7 +89,7 @@ function UserSessionFilesPage() {
               )}
 
               {pageFiles.length === 0 && !isLoading ? (
-                <TableEmptyState label="등록된 세션 자료가 없어요." />
+                <TableEmptyState label="등록된 세션 자료가 없어요" />
               ) : !isTablet ? (
                 <FilesTableRow files={pageFiles} isLoading={isLoading} />
               ) : (

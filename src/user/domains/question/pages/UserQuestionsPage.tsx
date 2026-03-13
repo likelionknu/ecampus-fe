@@ -6,7 +6,7 @@ import {
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
+import TitleSection from "@/shared/components/TitleSection";
 import MobileQuestionsTableRows from "@/user/domains/question/components/MobileQuestionsTableRows";
 import QuestionTableHeader from "../components/QuestionTableHeader";
 import QuestionTableRows from "../components/QuestionTableRows";
@@ -150,7 +150,7 @@ function UserQuestionsPage() {
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:ml-30 xl:max-w-280">
-      <UserTitleSection
+      <TitleSection
         title={`질문(${mockQuestions.totalElements})`}
         subText="이캠퍼스에서 생성된 모든 질문을 확인할 수 있어요"
       />

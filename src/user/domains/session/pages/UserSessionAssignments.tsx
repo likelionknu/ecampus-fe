@@ -1,21 +1,21 @@
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
-import AssignmentsTableHeader from "../components/AssignmentsTableHeader";
-import AssignmentsTableRow from "../components/AssignmentsTableRow";
 import { useMediaQuery } from "react-responsive";
+import TitleSection from "@/shared/components/TitleSection";
 import {
   PageNationButton,
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
 import TableEmptyState from "@/shared/components/table/TableEmptyState";
+import { formatDateTime } from "@/shared/utils/date";
+import AssignmentsTableHeader from "../components/AssignmentsTableHeader";
+import AssignmentsTableRow from "../components/AssignmentsTableRow";
 import ListBoxMobile from "../components/application/ListBoxMobile";
 import { AssignmentInfo } from "../components/application/AssignmentInfo";
-import { formatDateTime } from "@/shared/utils/date";
 
 const mockGroups = [
   {
     id: 1,
-    name: "기본 CRUD 예제를 안정적인 API로 개선하기기본 CRUD 예제를 안정적인 API로 개선하기기본 CRUD 예제를 안정적인 API로 개선하기",
+    name: "기본 CRUD 과제를 안정적인 API로 개선하기",
     endAt: "2026-02-14T00:38:00",
     assignmentStatus: "SUBMITTED",
     evaluate: "FAIL",
@@ -29,7 +29,7 @@ const mockGroups = [
   },
   {
     id: 3,
-    name: "기본 CRUD 예제를 안정적인 API로 개선하기",
+    name: "기본 CRUD 과제를 안정적인 API로 개선하기",
     endAt: "2026-02-14T00:38:00",
     assignmentStatus: "SUBMITTED",
     evaluate: "PASS",
@@ -43,7 +43,7 @@ const mockGroups = [
   },
   {
     id: 5,
-    name: "기본 CRUD 예제를 안정적인 API로 개선하기",
+    name: "기본 CRUD 과제를 안정적인 API로 개선하기",
     endAt: "2026-02-14T00:38:00",
     assignmentStatus: "SUBMITTED",
     evaluate: "PASS",
@@ -69,13 +69,13 @@ function UserSessionAssignments() {
     SUBMITTED: "제출",
   };
   const ASSIGNMENT_EVALUATE_MAP: Record<string, string> = {
-    PASS: "성공",
+    PASS: "합격",
     FAIL: "실패",
   };
 
   return (
     <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
-      <UserTitleSection title="과제" subText="내게 부여된 과제를 확인하세요" />
+      <TitleSection title="과제" subText="내게 부여된 과제를 확인하세요" />
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
           const pageAssignments = mockGroups.slice(
@@ -90,7 +90,7 @@ function UserSessionAssignments() {
                 </PageNationMenu>
               )}
               {pageAssignments.length === 0 && !isLoading ? (
-                <TableEmptyState label="등록된 과제가 없어요." />
+                <TableEmptyState label="등록된 과제가 없어요" />
               ) : !isTablet ? (
                 <AssignmentsTableRow
                   isLoading={isLoading}
@@ -123,7 +123,7 @@ function UserSessionAssignments() {
                       <ListBoxMobile
                         key={assignment.id}
                         title={assignment.name}
-                        subText={`${formatDateTime(assignment.endAt)}에 제출 종료됨`}
+                        subText={`${formatDateTime(assignment.endAt)} · 제출 종료`}
                       >
                         <AssignmentInfo
                           label="제출 상태"
@@ -148,4 +148,5 @@ function UserSessionAssignments() {
     </div>
   );
 }
+
 export default UserSessionAssignments;
