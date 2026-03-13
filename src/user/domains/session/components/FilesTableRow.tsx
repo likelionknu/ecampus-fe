@@ -1,4 +1,5 @@
-import { formatDateTime } from "@/shared/utils/date";
+import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
 interface FilesRow {
   id: number;
@@ -9,11 +10,20 @@ interface FilesRow {
 
 interface FilesTableRowsProps {
   files: FilesRow[];
+  isLoading: boolean;
 }
 
-function FilesTableRow({ files }: FilesTableRowsProps) {
+function FilesTableRow({ files, isLoading }: FilesTableRowsProps) {
   return (
     <div className="flex flex-col">
+      {isLoading && (
+        <div className="flex animate-pulse gap-4 rounded-2xl px-4 py-4">
+          <SkeletonCell className="ml-2 h-4 w-7" />
+          <SkeletonCell className="h-4 w-121" />
+          <SkeletonCell className="h-4 w-46" />
+          <SkeletonCell className="ml-10 h-4 w-20" />
+        </div>
+      )}
       {files.map((file, index) => (
         <div
           key={`${file.id}-${file.createdBy}-${index}`}
@@ -28,11 +38,11 @@ function FilesTableRow({ files }: FilesTableRowsProps) {
             <span className="text-body-2 overflow-hidden text-ellipsis whitespace-nowrap">
               {file.name}
             </span>
-
-            <span className="text-body-2 text-center">
-              {formatDateTime(file.createdAt)}
-            </span>
-
+            <div className="flex items-center gap-1">
+              <span className="text-body-2 text-center whitespace-nowrap">
+                {formatKoreanDateTime12(file.createdAt)}
+              </span>
+            </div>
             <span className="text-body-2 text-center">{file.createdBy}</span>
           </div>
         </div>

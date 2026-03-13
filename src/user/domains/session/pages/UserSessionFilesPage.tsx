@@ -2,6 +2,16 @@
 import UserTitleSection from "@/user/shared/components/UserTitleSection";
 import FilesTableHeader from "../components/FilesTableHeader";
 import FilesTableRow from "../components/FilesTableRow";
+import {
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+} from "@/shared/components/PageNation";
+import { useMediaQuery } from "react-responsive";
+import TableEmptyState from "@/shared/components/table/TableEmptyState";
+import ListBoxMobile from "../components/application/ListBoxMobile";
+import { InfoMobile } from "../components/application/InfoMobile";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 const mockfiles = [
   {
     id: 2,
@@ -54,16 +64,55 @@ const mockfiles = [
 ];
 
 function UserSessionFilesPage() {
+  const isTablet = useMediaQuery({ maxWidth: 1024 });
+  const isMobile = useMediaQuery({ maxWidth: 764 });
+  const itemNum = mockfiles.length;
+  const itemSumNum = 8;
+  const isLoading = true;
   return (
-    <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
+    <div className="mx-auto flex w-full max-w-251 flex-col gap-5 px-4 pt-7 md:px-8">
       <UserTitleSection title="자료" subText="이 세션에 추가된 자료에요" />
-      <section>
-        <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex max-w-251 items-center justify-between px-8 py-4">
-          <FilesTableHeader />
-        </div>
-        {/* <TableEmptyState label="등록된 세션 자료가 없어요." /> */}
-        <FilesTableRow files={mockfiles} />
-      </section>
+      <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
+        {({ currentItems, startIndex }) => {
+          const pageFiles = mockfiles.slice(
+            startIndex,
+            startIndex + currentItems.length,
+          );
+
+          return (
+            <>
+              {!isTablet && (
+                <PageNationMenu>
+                  <FilesTableHeader />
+                </PageNationMenu>
+              )}
+
+              {pageFiles.length === 0 && !isLoading ? (
+                <TableEmptyState label="등록된 세션 자료가 없어요." />
+              ) : !isTablet ? (
+                <FilesTableRow files={pageFiles} isLoading={isLoading} />
+              ) : (
+                <div
+                  className={`grid gap-4 ${
+                    isMobile ? "grid-cols-1" : "grid-cols-2"
+                  }`}
+                >
+                  {pageFiles.map((file) => (
+                    <ListBoxMobile key={file.id} title={file.name}>
+                      <InfoMobile label="작성자" value={file.createdBy} />
+                      <InfoMobile
+                        label="등록일"
+                        value={formatKoreanDateTime12(file.createdAt)}
+                      />
+                    </ListBoxMobile>
+                  ))}
+                </div>
+              )}
+              <PageNationButton />
+            </>
+          );
+        }}
+      </PageNationFrame>
     </div>
   );
 }
