@@ -1,12 +1,12 @@
-﻿// import Modal from "@/shared/components/Modal";
+// import Modal from "@/shared/components/Modal";
+import { useState, type ChangeEvent, type ReactNode } from "react";
+import { useMediaQuery } from "react-responsive";
 import Button from "@/shared/components/Button";
 import TitleSection from "@/shared/components/TitleSection";
 import BoxLayout from "@/user/shared/components/BoxLayout";
 import SessionQuestionWarning from "../../components/question/SessionQuestionWarning";
-import { useState } from "react";
-import { useMediaQuery } from "react-responsive";
 
-interface createQuestion {
+interface CreateQuestion {
   title: string;
   content: string;
 }
@@ -14,10 +14,10 @@ interface createQuestion {
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<T>) => void;
+  onChange: (e: ChangeEvent<T>) => void;
 }
 
-const BoxWarrper = ({ children }: { children: React.ReactNode }) => {
+const BoxWrapper = ({ children }: { children: ReactNode }) => {
   return <div className="flex justify-between">{children}</div>;
 };
 
@@ -55,53 +55,55 @@ const TextAreaField = ({
 };
 
 function UserSessionQuestionCreatePage() {
-  const [createQuestion, setCreateQuestion] = useState<createQuestion>({
+  const [createQuestion, setCreateQuestion] = useState<CreateQuestion>({
     title: "",
     content: "",
   });
   const isMobile = useMediaQuery({ maxWidth: 479 });
+
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:mx-0 md:max-w-187.5 md:px-8 xl:max-w-251">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
       {/* <Modal>
-        <Modal.Header>??吏덈Ц ?깅줉</Modal.Header>
+        <Modal.Header>새 질문 등록</Modal.Header>
         <Modal.Description>
-          ?덈줈??吏덈Ц 寃뚯떆湲???낅줈?쒗븷源뚯슂?
+          새로운 질문 게시글을 업로드할까요?
         </Modal.Description>
         <Modal.ButtonLayout>
           <Button size="modal" variant="primary">
-            ?뺤씤
+            확인
           </Button>
           <Modal.Cancle />
         </Modal.ButtonLayout>
       </Modal> */}
 
-      <TitleSection title="??吏덈Ц ?깅줉" />
+      <TitleSection title="새 질문 등록" />
       <SessionQuestionWarning />
 
       <BoxLayout>
-        <BoxWarrper>
-          <span className="text-body-1 text-ec-black">?쒕ぉ</span>
+        <BoxWrapper>
+          <span className="text-body-1 text-ec-black">제목</span>
           <span className="text-caption text-ec-sub">
-            {!isMobile && `${80 - createQuestion.title.length}???⑥쓬`}
+            {!isMobile && `${80 - createQuestion.title.length}자 남음`}
           </span>
-        </BoxWarrper>
+        </BoxWrapper>
         <InputField
-          placeholder="?쒕ぉ???낅젰?댁＜?몄슂."
+          placeholder="제목을 입력해주세요."
           value={createQuestion.title}
           onChange={(e) => {
             setCreateQuestion({ ...createQuestion, title: e.target.value });
           }}
         />
       </BoxLayout>
+
       <BoxLayout>
-        <BoxWarrper>
-          <span className="text-body-1 text-ec-black">吏덈Ц</span>
+        <BoxWrapper>
+          <span className="text-body-1 text-ec-black">질문</span>
           <span className="text-caption text-ec-sub">
-            {!isMobile && `${900 - createQuestion.content.length}???⑥쓬`}
+            {!isMobile && `${900 - createQuestion.content.length}자 남음`}
           </span>
-        </BoxWarrper>
+        </BoxWrapper>
         <TextAreaField
-          placeholder="吏덈Ц ?댁슜???낅젰?댁＜?몄슂."
+          placeholder="질문 내용을 입력해주세요."
           value={createQuestion.content}
           onChange={(e) => {
             setCreateQuestion({ ...createQuestion, content: e.target.value });
@@ -110,11 +112,10 @@ function UserSessionQuestionCreatePage() {
       </BoxLayout>
 
       <div className="text-right">
-        <Button size="large">?깅줉</Button>
+        <Button size="large">등록</Button>
       </div>
     </div>
   );
 }
 
 export default UserSessionQuestionCreatePage;
-
