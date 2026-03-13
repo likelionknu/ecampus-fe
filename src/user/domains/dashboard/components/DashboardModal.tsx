@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import xWhite from "@user/domains/dashboard/assets/xWhite.png";
+import xBlack from "@user/domains/dashboard/assets/xBlack.png";
 
 interface DashboardModalProps {
   onClose?: () => void;
@@ -30,7 +31,16 @@ const DashboardModal = ({ onClose }: DashboardModalProps) => {
             멋쟁이사자처럼 강남대학교의 첫 번째 소식이에요
           </div>
           <button className="cursor-pointer" onClick={onClose} type="button">
-            <img alt="닫기 아이콘" src={xWhite} className="h-4 w-4" />
+            <img
+              alt="닫기 아이콘"
+              src={xBlack}
+              className="h-4 w-4 dark:hidden"
+            />
+            <img
+              alt="닫기 아이콘"
+              src={xWhite}
+              className="hidden h-4 w-4 dark:block"
+            />
           </button>
         </div>
         <div className="text-ec-sub w-full justify-start pt-2.5 pb-4.5 text-xs font-medium">
