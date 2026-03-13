@@ -1,3 +1,5 @@
+import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+
 interface UserRow {
   course: number;
   name: string;
@@ -7,6 +9,7 @@ interface UserRow {
 
 interface GroupTableRowProps {
   users: UserRow[];
+  isLoading: boolean;
 }
 const PART_MAP: Record<string, string> = {
   BACKEND: "백엔드",
@@ -14,9 +17,17 @@ const PART_MAP: Record<string, string> = {
   DESIGN: "디자인",
   PLANNING: "기획",
 };
-function GroupTableRow({ users }: GroupTableRowProps) {
+function GroupTableRow({ users, isLoading }: GroupTableRowProps) {
   return (
     <div className="flex flex-col">
+      {isLoading && (
+        <div className="flex animate-pulse gap-4 rounded-2xl px-4 py-4">
+          <SkeletonCell className="ml-2 h-4 w-12" />
+          <SkeletonCell className="h-4 w-14" />
+          <SkeletonCell className="h-4 w-20" />
+          <SkeletonCell className="h-4 w-171" />
+        </div>
+      )}
       {users.map((user, index) => (
         <div
           key={user.email}
