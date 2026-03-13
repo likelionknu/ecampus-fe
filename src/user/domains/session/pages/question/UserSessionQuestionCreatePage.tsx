@@ -1,6 +1,6 @@
-// import Modal from "@/shared/components/Modal";
+﻿// import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
+import TitleSection from "@/shared/components/TitleSection";
 import BoxLayout from "@/user/shared/components/BoxLayout";
 import SessionQuestionWarning from "../../components/question/SessionQuestionWarning";
 import { useState } from "react";
@@ -63,30 +63,30 @@ function UserSessionQuestionCreatePage() {
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:mx-0 md:max-w-187.5 md:px-8 xl:max-w-251">
       {/* <Modal>
-        <Modal.Header>새 질문 등록</Modal.Header>
+        <Modal.Header>??吏덈Ц ?깅줉</Modal.Header>
         <Modal.Description>
-          새로운 질문 게시글을 업로드할까요?
+          ?덈줈??吏덈Ц 寃뚯떆湲???낅줈?쒗븷源뚯슂?
         </Modal.Description>
         <Modal.ButtonLayout>
           <Button size="modal" variant="primary">
-            확인
+            ?뺤씤
           </Button>
           <Modal.Cancle />
         </Modal.ButtonLayout>
       </Modal> */}
 
-      <UserTitleSection title="새 질문 등록" />
+      <TitleSection title="??吏덈Ц ?깅줉" />
       <SessionQuestionWarning />
 
       <BoxLayout>
         <BoxWarrper>
-          <span className="text-body-1 text-ec-black">제목</span>
+          <span className="text-body-1 text-ec-black">?쒕ぉ</span>
           <span className="text-caption text-ec-sub">
-            {!isMobile && `${80 - createQuestion.title.length}자 남음`}
+            {!isMobile && `${80 - createQuestion.title.length}???⑥쓬`}
           </span>
         </BoxWarrper>
         <InputField
-          placeholder="제목을 입력해주세요."
+          placeholder="?쒕ぉ???낅젰?댁＜?몄슂."
           value={createQuestion.title}
           onChange={(e) => {
             setCreateQuestion({ ...createQuestion, title: e.target.value });
@@ -95,13 +95,13 @@ function UserSessionQuestionCreatePage() {
       </BoxLayout>
       <BoxLayout>
         <BoxWarrper>
-          <span className="text-body-1 text-ec-black">질문</span>
+          <span className="text-body-1 text-ec-black">吏덈Ц</span>
           <span className="text-caption text-ec-sub">
-            {!isMobile && `${900 - createQuestion.content.length}자 남음`}
+            {!isMobile && `${900 - createQuestion.content.length}???⑥쓬`}
           </span>
         </BoxWarrper>
         <TextAreaField
-          placeholder="질문 내용을 입력해주세요."
+          placeholder="吏덈Ц ?댁슜???낅젰?댁＜?몄슂."
           value={createQuestion.content}
           onChange={(e) => {
             setCreateQuestion({ ...createQuestion, content: e.target.value });
@@ -110,10 +110,11 @@ function UserSessionQuestionCreatePage() {
       </BoxLayout>
 
       <div className="text-right">
-        <Button size="large">등록</Button>
+        <Button size="large">?깅줉</Button>
       </div>
     </div>
   );
 }
 
 export default UserSessionQuestionCreatePage;
+

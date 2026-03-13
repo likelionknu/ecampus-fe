@@ -1,5 +1,5 @@
-import { useState } from "react";
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
+﻿import { useState } from "react";
+import TitleSection from "@/shared/components/TitleSection";
 import GroupTableHeader from "../components/GroupTableHeader";
 import SerachBar from "@/shared/components/SerachBar";
 import GroupTableRow from "../components/GroupTableRow";
@@ -22,34 +22,34 @@ interface MockQuestion {
 const mockGroups: MockQuestion[] = [
   {
     course: 1,
-    name: "김진영",
+    name: "源吏꾩쁺",
     part: "BACKEND",
     email: "kim@test.com",
   },
   {
     course: 2,
-    name: "박김철",
+    name: "諛뺢?泥?,
     part: "BACKEND",
     email: "park@test.com",
   },
   {
     course: 3,
-    name: "김진영",
+    name: "源吏꾩쁺",
     part: "BACKEND",
     email: "kim@test.com",
   },
   {
     course: 4,
-    name: "박김철",
+    name: "諛뺢?泥?,
     part: "BACKEND",
     email: "park@test.com",
   },
 ];
 const PART_MAP: Record<string, string> = {
-  BACKEND: "백엔드",
-  FRONTEND: "프론트엔드",
-  DESIGN: "디자인",
-  PLANNING: "기획",
+  BACKEND: "諛깆뿏??,
+  FRONTEND: "?꾨줎?몄뿏??,
+  DESIGN: "?붿옄??,
+  PLANNING: "湲고쉷",
 };
 function UserSessionGroupPage() {
   const [search, setSearch] = useState("");
@@ -61,16 +61,16 @@ function UserSessionGroupPage() {
 
   return (
     <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
-      <UserTitleSection
-        title="사용자 및 그룹"
-        subText="이 세션에 추가된 사용자를 확인하세요"
+      <TitleSection
+        title="?ъ슜??諛?洹몃９"
+        subText="???몄뀡??異붽????ъ슜?먮? ?뺤씤?섏꽭??
       />
 
       <div className="w-full lg:w-107.5">
         <SerachBar
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="사용자 이름으로 검색"
+          placeholder="?ъ슜???대쫫?쇰줈 寃??
         />
       </div>
 
@@ -89,7 +89,7 @@ function UserSessionGroupPage() {
               )}
 
               {pageGroups.length === 0 && !isLoading ? (
-                <TableEmptyState label="등록된 사용자가 없어요." />
+                <TableEmptyState label="?깅줉???ъ슜?먭? ?놁뼱??" />
               ) : !isTablet ? (
                 <GroupTableRow isLoading={isLoading} users={pageGroups} />
               ) : (
@@ -104,9 +104,9 @@ function UserSessionGroupPage() {
                       title={group.name}
                       subText={group.email}
                     >
-                      <GroupInfo label="기수" value="14기" />
+                      <GroupInfo label="湲곗닔" value="14湲? />
                       <GroupInfo
-                        label="파트"
+                        label="?뚰듃"
                         value={PART_MAP[group.part] || group.part}
                       />
                     </ListBoxMobile>
@@ -123,3 +123,4 @@ function UserSessionGroupPage() {
 }
 
 export default UserSessionGroupPage;
+

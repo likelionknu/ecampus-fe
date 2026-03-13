@@ -2,16 +2,16 @@ import Button from "@/shared/components/Button";
 import type { ButtonVariant } from "@/shared/types/Button";
 import { useMediaQuery } from "react-responsive";
 
-interface UserTitleAction {
+interface TitleAction {
   label: string;
   buttonType?: ButtonVariant;
   onClick?: () => void;
 }
 
-interface UserTitleSectionProps {
+interface TitleSectionProps {
   title: string;
   subText?: string;
-  actions?: UserTitleAction[];
+  actions?: TitleAction[];
 }
 
 const SubText = ({ children }: { children: React.ReactNode }) => {
@@ -22,7 +22,7 @@ const SubText = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-function UserTitleSection({ title, subText, actions }: UserTitleSectionProps) {
+function TitleSection({ title, subText, actions }: TitleSectionProps) {
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   const hasActions = Boolean(actions?.length);
@@ -54,4 +54,4 @@ function UserTitleSection({ title, subText, actions }: UserTitleSectionProps) {
   );
 }
 
-export default UserTitleSection;
+export default TitleSection;

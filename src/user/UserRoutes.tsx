@@ -19,7 +19,6 @@ const userRoutes: RouteObject[] = [
     element: <UserDashBoardPage />,
     handle: { title: "대시보드" },
   },
-  // 쓰레기 경로
   {
     path: "sessions",
     element: <UserSessionSelect />,
