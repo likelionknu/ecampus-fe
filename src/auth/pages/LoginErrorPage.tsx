@@ -1,5 +1,6 @@
 import NavLogo from "@shared/assets/NavLogo.png";
-import { Link, useSearchParams } from "react-router-dom";
+import LegalFooter from "@shared/components/LegalFooter";
+import { useSearchParams } from "react-router-dom";
 
 function GoogleIcon() {
   return (
@@ -34,14 +35,61 @@ function LoginErrorPage() {
       : "이 계정은 승인되지 않은 계정이에요";
 
   return (
-    <main className="bg-ec-white min-h-screen">
-      <div className="mx-auto flex min-h-screen w-full max-w-360">
-        <div
-          aria-hidden="true"
-          className="from-ec-blue-item to-ec-blue-item/40 hidden flex-1 bg-linear-to-r lg:block"
-        />
+    <main className="bg-ec-white relative min-h-screen overflow-x-clip">
+      <div
+        aria-hidden="true"
+        className="from-ec-blue-item to-ec-blue-item/40 pointer-events-none fixed inset-y-0 left-0 hidden w-223.5 bg-linear-to-r lg:block"
+      />
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-360 lg:pr-136.5">
+        {/*모바일*/}
+        <section className="relative flex min-h-screen w-full flex-col px-6 pt-14 pb-8 sm:px-14 sm:pt-16 lg:hidden">
+          {/*모바일 로고*/}
+          <div className="flex items-center gap-2.5 sm:gap-4">
+            <img
+              src={NavLogo}
+              alt="LIKELION KNU 로고"
+              className="h-6 w-4 shrink-0 brightness-0 sm:h-9 sm:w-6"
+            />
+            <span className="text-ec-black tracking-ec-tight text-[19px] leading-none font-semibold sm:text-3xl">
+              LIKELION KNU
+            </span>
+          </div>
 
-        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:w-136.5 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+          {/*모바일 내용*/}
+          <div className="mt-10">
+            <div
+              role="alert"
+              className="border-ec-red text-ec-red rounded-xl flex h-12 w-full items-center border px-3.5 text-[14px]/[20px] font-medium tracking-ec-normal"
+            >
+              {errorMessage}
+            </div>
+
+            <h1 className="text-ec-black font-pretendard mt-5 text-[24px]/[1.35] font-semibold tracking-ec-normal">
+              다시 돌아온 걸 환영해요!
+            </h1>
+            <p className="text-ec-sub font-pretendard mt-5 text-[14px]/[1.57] font-medium tracking-ec-normal">
+              멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
+            </p>
+
+            <button
+              type="button"
+              className="text-ec-blue border-ec-blue bg-ec-white rounded-xl font-pretendard hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue mt-10 inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 border text-[14px]/[20px] font-medium tracking-ec-normal transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
+            >
+              <GoogleIcon />
+              <span>구글 계정으로 시작하기</span>
+            </button>
+          </div>
+
+          {/*모바일 푸터*/}
+          <div className="mt-auto flex justify-end pt-20">
+            <p className="typo-caption text-ec-sub text-right">
+              LIKELION KNU 2026. 모든 권리 보유.
+            </p>
+          </div>
+        </section>
+
+        {/*웹*/}
+        <section className="relative hidden w-full flex-col lg:fixed lg:top-0 lg:left-223.5 lg:z-10 lg:flex lg:h-190 lg:w-136.5 lg:px-13.75 lg:pt-15 lg:pb-12.5">
           <div className="flex items-center gap-4">
             <img
               src={NavLogo}
@@ -53,7 +101,7 @@ function LoginErrorPage() {
             </span>
           </div>
 
-          <div className="mt-14 lg:mt-15.5">
+          <div className="mt-15.5">
             <div
               role="alert"
               className="border-ec-red text-ec-red rounded-ec-10 flex h-12 w-full max-w-96 items-center border px-4.5 text-sm leading-6 font-medium"
@@ -76,18 +124,7 @@ function LoginErrorPage() {
               <span className="typo-body-1">구글 계정으로 시작하기</span>
             </button>
           </div>
-
-          <footer className="mt-auto flex flex-col items-end gap-2 pt-16 lg:pt-0">
-            <Link
-              to="/privacy-policy"
-              className="typo-caption text-ec-blue transition-opacity hover:underline hover:opacity-80"
-            >
-              개인정보 처리방침
-            </Link>
-            <p className="typo-caption text-ec-sub">
-              LIKELION KNU 2026. 모든 권리 보유.
-            </p>
-          </footer>
+          <LegalFooter />
         </section>
       </div>
     </main>

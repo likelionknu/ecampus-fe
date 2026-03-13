@@ -1,6 +1,6 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import NavLogo from "@shared/assets/NavLogo.png";
-import { Link } from "react-router-dom";
+import LegalFooter from "@shared/components/LegalFooter";
 
 function PreparingIllustration() {
   return (
@@ -15,14 +15,13 @@ function PreparingIllustration() {
 
 function PreparingPage() {
   return (
-    <main className="bg-ec-white min-h-screen">
-      <div className="mx-auto flex min-h-screen w-full max-w-360">
-        <div
-          aria-hidden="true"
-          className="from-ec-blue-item to-ec-blue-item/40 hidden flex-1 bg-linear-to-r lg:block"
-        />
-
-        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:w-135.75 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+    <main className="bg-ec-white relative min-h-screen overflow-x-clip">
+      <div
+        aria-hidden="true"
+        className="from-ec-blue-item to-ec-blue-item/40 pointer-events-none fixed inset-y-0 left-0 hidden w-224.25 bg-linear-to-r lg:block"
+      />
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-360 lg:pr-135.75">
+        <section className="relative flex w-full flex-col px-8 py-10 sm:px-14 lg:fixed lg:top-0 lg:left-224.25 lg:z-10 lg:h-190 lg:w-135.75 lg:px-13.75 lg:pt-15 lg:pb-12.5">
           <div className="flex items-center gap-4">
             <img
               src={NavLogo}
@@ -45,18 +44,7 @@ function PreparingPage() {
               나중에 다시 방문해주세요!
             </p>
           </div>
-
-          <footer className="mt-auto flex flex-col items-end gap-2 pt-16 lg:pt-0">
-            <Link
-              to="/privacy-policy"
-              className="typo-caption text-ec-blue transition-opacity hover:underline hover:opacity-80"
-            >
-              개인정보 처리방침
-            </Link>
-            <p className="typo-caption text-ec-sub">
-              LIKELION KNU 2026. 모든 권리 보유.
-            </p>
-          </footer>
+          <LegalFooter />
         </section>
       </div>
     </main>
