@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 interface TabItem {
   label: string;
@@ -7,17 +7,30 @@ interface TabItem {
 }
 
 function TabBar({ items }: { items: TabItem[] }) {
+  const { pathname } = useLocation();
+
+  const activeItem =
+    items.find((item) =>
+      item.end ? pathname === item.path : pathname.startsWith(item.path),
+    ) ?? items[0];
+
   return (
-    <nav className="bg-ec-white border-ec-outline hidden h-237.25 w-49.25 flex-col border-r px-7.5 py-7.5 md:flex">
-      <ul className="flex flex-col gap-5">
+    <nav className="bg-ec-table-header border-ec-outline-dark rounded-b-ec-10 md:rounded-ec-10 absolute top-16.25 z-10 w-dvw overflow-hidden border md:relative md:top-0 md:w-50">
+      <div className="flex items-center justify-center">
+        <span className="text-caption text-ec-sub">{activeItem?.label}</span>
+      </div>
+
+      <ul className="flex flex-col gap-5 px-7 py-7">
         {items.map((item) => (
           <li key={item.path}>
             <NavLink
               to={item.path}
               end={item.end}
               className={({ isActive }) =>
-                `text-[18px] transition-colors ${
-                  isActive ? "text-ec-blue" : "text-ec-sub hover:text-ec-blue"
+                `text-sub-title transition-colors ${
+                  isActive
+                    ? "text-ec-black font-semibold"
+                    : "text-ec-black hover:text-ec-sub"
                 }`
               }
             >
@@ -29,18 +42,5 @@ function TabBar({ items }: { items: TabItem[] }) {
     </nav>
   );
 }
-export default TabBar;
 
-/*  사용 예시
-/baseurl/path
-ex) /user/경로, /admin/경로
-*/
-/*
-  <TabBar
-  items={[
-    { label: "목록명", path: "경로" },
-    { label: "목록명", path: "경로" },
-    { label: "목록명", path: "경로" },
-  ]}
-/>
- */
+export default TabBar;
