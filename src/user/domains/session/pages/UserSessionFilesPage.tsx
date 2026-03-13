@@ -1,80 +1,81 @@
-﻿// import TableEmptyState from "@/shared/components/table/TableEmptyState";
+import { useMediaQuery } from "react-responsive";
 import TitleSection from "@/shared/components/TitleSection";
-import FilesTableHeader from "../components/FilesTableHeader";
-import FilesTableRow from "../components/FilesTableRow";
 import {
   PageNationButton,
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import { useMediaQuery } from "react-responsive";
 import TableEmptyState from "@/shared/components/table/TableEmptyState";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import FilesTableHeader from "../components/FilesTableHeader";
+import FilesTableRow from "../components/FilesTableRow";
 import ListBoxMobile from "../components/application/ListBoxMobile";
 import { InfoMobile } from "../components/application/InfoMobile";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-const mockfiles = [
+
+const mockFiles = [
   {
     id: 2,
-    name: "?뚯뒪?명듃???먮즺 1?뚯뒪?명듃???먮즺 1?뚯뒪?명듃???먮즺 1?뚯뒪?명듃???먮즺 1?뚯뒪?명듃???먮즺 1?뚯뒪?명듃???먮즺 1",
+    name: "테스트 자료 1",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
   {
     id: 3,
-    name: "?뚯뒪???먮즺 2",
+    name: "테스트 자료 2",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
   {
     id: 4,
-    name: "?뚯뒪???먮즺 3",
+    name: "테스트 자료 3",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
   {
     id: 5,
-    name: "?뚯뒪??4",
+    name: "테스트 자료 4",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
   {
     id: 6,
-    name: "?뚯뒪??5",
+    name: "테스트 자료 5",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
   {
     id: 7,
-    name: "?뚯뒪??6",
+    name: "테스트 자료 6",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
   {
     id: 8,
-    name: "?뚯뒪??7",
+    name: "테스트 자료 7",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
   {
     id: 9,
-    name: "?뚯뒪??8",
+    name: "테스트 자료 8",
     createdAt: "2026-02-28T16:00:00.111111",
-    createdBy: "?쒖쥌誘?,
+    createdBy: "한종민",
   },
 ];
 
 function UserSessionFilesPage() {
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 764 });
-  const itemNum = mockfiles.length;
+  const itemNum = mockFiles.length;
   const itemSumNum = 8;
   const isLoading = true;
+
   return (
     <div className="mx-auto flex w-full max-w-251 flex-col gap-5 px-4 pt-7 md:px-8">
-      <TitleSection title="?먮즺" subText="???몄뀡??異붽????먮즺?먯슂" />
+      <TitleSection title="자료" subText="이 세션에 추가된 자료예요" />
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
-          const pageFiles = mockfiles.slice(
+          const pageFiles = mockFiles.slice(
             startIndex,
             startIndex + currentItems.length,
           );
@@ -88,7 +89,7 @@ function UserSessionFilesPage() {
               )}
 
               {pageFiles.length === 0 && !isLoading ? (
-                <TableEmptyState label="?깅줉???몄뀡 ?먮즺媛 ?놁뼱??" />
+                <TableEmptyState label="등록된 세션 자료가 없어요" />
               ) : !isTablet ? (
                 <FilesTableRow files={pageFiles} isLoading={isLoading} />
               ) : (
@@ -99,9 +100,9 @@ function UserSessionFilesPage() {
                 >
                   {pageFiles.map((file) => (
                     <ListBoxMobile key={file.id} title={file.name}>
-                      <InfoMobile label="?묒꽦?? value={file.createdBy} />
+                      <InfoMobile label="작성자" value={file.createdBy} />
                       <InfoMobile
-                        label="?깅줉??
+                        label="등록일"
                         value={formatKoreanDateTime12(file.createdAt)}
                       />
                     </ListBoxMobile>
@@ -118,4 +119,3 @@ function UserSessionFilesPage() {
 }
 
 export default UserSessionFilesPage;
-
