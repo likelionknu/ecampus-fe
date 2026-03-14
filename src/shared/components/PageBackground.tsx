@@ -24,7 +24,7 @@ function PageBackground({ children, variant = "status" }: PageBackgroundProps) {
     <main className="bg-ec-white relative min-h-screen overflow-x-clip">
       <div className="relative min-h-screen w-full" style={layoutStyle}>
         <div className="relative w-full lg:h-screen">
-          <div className="relative min-h-screen w-full lg:absolute lg:top-0 lg:right-0 lg:h-[calc(100vh/var(--desktop-scale))] lg:w-360 lg:origin-top-right lg:[transform:scale(var(--desktop-scale))]">
+          <div className="relative min-h-screen w-full lg:absolute lg:top-0 lg:right-0 lg:h-[calc(100vh/var(--desktop-scale))] lg:w-360 lg:origin-top-right lg:transform-[scale(var(--desktop-scale))]">
             <div aria-hidden="true" className={gradientClassName} />
             <div className={containerClassName}>{children}</div>
           </div>
