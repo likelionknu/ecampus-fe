@@ -1,12 +1,12 @@
 // import Modal from "@/shared/components/Modal";
+import { useState, type ChangeEvent, type ReactNode } from "react";
+import { useMediaQuery } from "react-responsive";
 import Button from "@/shared/components/Button";
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
+import TitleSection from "@/shared/components/TitleSection";
 import BoxLayout from "@/user/shared/components/BoxLayout";
 import SessionQuestionWarning from "../../components/question/SessionQuestionWarning";
-import { useState } from "react";
-import { useMediaQuery } from "react-responsive";
 
-interface createQuestion {
+interface CreateQuestion {
   title: string;
   content: string;
 }
@@ -14,10 +14,10 @@ interface createQuestion {
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
   value: string;
-  onChange: (e: React.ChangeEvent<T>) => void;
+  onChange: (e: ChangeEvent<T>) => void;
 }
 
-const BoxWarrper = ({ children }: { children: React.ReactNode }) => {
+const BoxWrapper = ({ children }: { children: ReactNode }) => {
   return <div className="flex justify-between">{children}</div>;
 };
 
@@ -55,13 +55,14 @@ const TextAreaField = ({
 };
 
 function UserSessionQuestionCreatePage() {
-  const [createQuestion, setCreateQuestion] = useState<createQuestion>({
+  const [createQuestion, setCreateQuestion] = useState<CreateQuestion>({
     title: "",
     content: "",
   });
   const isMobile = useMediaQuery({ maxWidth: 479 });
+
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 xl:mx-0 xl:max-w-251 xl:px-8">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
       {/* <Modal>
         <Modal.Header>새 질문 등록</Modal.Header>
         <Modal.Description>
@@ -75,16 +76,16 @@ function UserSessionQuestionCreatePage() {
         </Modal.ButtonLayout>
       </Modal> */}
 
-      <UserTitleSection title="새 질문 등록" />
+      <TitleSection title="새 질문 등록" />
       <SessionQuestionWarning />
 
       <BoxLayout>
-        <BoxWarrper>
+        <BoxWrapper>
           <span className="text-body-1 text-ec-black">제목</span>
           <span className="text-caption text-ec-sub">
             {!isMobile && `${80 - createQuestion.title.length}자 남음`}
           </span>
-        </BoxWarrper>
+        </BoxWrapper>
         <InputField
           placeholder="제목을 입력해주세요."
           value={createQuestion.title}
@@ -93,13 +94,14 @@ function UserSessionQuestionCreatePage() {
           }}
         />
       </BoxLayout>
+
       <BoxLayout>
-        <BoxWarrper>
+        <BoxWrapper>
           <span className="text-body-1 text-ec-black">질문</span>
           <span className="text-caption text-ec-sub">
             {!isMobile && `${900 - createQuestion.content.length}자 남음`}
           </span>
-        </BoxWarrper>
+        </BoxWrapper>
         <TextAreaField
           placeholder="질문 내용을 입력해주세요."
           value={createQuestion.content}

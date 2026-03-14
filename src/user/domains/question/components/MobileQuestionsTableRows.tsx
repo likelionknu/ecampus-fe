@@ -15,11 +15,11 @@ function MobileQuestionsTableRows({
   questions,
 }: MobileQuestionsTableRowsProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       {questions.map((question, index) => (
         <div
           key={`${question.id}-${question.createdUserName ?? "anonymous"}-${index}`}
-          className="bg-ec-box rounded-ec-10 px-5 py-5.5"
+          className="bg-ec-box rounded-ec-10 max-w-87.5 px-5 py-5.5"
         >
           <div className="border-ec-outline-dark flex flex-col gap-2 border-b pb-5">
             <div className="flex items-center gap-1">

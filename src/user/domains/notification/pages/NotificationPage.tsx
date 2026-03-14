@@ -5,7 +5,7 @@ import {
   PageNationMenu,
 } from "@/shared/components/PageNation";
 import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import UserTitleSection from "@/user/shared/components/UserTitleSection";
+import TitleSection from "@/shared/components/TitleSection";
 import MobileNotifitcationTableRows from "../components/MobileNotificationTableRows";
 import NotificationTableHeader from "../components/NotificationTableHeader";
 import NotificationTableRows from "../components/NotificationTableRows";
@@ -52,8 +52,8 @@ function UserNotificationPage() {
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 xl:mx-0 xl:ml-30 xl:max-w-280">
-      <UserTitleSection
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-280">
+      <TitleSection
         title="알림"
         subText="최근 받은 알림을 확인해보세요"
         actions={[

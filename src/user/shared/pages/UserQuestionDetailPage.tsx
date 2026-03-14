@@ -8,7 +8,7 @@ import QuestionContentSection from "@/user/domains/session/components/question/Q
 import QuestionMetaRow from "@/user/domains/session/components/question/QuestionMetaRow";
 import QuestionCommentSkeleton from "@/user/domains/session/components/skeleton/QuestionCommentSkeleton";
 import QuestionMetaRowSkeleton from "@/user/domains/session/components/skeleton/QuestionMetaRowSkeleton";
-import UserTitleSection from "../components/UserTitleSection";
+import TitleSection from "@/shared/components/TitleSection";
 import { useMediaQuery } from "react-responsive";
 
 const mockQuestionDetail = {
@@ -61,10 +61,10 @@ function UserQuestionDetailPage() {
 
   return (
     <div
-      className={`${shouldShowDeleteButton ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 pt-7 pb-120 xl:mx-0 xl:max-w-280`}
+      className={`${shouldShowDeleteButton ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280`}
     >
       <div className="flex flex-col gap-5">
-        <UserTitleSection
+        <TitleSection
           title={mockQuestionDetail.title}
           {...(shouldShowDeleteButton
             ? {
