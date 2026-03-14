@@ -6,10 +6,10 @@ import {
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import SessionHeader from "../components/SessionHeader";
 import SessionsTableRows, {
   type AdminSessionRow,
 } from "../components/SessionsTableRows";
+import SessionHeader from "../components/SessionHeader";
 
 const mockSessions: { content: AdminSessionRow[]; totalElements: number } = {
   content: [
@@ -92,13 +92,13 @@ const mockSessions: { content: AdminSessionRow[]; totalElements: number } = {
 function AdminSessionsPage() {
   const itemNum = mockSessions.totalElements;
   const itemSumNum = 8;
-  const isLoading = false;
+  const isLoading = true;
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
       <TitleSection
-        title={`세션 관리(${mockSessions.totalElements})`}
+        title="세션 관리"
         actions={[
           {
             label: "새 세션 추가하기",

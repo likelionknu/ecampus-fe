@@ -1,8 +1,7 @@
 import type { RouteObject } from "react-router-dom";
-import AdminSessionsPage from "./domains/session/pages/AdminSessionsPage";
-import AdminDashBoardPage from "./domains/dashboard/pages/AdminDashBoardPage";
+import AdminSessionsPage from "./domains/management/pages/AdminSessionsPage";
 import SessionTabLayout from "@/shared/layouts/SessionTabLayout";
-import AdminGroupPage from "./domains/session/pages/AdminGroupPage";
+import AdminGroupPage from "./domains/management/pages/AdminGroupPage";
 
 const adminRoutes: RouteObject[] = [
   {
@@ -12,11 +11,6 @@ const adminRoutes: RouteObject[] = [
       { index: true, element: <AdminSessionsPage /> },
       { path: "group", element: <AdminGroupPage /> },
     ],
-  },
-  {
-    path: "dashboard",
-    element: <AdminDashBoardPage />,
-    handle: { title: "관리자" },
   },
 ];
 
