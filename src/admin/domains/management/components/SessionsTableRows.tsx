@@ -1,14 +1,5 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-
-export interface AdminSessionRow {
-  id: number;
-  name: string;
-  creator: string;
-  participantCount: number;
-  fileCount: number;
-  assignmentCount: number;
-  status: "활성화" | "비활성화";
-}
+import type { AdminSessionRow } from "../types";
 
 interface SessionsTableRowsProps {
   isLoading: boolean;

@@ -1,4 +1,4 @@
-import { useMediaQuery } from "react-responsive";
+﻿import { useMediaQuery } from "react-responsive";
 import SelectBox from "@/shared/components/SelectBox";
 import SerachBar from "@/shared/components/SerachBar";
 import TitleSection from "@/shared/components/TitleSection";
@@ -10,14 +10,10 @@ import {
 } from "@/shared/components/PageNation";
 import { SESSION_GROUP_DROPDOWN_OPTIONS } from "@/shared/constants/selectOptions";
 import GroupHeader from "../components/GroupHeader";
-import GroupTableRows, {
-  type AdminGroupRow,
-} from "../components/GroupTableRows";
+import GroupTableRows from "../components/GroupTableRows";
+import type { AdminGroupRow, PagedResponse } from "../types";
 
-const mockGroupMembers: {
-  content: AdminGroupRow[];
-  totalElements: number;
-} = {
+const mockGroupMembers: PagedResponse<AdminGroupRow> = {
   content: [
     {
       id: 1,
@@ -27,7 +23,7 @@ const mockGroupMembers: {
       email: "yuuuuuuuuuuu@gmail.com",
       joinedAt: "2026년 2월 14일 오전 12시 38분",
       penaltyPoint: 0,
-      action: "-",
+      useable: false,
     },
     {
       id: 2,
@@ -37,7 +33,47 @@ const mockGroupMembers: {
       email: "seojun.kim@gmail.com",
       joinedAt: "2026년 2월 13일 오후 8시 02분",
       penaltyPoint: 1,
-      action: "-",
+      useable: false,
+    },
+    {
+      id: 1,
+      generation: 14,
+      part: "프론트엔드",
+      name: "황형진",
+      email: "yuuuuuuuuuuu@gmail.com",
+      joinedAt: "2026년 2월 14일 오전 12시 38분",
+      penaltyPoint: 0,
+      useable: false,
+    },
+    {
+      id: 2,
+      generation: 14,
+      part: "백엔드",
+      name: "김서준",
+      email: "seojun.kim@gmail.com",
+      joinedAt: "2026년 2월 13일 오후 8시 02분",
+      penaltyPoint: 1,
+      useable: false,
+    },
+    {
+      id: 1,
+      generation: 14,
+      part: "프론트엔드",
+      name: "황형진",
+      email: "yuuuuuuuuuuu@gmail.com",
+      joinedAt: "2026년 2월 14일 오전 12시 38분",
+      penaltyPoint: 0,
+      useable: true,
+    },
+    {
+      id: 2,
+      generation: 14,
+      part: "백엔드",
+      name: "김서준",
+      email: "seojun.kim@gmail.com",
+      joinedAt: "2026년 2월 13일 오후 8시 02분",
+      penaltyPoint: 1,
+      useable: true,
     },
     {
       id: 3,
@@ -47,7 +83,7 @@ const mockGroupMembers: {
       email: "haneul.park@gmail.com",
       joinedAt: "2026년 2월 11일 오후 3시 20분",
       penaltyPoint: 0,
-      action: "-",
+      useable: true,
     },
     {
       id: 4,
@@ -57,7 +93,7 @@ const mockGroupMembers: {
       email: "yujin.lee@gmail.com",
       joinedAt: "2026년 2월 10일 오전 10시 44분",
       penaltyPoint: 2,
-      action: "-",
+      useable: true,
     },
     {
       id: 5,
@@ -67,7 +103,7 @@ const mockGroupMembers: {
       email: "minji.choi@gmail.com",
       joinedAt: "2025년 9월 1일 오후 1시 05분",
       penaltyPoint: 0,
-      action: "-",
+      useable: true,
     },
     {
       id: 6,
@@ -77,7 +113,7 @@ const mockGroupMembers: {
       email: "jihoon.oh@gmail.com",
       joinedAt: "2025년 8월 30일 오전 9시 14분",
       penaltyPoint: 3,
-      action: "-",
+      useable: true,
     },
     {
       id: 7,
@@ -87,7 +123,7 @@ const mockGroupMembers: {
       email: "daeun.jung@gmail.com",
       joinedAt: "2024년 12월 4일 오후 4시 50분",
       penaltyPoint: 0,
-      action: "-",
+      useable: true,
     },
     {
       id: 8,
@@ -97,7 +133,7 @@ const mockGroupMembers: {
       email: "jiho.song@gmail.com",
       joinedAt: "2024년 11월 28일 오전 11시 17분",
       penaltyPoint: 1,
-      action: "-",
+      useable: true,
     },
   ],
   totalElements: 8,
@@ -148,7 +184,7 @@ function AdminGroupPage() {
               )}
 
               {pagedMembers.length === 0 && !isLoading ? (
-                <TableEmptyState label="등록된 사용자 및 그룹이 없어요." />
+                <TableEmptyState label="해당하는 사용자를 찾을 수 없거나 존재하지 않아요" />
               ) : (
                 <GroupTableRows isLoading={isLoading} members={pagedMembers} />
               )}

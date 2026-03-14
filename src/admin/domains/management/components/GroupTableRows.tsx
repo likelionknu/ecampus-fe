@@ -1,15 +1,6 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-
-export interface AdminGroupRow {
-  id: number;
-  generation: number;
-  part: string;
-  name: string;
-  email: string;
-  joinedAt: string;
-  penaltyPoint: number;
-  action: "-";
-}
+import GroupIcon from "./GroupIcon";
+import type { AdminGroupRow } from "../types";
 
 interface GroupTableRowsProps {
   isLoading: boolean;
@@ -38,15 +29,23 @@ function GroupTableRows({ isLoading, members }: GroupTableRowsProps) {
             index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
           }`}
         >
-          <span className="w-14 shrink-0">{member.generation}기</span>
-          <span className="w-26 shrink-0">{member.part}</span>
-          <span className="w-26 shrink-0">{member.name}</span>
-          <span className="w-70 shrink-0 truncate">{member.email}</span>
-          <span className="w-70 shrink-0">{member.joinedAt}</span>
+          <span className="w-10 shrink-0">{member.generation}기</span>
+          <span className="w-18 shrink-0">{member.part}</span>
+          <span className="w-18 shrink-0">{member.name}</span>
+          <span className="w-50 shrink-0 truncate">{member.email}</span>
+          <span className="w-52 shrink-0">{member.joinedAt}</span>
           <span className="w-14 shrink-0">{member.penaltyPoint}점</span>
-          <span className="text-ec-sub w-10 shrink-0 text-center">
-            {member.action}
-          </span>
+          <div className="flex flex-1 justify-between">
+            <GroupIcon label="메모" type="memo" />
+            <GroupIcon label="파트 변경" type="change" />
+            <GroupIcon label="기수 변경" type="change" />
+            <GroupIcon label="벌점" type="demerit" />
+            {member.useable ? (
+              <GroupIcon label="정지" type="stop" />
+            ) : (
+              <GroupIcon label="복구" type="restore" />
+            )}
+          </div>
         </div>
       ))}
     </div>

@@ -6,12 +6,11 @@ import {
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import SessionsTableRows, {
-  type AdminSessionRow,
-} from "../components/SessionsTableRows";
+import SessionsTableRows from "../components/SessionsTableRows";
 import SessionHeader from "../components/SessionHeader";
+import type { AdminSessionRow, PagedResponse } from "../types";
 
-const mockSessions: { content: AdminSessionRow[]; totalElements: number } = {
+const mockSessions: PagedResponse<AdminSessionRow> = {
   content: [
     {
       id: 8,
@@ -85,8 +84,44 @@ const mockSessions: { content: AdminSessionRow[]; totalElements: number } = {
       assignmentCount: 12,
       status: "비활성화",
     },
+    {
+      id: 8,
+      name: "[14기] 아기사자 - 백엔드 파트",
+      creator: "황형진",
+      participantCount: 86,
+      fileCount: 12,
+      assignmentCount: 12,
+      status: "활성화",
+    },
+    {
+      id: 8,
+      name: "[14기] 아기사자 - 백엔드 파트",
+      creator: "황형진",
+      participantCount: 86,
+      fileCount: 12,
+      assignmentCount: 12,
+      status: "비활성화",
+    },
+    {
+      id: 8,
+      name: "[14기] 아기사자 - 백엔드 파트",
+      creator: "황형진",
+      participantCount: 86,
+      fileCount: 12,
+      assignmentCount: 12,
+      status: "활성화",
+    },
+    {
+      id: 8,
+      name: "[14기] 아기사자 - 백엔드 파트",
+      creator: "황형진",
+      participantCount: 86,
+      fileCount: 12,
+      assignmentCount: 12,
+      status: "비활성화",
+    },
   ],
-  totalElements: 8,
+  totalElements: 10,
 };
 
 function AdminSessionsPage() {
