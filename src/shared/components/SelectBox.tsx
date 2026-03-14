@@ -32,7 +32,7 @@ const SelectBox: React.FC<SelectBoxProps> = ({
       >
         <span
           className={`text-sm font-medium ${
-            selected === "전체" ? "text-ec-sub" : "text-ec-black"
+            selected === defaultValue ? "text-ec-sub" : "text-ec-black"
           }`}
         >
           {selected}

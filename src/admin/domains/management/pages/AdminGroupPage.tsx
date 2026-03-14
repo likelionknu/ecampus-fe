@@ -142,7 +142,7 @@ const mockGroupMembers: PagedResponse<AdminGroupRow> = {
 function AdminGroupPage() {
   const itemNum = mockGroupMembers.totalElements;
   const itemSumNum = 8;
-  const isLoading = false;
+  const isLoading = true;
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   return (
@@ -151,7 +151,7 @@ function AdminGroupPage() {
         title="사용자 및 그룹"
         actions={[
           {
-            label: "유저 리스트",
+            label: "화이트리스트",
             buttonType: "primary",
             onClick: () => {},
           },
@@ -160,11 +160,11 @@ function AdminGroupPage() {
 
       <div className="flex flex-col gap-2 md:flex-row">
         <div className="xl:w-108">
-          <SerachBar placeholder="이름 또는 이메일로 검색" />
+          <SerachBar placeholder="사용자 이름으로 검색" />
         </div>
         <SelectBox
           options={SESSION_GROUP_DROPDOWN_OPTIONS}
-          defaultValue="전체"
+          defaultValue="정렬"
         />
       </div>
 

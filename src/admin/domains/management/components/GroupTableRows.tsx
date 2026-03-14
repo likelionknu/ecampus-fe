@@ -11,14 +11,14 @@ function GroupTableRows({ isLoading, members }: GroupTableRowsProps) {
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
       {isLoading && (
-        <div className="flex animate-pulse items-center px-8 py-5">
-          <SkeletonCell className="h-4 w-14" />
-          <SkeletonCell className="ml-4 h-4 w-24" />
-          <SkeletonCell className="ml-4 h-4 w-24" />
+        <div className="flex animate-pulse items-center px-5 py-5">
+          <SkeletonCell className="ml-2 h-4 w-8" />
+          <SkeletonCell className="ml-2 h-4 w-17" />
+          <SkeletonCell className="ml-2 h-4 w-11" />
+          <SkeletonCell className="ml-5 h-4 w-46" />
           <SkeletonCell className="ml-4 h-4 w-50" />
-          <SkeletonCell className="ml-4 h-4 w-50" />
-          <SkeletonCell className="ml-4 h-4 w-10" />
-          <SkeletonCell className="ml-4 h-4 w-6" />
+          <SkeletonCell className="ml-3 h-4 w-8" />
+          <SkeletonCell className="ml-4 h-4 flex-1" />
         </div>
       )}
 
