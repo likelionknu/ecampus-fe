@@ -1,18 +1,20 @@
 export interface TabItemConfig {
   label: string;
   path: string;
+  end?: boolean;
 }
 
-export const DASHBOARD_TAG_ITEMS: TabItemConfig[] = [
+export const SESSION_DASHBOARD_TAG_ITEMS: TabItemConfig[] = [
   { label: "대시보드", path: "/admin/dashboard" },
   { label: "자료 관리", path: "/admin/materials" },
   { label: "과제 관리", path: "/admin/assignments" },
 ];
 
 export const SESSION_MANAGEMENT_TAG_ITEMS: TabItemConfig[] = [
-  { label: "세션 관리", path: "/admin/sessions" },
-  { label: "사용자 및 그룹", path: "/admin/sessions/users" },
-  { label: "질문 및 답변", path: "/admin/sessions/qna" },
+  { label: "세션 관리", path: "/admin/sessions", end: true },
+  { label: "사용자 및 그룹", path: "/admin/sessions/group", end: true },
+  { label: "질문 및 답변", path: "/admin/sessions/qna", end: true },
+  { label: "공지사항", path: "/admin/sessions/qna", end: true },
 ];
 
 export const SESSION_TAG_ITEMS: TabItemConfig[] = [

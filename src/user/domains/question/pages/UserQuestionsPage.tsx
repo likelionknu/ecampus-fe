@@ -12,6 +12,7 @@ import QuestionTableHeader from "../components/QuestionTableHeader";
 import QuestionTableRows from "../components/QuestionTableRows";
 import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
 import SelectBox from "@/shared/components/SelectBox";
+import { QUESTION_STATUS_OPTIONS } from "@/shared/constants/selectOptions";
 
 const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
   {
@@ -140,8 +141,6 @@ const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
     totalElements: 8,
   };
 
-const questionStatusOptions = ["전체", "완료", "대기"];
-
 function UserQuestionsPage() {
   const itemSumNum = 8;
   const itemNum = mockQuestions.totalElements;
@@ -159,7 +158,7 @@ function UserQuestionsPage() {
         <div className="xl:w-108">
           <SerachBar placeholder="질문 제목으로 검색" />
         </div>
-        <SelectBox options={questionStatusOptions} defaultValue="전체" />
+        <SelectBox options={QUESTION_STATUS_OPTIONS} defaultValue="전체" />
       </div>
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>

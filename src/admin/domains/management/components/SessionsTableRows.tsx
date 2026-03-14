@@ -1,14 +1,5 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-
-export interface AdminSessionRow {
-  id: number;
-  name: string;
-  creator: string;
-  participantCount: number;
-  fileCount: number;
-  assignmentCount: number;
-  status: "활성화" | "비활성화";
-}
+import type { AdminSessionRow } from "../types";
 
 interface SessionsTableRowsProps {
   isLoading: boolean;
@@ -19,14 +10,14 @@ function SessionsTableRows({ isLoading, sessions }: SessionsTableRowsProps) {
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
       {isLoading && (
-        <div className="flex animate-pulse items-center px-8 py-5">
-          <SkeletonCell className="h-4 w-6" />
-          <SkeletonCell className="ml-8 h-4 flex-1" />
-          <SkeletonCell className="ml-6 h-4 w-16" />
+        <div className="flex animate-pulse items-center px-6 py-5">
+          <SkeletonCell className="ml-0.5 h-4 w-6" />
+          <SkeletonCell className="ml-7 h-4 w-148" />
+          <SkeletonCell className="ml-3 h-4 w-16" />
+          <SkeletonCell className="ml-6.5 h-4 w-12" />
           <SkeletonCell className="ml-6 h-4 w-12" />
-          <SkeletonCell className="ml-6 h-4 w-12" />
-          <SkeletonCell className="ml-6 h-4 w-12" />
-          <SkeletonCell className="ml-6 h-4 w-14" />
+          <SkeletonCell className="ml-4 h-4 w-12" />
+          <SkeletonCell className="ml-4 h-4 w-14" />
         </div>
       )}
 
@@ -38,13 +29,13 @@ function SessionsTableRows({ isLoading, sessions }: SessionsTableRowsProps) {
           }`}
         >
           <span className="w-12">{session.id}</span>
-          <span className="flex-1 truncate">{session.name}</span>
-          <span className="w-20">{session.creator}</span>
-          <span className="w-16">{session.participantCount}명</span>
-          <span className="w-16">{session.fileCount}건</span>
-          <span className="w-16">{session.assignmentCount}개</span>
+          <span className="w-154 truncate">{session.name}</span>
+          <span className="w-21.5">{session.creator}</span>
+          <span className="w-18.5">{session.participantCount}명</span>
+          <span className="w-16.5">{session.fileCount}건</span>
+          <span className="w-14">{session.assignmentCount}개</span>
           <span
-            className={`w-20 ${
+            className={`w-12 text-center ${
               session.status === "활성화" ? "text-ec-blue" : "text-ec-sub"
             }`}
           >
