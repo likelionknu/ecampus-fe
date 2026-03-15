@@ -164,7 +164,7 @@ function AdminGroupPage() {
         </div>
         <SelectBox
           options={SESSION_GROUP_DROPDOWN_OPTIONS}
-          defaultValue="전체"
+          defaultValue="정렬"
         />
       </div>
 
