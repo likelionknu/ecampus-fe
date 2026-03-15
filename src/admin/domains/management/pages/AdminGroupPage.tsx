@@ -146,7 +146,7 @@ function AdminGroupPage() {
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280 xl:px-8">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
       <TitleSection
         title="사용자 및 그룹"
         actions={[
@@ -164,7 +164,7 @@ function AdminGroupPage() {
         </div>
         <SelectBox
           options={SESSION_GROUP_DROPDOWN_OPTIONS}
-          defaultValue="정렬"
+          defaultValue="전체"
         />
       </div>
 

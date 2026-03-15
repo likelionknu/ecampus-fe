@@ -9,6 +9,10 @@ import {
 import SessionsTableRows from "../components/SessionsTableRows";
 import SessionHeader from "../components/SessionHeader";
 import type { AdminSessionRow, PagedResponse } from "../types";
+import { useState } from "react";
+import CreateModal from "../components/modal/sessions/CreateModal";
+import ConfirmModal from "../components/modal/sessions/ConfirmModal";
+import DoneModal from "../components/modal/sessions/DoneModal";
 
 const mockSessions: PagedResponse<AdminSessionRow> = {
   content: [
@@ -124,21 +128,52 @@ const mockSessions: PagedResponse<AdminSessionRow> = {
   totalElements: 10,
 };
 
+type ModalStep = "CREATE" | "CONFIRM" | "DONE";
+
+type StepType = ModalStep | "";
+
 function AdminSessionsPage() {
   const itemNum = mockSessions.totalElements;
   const itemSumNum = 8;
   const isLoading = true;
+  const [name, setName] = useState<string>("");
+  const [step, setStep] = useState<StepType>("");
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  const handleClose = () => {
+    setStep("");
+  };
+
+  const stepModal = {
+    CREATE: (
+      <CreateModal
+        name={name}
+        onChange={(e) => setName(e.target.value)}
+        onNext={() => {
+          setStep("CONFIRM");
+        }}
+        onClose={handleClose}
+      />
+    ),
+    CONFIRM: (
+      <ConfirmModal onClose={handleClose} onNext={() => setStep("DONE")} />
+    ),
+    DONE: <DoneModal onClose={handleClose} />,
+  };
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
+      {step && stepModal[step]}
+
       <TitleSection
         title="세션 관리"
         actions={[
           {
             label: "새 세션 추가하기",
             buttonType: "primary",
-            onClick: () => {},
+            onClick: () => {
+              setStep("CREATE");
+            },
           },
         ]}
       />
