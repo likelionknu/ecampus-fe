@@ -95,26 +95,25 @@ function UserNotificationPage() {
   const isLoading = false;
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
-  const handleClose = useCallback(() => {
-    setModalState(null);
-  }, []);
-
   const titleActions = useMemo(
     () => [
       {
         label: "모두 읽음으로 표시",
         buttonType: "primary" as const,
-        onClick: () => setModalState({ action: "MARK_ALL_READ", phase: "CONFIRM" }),
+        onClick: () =>
+          setModalState({ action: "MARK_ALL_READ", phase: "CONFIRM" }),
       },
       {
         label: "모든 알림 지우기",
         buttonType: "danger" as const,
-        onClick: () => setModalState({ action: "DELETE_ALL", phase: "CONFIRM" }),
+        onClick: () =>
+          setModalState({ action: "DELETE_ALL", phase: "CONFIRM" }),
       },
       {
         label: "읽은 알림 지우기",
         buttonType: "danger" as const,
-        onClick: () => setModalState({ action: "DELETE_READ", phase: "CONFIRM" }),
+        onClick: () =>
+          setModalState({ action: "DELETE_READ", phase: "CONFIRM" }),
       },
     ],
     [],
@@ -140,14 +139,18 @@ function UserNotificationPage() {
     }
   };
 
+  const handleClose = useCallback(() => {
+    setModalState(null);
+  }, []);
+
   const handleConfirm = () => {
     if (!modalState) return;
 
     runAction(modalState.action);
-    setModalState({ action: modalState.action, phase: "DONE" });
+    setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
   };
 
-  const renderActionModal = () => {
+  const renderStepModal = () => {
     if (!modalState) return null;
 
     const config = MODAL_CONFIG[modalState.action];
@@ -175,7 +178,7 @@ function UserNotificationPage() {
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-280">
-      {renderActionModal()}
+      {renderStepModal()}
 
       <TitleSection
         title="알림"

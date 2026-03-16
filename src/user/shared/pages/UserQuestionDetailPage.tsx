@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useMatches } from "react-router-dom";
 import TextBox from "@/shared/components/TextBox";
 import CommentInput from "@/shared/components/comment/CommentInput";
@@ -10,6 +10,39 @@ import QuestionCommentSkeleton from "@/user/domains/session/components/skeleton/
 import QuestionMetaRowSkeleton from "@/user/domains/session/components/skeleton/QuestionMetaRowSkeleton";
 import TitleSection from "@/shared/components/TitleSection";
 import { useMediaQuery } from "react-responsive";
+import Modal from "@/shared/components/Modal";
+import Button from "@/shared/components/Button";
+
+type ActionType = "COMMENT" | "QUESTION";
+type ModalPhase = "CONFIRM" | "DONE";
+type ModalState = { action: ActionType; phase: ModalPhase } | null;
+
+const MODAL_CONFIG: Record<
+  ActionType,
+  {
+    title: string;
+    confirmMessage: string;
+    doneMessage: string;
+    confirmLabel: string;
+    confirmVariant: "primary" | "danger";
+  }
+> = {
+  QUESTION: {
+    title: "질문 삭제",
+    confirmMessage:
+      "질문을 정말 삭제하시겠어요? 이 질문을 그대로 남겨두어\n 다른 사용자에게 도움이 될 수 있도록 도와주세요",
+    doneMessage: "질문을 삭제했어요.",
+    confirmLabel: "삭제",
+    confirmVariant: "danger",
+  },
+  COMMENT: {
+    title: "새 댓글 등록",
+    confirmMessage: "이 질문 게시글에 댓글을 등록할게요.",
+    doneMessage: "게시글에 댓글을 등록했어요.",
+    confirmLabel: "확인",
+    confirmVariant: "primary",
+  },
+};
 
 const mockQuestionDetail = {
   answer: null,
@@ -46,9 +79,10 @@ const questionMetaRows = [
 const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답변자", "상태"];
 
 function UserQuestionDetailPage() {
-  const isMobile = useMediaQuery({ maxWidth: 479 });
+  const [modalState, setModalState] = useState<ModalState>(null);
   const [isLoading, setIsLoading] = useState(false);
   const matches = useMatches();
+  const isMobile = useMediaQuery({ maxWidth: 479 });
   const shouldShowDeleteButton =
     [...matches]
       .reverse()
@@ -59,10 +93,48 @@ function UserQuestionDetailPage() {
       )
       .find((value): value is boolean => typeof value === "boolean") ?? false;
 
+  const handleClose = useCallback(() => {
+    setModalState(null);
+  }, []);
+
+  const handleComfirm = () => {
+    if (!modalState) return;
+
+    setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
+  };
+
+  const renderStepModal = () => {
+    if (!modalState) return null;
+
+    const config = MODAL_CONFIG[modalState.action];
+    const isConfirm = modalState.phase === "CONFIRM";
+
+    return (
+      <Modal>
+        <Modal.Header onClick={handleClose}>{config.title}</Modal.Header>
+        <Modal.Description>
+          {isConfirm ? config.confirmMessage : config.doneMessage}
+        </Modal.Description>
+        <Modal.ButtonLayout>
+          <Button
+            size="modal"
+            variant={isConfirm ? config.confirmVariant : "primary"}
+            onClick={isConfirm ? handleComfirm : handleClose}
+          >
+            {isConfirm ? config.confirmLabel : "확인"}
+          </Button>
+          {isConfirm && <Modal.Cancled onClick={handleClose} />}
+        </Modal.ButtonLayout>
+      </Modal>
+    );
+  };
+
   return (
     <div
       className={`${shouldShowDeleteButton ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280`}
     >
+      {renderStepModal()}
+
       <div className="flex flex-col gap-5">
         <TitleSection
           title={mockQuestionDetail.title}
@@ -73,7 +145,7 @@ function UserQuestionDetailPage() {
                     label: "삭제",
                     buttonType: "danger" as const,
                     onClick: () => {
-                      setIsLoading((prev) => !prev);
+                      setModalState({ action: "QUESTION", phase: "CONFIRM" });
                     },
                   },
                 ],
@@ -128,7 +200,11 @@ function UserQuestionDetailPage() {
               <TextBox px={false} py={false}>
                 <QuestionCommentItem isMy={true} />
               </TextBox>
-              <CommentInput />
+              <CommentInput
+                onClick={() => {
+                  setModalState({ action: "COMMENT", phase: "CONFIRM" });
+                }}
+              />
             </>
           ) : (
             <TextBox>
@@ -150,7 +226,11 @@ function UserQuestionDetailPage() {
                   </>
                 )}
               </div>
-              <CommentInput />
+              <CommentInput
+                onClick={() => {
+                  setModalState({ action: "COMMENT", phase: "CONFIRM" });
+                }}
+              />
             </TextBox>
           )}
         </div>
