@@ -1,7 +1,7 @@
 import CloseImg from "../assets/close.png";
 
 interface ModalProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   onClick?: () => void;
 }
 
@@ -33,9 +33,12 @@ function ModalButtonLayout({ children }: ModalProps) {
   );
 }
 
-function ModalCancled() {
+function ModalCancled({ onClick }: ModalProps) {
   return (
-    <span className="text-ec-black tracking-ec-normal cursor-pointer text-[12px] leading-120 font-medium">
+    <span
+      className="text-ec-black tracking-ec-normal cursor-pointer text-[12px] leading-120 font-medium"
+      onClick={onClick}
+    >
       취소
     </span>
   );
@@ -56,7 +59,7 @@ const Modal = Object.assign(ModalMain, {
   Header: ModalHeader,
   Description: ModalDescription,
   ButtonLayout: ModalButtonLayout,
-  Cancle: ModalCancled,
+  Cancled: ModalCancled,
 });
 
 export default Modal;

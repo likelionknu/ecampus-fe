@@ -9,6 +9,11 @@ import {
 import SessionsTableRows from "../components/SessionsTableRows";
 import SessionHeader from "../components/SessionHeader";
 import type { AdminSessionRow, PagedResponse } from "../types";
+import { useCallback, useState } from "react";
+import CreateModal from "../components/modal/sessions/CreateModal";
+import ConfirmModal from "../components/modal/sessions/ConfirmModal";
+import DoneModal from "../components/modal/sessions/DoneModal";
+import type { CreateConfirmDoneModalStep } from "@/shared/types/ModalStep";
 
 const mockSessions: PagedResponse<AdminSessionRow> = {
   content: [
@@ -128,17 +133,49 @@ function AdminSessionsPage() {
   const itemNum = mockSessions.totalElements;
   const itemSumNum = 8;
   const isLoading = true;
+  const [name, setName] = useState<string>("");
+  const [step, setStep] = useState<CreateConfirmDoneModalStep | null>(null);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  const handleClose = useCallback(() => {
+    setStep(null);
+
+    if (name) setName("");
+  }, [name]);
+
+  const renderStepModal = () => {
+    switch (step) {
+      case "CREATE":
+        return (
+          <CreateModal
+            name={name}
+            onChange={(e) => setName(e.target.value)}
+            onNext={() => setStep("CONFIRM")}
+            onClose={handleClose}
+          />
+        );
+      case "CONFIRM":
+        return (
+          <ConfirmModal onClose={handleClose} onNext={() => setStep("DONE")} />
+        );
+      case "DONE":
+        return <DoneModal onClose={handleClose} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
+      {renderStepModal()}
+
       <TitleSection
         title="세션 관리"
         actions={[
           {
             label: "새 세션 추가하기",
             buttonType: "primary",
-            onClick: () => {},
+            onClick: () => setStep("CREATE"),
           },
         ]}
       />

@@ -6,7 +6,13 @@
   );
 };
 
-function QuestionCommentItem({ isMy }: { isMy?: boolean }) {
+function QuestionCommentItem({
+  isMy,
+  onClick,
+}: {
+  isMy?: boolean;
+  onClick?: () => void;
+}) {
   return (
     <div className="border-ec-outline border-b px-4 py-2 xl:px-0">
       <div className="font-pretendard flex justify-between">
@@ -20,7 +26,10 @@ function QuestionCommentItem({ isMy }: { isMy?: boolean }) {
           {isMy && <CommentStatus />}
         </div>
         {isMy && (
-          <span className="text-ec-red tracking-ec-normal cursor-pointer text-[14px]/[23px] font-medium">
+          <span
+            className="text-ec-red tracking-ec-normal cursor-pointer text-[14px]/[23px] font-medium"
+            onClick={onClick}
+          >
             삭제
           </span>
         )}
