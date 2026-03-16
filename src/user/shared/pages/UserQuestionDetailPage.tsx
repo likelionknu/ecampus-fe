@@ -12,10 +12,10 @@ import TitleSection from "@/shared/components/TitleSection";
 import { useMediaQuery } from "react-responsive";
 import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
+import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
 
 type ActionType = "COMMENT" | "QUESTION";
-type ModalPhase = "CONFIRM" | "DONE";
-type ModalState = { action: ActionType; phase: ModalPhase } | null;
+type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
 
 const MODAL_CONFIG: Record<
   ActionType,
@@ -80,7 +80,7 @@ const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답�
 
 function UserQuestionDetailPage() {
   const [modalState, setModalState] = useState<ModalState>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const isLoading = false;
   const matches = useMatches();
   const isMobile = useMediaQuery({ maxWidth: 479 });
   const shouldShowDeleteButton =

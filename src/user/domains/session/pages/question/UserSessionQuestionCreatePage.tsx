@@ -3,10 +3,9 @@ import { useCallback, useState, type ChangeEvent, type ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
 import Button from "@/shared/components/Button";
 import TitleSection from "@/shared/components/TitleSection";
+import type { CreateConfirmErrorModalStep } from "@/shared/types/ModalStep";
 import BoxLayout from "@/user/shared/components/BoxLayout";
 import SessionQuestionWarning from "../../components/question/SessionQuestionWarning";
-
-type ModalStep = "CREATE" | "CONFIRM" | "ERROR";
 
 interface CreateQuestion {
   title: string;
@@ -57,7 +56,7 @@ const TextAreaField = ({
 };
 
 const MODAL_CONFIG: Record<
-  ModalStep,
+  CreateConfirmErrorModalStep,
   {
     description: string;
   }
@@ -78,7 +77,7 @@ function UserSessionQuestionCreatePage() {
     title: "",
     content: "",
   });
-  const [step, setStep] = useState<ModalStep | null>(null);
+  const [step, setStep] = useState<CreateConfirmErrorModalStep | null>(null);
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   const handleClose = useCallback(() => {

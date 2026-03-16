@@ -13,6 +13,7 @@ import NotificationTableRows from "../components/NotificationTableRows";
 import type { NotificationRow } from "../types/NotificationRow";
 import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
+import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
 
 const notificationContent =
   "[14기] 아기사자 - 백엔드 파트 세션에 새로운 자료가 업로드되었어요";
@@ -49,8 +50,7 @@ const mockNotifications: NotificationRow[] = [
 ];
 
 type ActionType = "MARK_ALL_READ" | "DELETE_ALL" | "DELETE_READ";
-type ModalPhase = "CONFIRM" | "DONE";
-type ModalState = { action: ActionType; phase: ModalPhase } | null;
+type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
 
 const MODAL_CONFIG: Record<
   ActionType,

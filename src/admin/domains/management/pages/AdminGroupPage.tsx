@@ -12,6 +12,11 @@ import { SESSION_GROUP_DROPDOWN_OPTIONS } from "@/shared/constants/selectOptions
 import GroupHeader from "../components/GroupHeader";
 import GroupTableRows from "../components/GroupTableRows";
 import type { AdminGroupRow, PagedResponse } from "../types";
+import GroupActionStepModal, {
+  type GroupActionType,
+} from "../components/modal/GroupActionStepModal";
+import { useCallback, useState } from "react";
+import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
 
 const mockGroupMembers: PagedResponse<AdminGroupRow> = {
   content: [
@@ -139,21 +144,51 @@ const mockGroupMembers: PagedResponse<AdminGroupRow> = {
   totalElements: 8,
 };
 
+export type ModalState = {
+  action: GroupActionType;
+  phase: ConfirmDoneModalPhase;
+} | null;
+
 function AdminGroupPage() {
   const itemNum = mockGroupMembers.totalElements;
   const itemSumNum = 8;
   const isLoading = true;
+  const [modalState, setModalState] = useState<ModalState>(null);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  const handleClose = useCallback(() => {
+    setModalState(null);
+  }, []);
+
+  const handleOpenModal = useCallback((action: GroupActionType) => {
+    setModalState({ action, phase: "CONFIRM" });
+  }, []);
+
+  const handleConfirm = () => {
+    if (!modalState) return;
+
+    setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
+  };
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
+      {modalState && (
+        <GroupActionStepModal
+          modalState={modalState}
+          onClose={handleClose}
+          onNext={handleConfirm}
+        />
+      )}
+
       <TitleSection
         title="사용자 및 그룹"
         actions={[
           {
             label: "화이트리스트",
             buttonType: "primary",
-            onClick: () => {},
+            onClick: () => {
+              handleOpenModal("WHITELIST_ADD");
+            },
           },
         ]}
       />
@@ -186,7 +221,11 @@ function AdminGroupPage() {
               {pagedMembers.length === 0 && !isLoading ? (
                 <TableEmptyState label="해당하는 사용자를 찾을 수 없거나 존재하지 않아요" />
               ) : (
-                <GroupTableRows isLoading={isLoading} members={pagedMembers} />
+                <GroupTableRows
+                  isLoading={isLoading}
+                  members={pagedMembers}
+                  onOpenModal={handleOpenModal}
+                />
               )}
               <PageNationButton />
             </>

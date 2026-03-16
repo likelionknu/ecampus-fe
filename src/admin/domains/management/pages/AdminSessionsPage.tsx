@@ -13,6 +13,7 @@ import { useCallback, useState } from "react";
 import CreateModal from "../components/modal/sessions/CreateModal";
 import ConfirmModal from "../components/modal/sessions/ConfirmModal";
 import DoneModal from "../components/modal/sessions/DoneModal";
+import type { CreateConfirmDoneModalStep } from "@/shared/types/ModalStep";
 
 const mockSessions: PagedResponse<AdminSessionRow> = {
   content: [
@@ -128,14 +129,12 @@ const mockSessions: PagedResponse<AdminSessionRow> = {
   totalElements: 10,
 };
 
-type ModalStep = "CREATE" | "CONFIRM" | "DONE";
-
 function AdminSessionsPage() {
   const itemNum = mockSessions.totalElements;
   const itemSumNum = 8;
   const isLoading = true;
   const [name, setName] = useState<string>("");
-  const [step, setStep] = useState<ModalStep | null>(null);
+  const [step, setStep] = useState<CreateConfirmDoneModalStep | null>(null);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   const handleClose = useCallback(() => {
