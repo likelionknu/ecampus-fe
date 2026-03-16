@@ -1,22 +1,5 @@
-import { useEffect } from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { loginWithGoogleCode } from "@auth/api/login";
 import LoginLoadingVector from "@auth/assets/Vector.svg";
-import {
-  AuthFlowError,
-  buildLoginErrorPath,
-  createAuthErrorInfo,
-  getGoogleOAuthErrorMessage,
-  normalizeAuthError,
-} from "@auth/utils/authErrors";
-import {
-  clearAuthSession,
-  getDefaultRouteByRole,
-  saveAuthSession,
-  toAuthSession,
-} from "@auth/utils/authStorage";
-import { validateGoogleOAuthState } from "@auth/utils/googleOAuth";
 import NavLogo from "@shared/assets/NavLogo.png";
 import LegalFooter from "@shared/components/LegalFooter";
 import PageBackground from "@shared/components/PageBackground";
@@ -33,67 +16,6 @@ function LoginLoadingIllustration() {
 }
 
 function LoginLoadingPage() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const code = searchParams.get("code");
-  const error = searchParams.get("error");
-  const state = searchParams.get("state");
-
-  useEffect(() => {
-    let isActive = true;
-
-    const processGoogleLogin = async () => {
-      try {
-        if (error) {
-          throw new AuthFlowError(
-            createAuthErrorInfo({
-              reason: "oauth",
-              message: getGoogleOAuthErrorMessage(error),
-            }),
-          );
-        }
-
-        if (!code) {
-          throw new AuthFlowError(
-            createAuthErrorInfo({
-              reason: "invalid-code",
-            }),
-          );
-        }
-
-        validateGoogleOAuthState(state);
-
-        const loginResponse = await loginWithGoogleCode({ code });
-
-        saveAuthSession(toAuthSession(loginResponse));
-
-        if (!isActive) {
-          return;
-        }
-
-        navigate(getDefaultRouteByRole(loginResponse.role), {
-          replace: true,
-        });
-      } catch (caughtError) {
-        clearAuthSession();
-
-        if (!isActive) {
-          return;
-        }
-
-        navigate(buildLoginErrorPath(normalizeAuthError(caughtError)), {
-          replace: true,
-        });
-      }
-    };
-
-    void processGoogleLogin();
-
-    return () => {
-      isActive = false;
-    };
-  }, [code, error, navigate, state]);
-
   return (
     <PageBackground variant="auth">
       {/*모바일*/}

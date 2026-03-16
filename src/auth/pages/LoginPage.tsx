@@ -7,17 +7,22 @@ import {
 } from "@auth/utils/authErrors";
 import {
   getDefaultRouteByRole,
-  getStoredAuthSession,
-} from "@auth/utils/authStorage";
-import { startGoogleLogin } from "@auth/utils/googleOAuth";
+  useAuthSessionStore,
+} from "@auth/utils/authStore";
+import GoogleLogin from "@/auth/api/googleOAuth";
 import NavLogo from "@shared/assets/NavLogo.png";
 import LegalFooter from "@shared/components/LegalFooter";
 import PageBackground from "@shared/components/PageBackground";
 
 function LoginPage() {
   const navigate = useNavigate();
-  const authSession = getStoredAuthSession();
+  const hasHydrated = useAuthSessionStore((state) => state.hasHydrated);
+  const authSession = useAuthSessionStore((state) => state.session);
   const [isRedirecting, setIsRedirecting] = useState(false);
+
+  if (!hasHydrated) {
+    return null;
+  }
 
   if (authSession) {
     return <Navigate to={getDefaultRouteByRole(authSession.role)} replace />;
@@ -27,7 +32,7 @@ function LoginPage() {
     setIsRedirecting(true);
 
     try {
-      startGoogleLogin();
+      GoogleLogin();
     } catch (error) {
       setIsRedirecting(false);
       navigate(buildLoginErrorPath(normalizeAuthError(error)), {

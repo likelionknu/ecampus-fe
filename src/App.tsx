@@ -5,8 +5,8 @@ import {
 } from "react-router-dom";
 import AdminRoutes from "@admin/AdminRoutes";
 import RequireAuth from "@auth/components/RequireAuth";
+import GoogleCallback from "@auth/api/GoogleCallback";
 import LoginErrorPage from "@auth/pages/LoginErrorPage";
-import LoginLoadingPage from "@auth/pages/LoginLoadingPage";
 import LoginPage from "@auth/pages/LoginPage";
 import BaseLayout from "@shared/layouts/BaseLayout";
 import ErrorPage from "@shared/pages/ErrorPage";
@@ -18,6 +18,7 @@ import UserRoutes from "@user/UserRoutes";
 import TestPage from "./shared/pages/TestPage";
 
 const router = createBrowserRouter([
+  { path: "/", element: <GoogleCallback /> },
   {
     path: "/test",
     element: <TestPage />,
@@ -31,11 +32,6 @@ const router = createBrowserRouter([
     path: "/auth/login-error",
     element: <LoginErrorPage />,
     handle: { title: "Login Error" },
-  },
-  {
-    path: "/auth/login-loading",
-    element: <LoginLoadingPage />,
-    handle: { title: "Login Loading" },
   },
   {
     path: "/preparing",

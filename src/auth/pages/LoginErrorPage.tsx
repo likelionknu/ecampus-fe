@@ -6,7 +6,7 @@ import {
   normalizeAuthError,
   readAuthErrorFromSearchParams,
 } from "@auth/utils/authErrors";
-import { startGoogleLogin } from "@auth/utils/googleOAuth";
+import GoogleLogin from "@/auth/api/googleOAuth";
 import NavLogo from "@shared/assets/NavLogo.png";
 import LegalFooter from "@shared/components/LegalFooter";
 import PageBackground from "@shared/components/PageBackground";
@@ -21,7 +21,7 @@ function LoginErrorPage() {
     setIsRedirecting(true);
 
     try {
-      startGoogleLogin();
+      GoogleLogin();
     } catch (error) {
       setIsRedirecting(false);
       navigate(buildLoginErrorPath(normalizeAuthError(error)), {

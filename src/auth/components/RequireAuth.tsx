@@ -2,8 +2,8 @@ import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import {
   getDefaultRouteByRole,
-  getStoredAuthSession,
-} from "@auth/utils/authStorage";
+  useAuthSessionStore,
+} from "@auth/utils/authStore";
 import type { UserRole } from "@auth/types/auth";
 
 interface RequireAuthProps {
@@ -13,7 +13,12 @@ interface RequireAuthProps {
 
 function RequireAuth({ children, allowedRoles }: RequireAuthProps) {
   const location = useLocation();
-  const authSession = getStoredAuthSession();
+  const hasHydrated = useAuthSessionStore((state) => state.hasHydrated);
+  const authSession = useAuthSessionStore((state) => state.session);
+
+  if (!hasHydrated) {
+    return null;
+  }
 
   if (!authSession) {
     return (
