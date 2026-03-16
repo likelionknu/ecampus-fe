@@ -18,6 +18,20 @@ interface HeaderRouterButtonProps {
   onClick: (to: string) => void;
 }
 
+function HeaderRouterButton({ label, to, onClick }: HeaderRouterButtonProps) {
+  return (
+    <button
+      type="button"
+      className="flex w-full cursor-pointer items-center"
+      onClick={() => onClick(to)}
+    >
+      <div className="text-ec-black full line-clamp-1 justify-start text-base font-medium">
+        {label}
+      </div>
+    </button>
+  );
+}
+
 function Header() {
   const isTablet = useMediaQuery({ maxWidth: 1280 });
 
@@ -45,24 +59,6 @@ function Header() {
   };
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  const HeaderRouterButton = ({
-    label,
-    to,
-    onClick,
-  }: HeaderRouterButtonProps) => {
-    return (
-      <button
-        type="button"
-        className="flex w-full cursor-pointer items-center"
-        onClick={() => onClick(to)}
-      >
-        <div className="text-ec-black full line-clamp-1 justify-start text-base font-medium">
-          {label}
-        </div>
-      </button>
-    );
-  };
 
   return (
     <>
