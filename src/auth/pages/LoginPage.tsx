@@ -1,9 +1,41 @@
-import GoogleIcon from "@auth/assets/googleicon.svg";
+import { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import GoogleLoginButton from "@auth/components/GoogleLoginButton";
+import {
+  buildLoginErrorPath,
+  normalizeAuthError,
+} from "@auth/utils/authErrors";
+import {
+  getDefaultRouteByRole,
+  getStoredAuthSession,
+} from "@auth/utils/authStorage";
+import { startGoogleLogin } from "@auth/utils/googleOAuth";
 import NavLogo from "@shared/assets/NavLogo.png";
 import LegalFooter from "@shared/components/LegalFooter";
 import PageBackground from "@shared/components/PageBackground";
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const authSession = getStoredAuthSession();
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  if (authSession) {
+    return <Navigate to={getDefaultRouteByRole(authSession.role)} replace />;
+  }
+
+  const handleGoogleLogin = () => {
+    setIsRedirecting(true);
+
+    try {
+      startGoogleLogin();
+    } catch (error) {
+      setIsRedirecting(false);
+      navigate(buildLoginErrorPath(normalizeAuthError(error)), {
+        replace: true,
+      });
+    }
+  };
+
   return (
     <PageBackground variant="auth">
       {/*모바일*/}
@@ -29,18 +61,11 @@ function LoginPage() {
             멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
           </p>
 
-          <button
-            type="button"
+          <GoogleLoginButton
+            onClick={handleGoogleLogin}
+            disabled={isRedirecting}
             className="text-ec-blue border-ec-blue bg-ec-white font-pretendard hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue tracking-ec-normal mt-10 inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border text-[14px]/[20px] font-medium transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <img
-              src={GoogleIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-5 w-5 shrink-0"
-            />
-            <span>구글 계정으로 시작하기</span>
-          </button>
+          />
         </div>
 
         {/*모바일 푸터*/}
@@ -70,18 +95,12 @@ function LoginPage() {
             멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
           </p>
 
-          <button
-            type="button"
+          <GoogleLoginButton
+            onClick={handleGoogleLogin}
+            disabled={isRedirecting}
             className="text-ec-blue rounded-ec-10 border-ec-blue bg-ec-white hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue mt-10 inline-flex h-14 w-full max-w-96 cursor-pointer items-center justify-center gap-2.5 border transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <img
-              src={GoogleIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-5 w-5 shrink-0"
-            />
-            <span className="typo-body-1">구글 계정으로 시작하기</span>
-          </button>
+            labelClassName="typo-body-1"
+          />
         </div>
         <LegalFooter />
       </section>
