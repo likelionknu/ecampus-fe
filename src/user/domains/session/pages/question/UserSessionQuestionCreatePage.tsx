@@ -1,8 +1,9 @@
-// import Modal from "@/shared/components/Modal";
-import { useState, type ChangeEvent, type ReactNode } from "react";
+import Modal from "@/shared/components/Modal";
+import { useCallback, useState, type ChangeEvent, type ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
 import Button from "@/shared/components/Button";
 import TitleSection from "@/shared/components/TitleSection";
+import type { CreateConfirmErrorModalStep } from "@/shared/types/ModalStep";
 import BoxLayout from "@/user/shared/components/BoxLayout";
 import SessionQuestionWarning from "../../components/question/SessionQuestionWarning";
 
@@ -54,27 +55,59 @@ const TextAreaField = ({
   );
 };
 
+const MODAL_CONFIG: Record<
+  CreateConfirmErrorModalStep,
+  {
+    description: string;
+  }
+> = {
+  CREATE: {
+    description: "새로운 질문 게시글을 업로드할까요?",
+  },
+  CONFIRM: {
+    description: "새로운 질문 게시글을 업로드했어요",
+  },
+  ERROR: {
+    description: "요청을 다시 확인해주세요",
+  },
+};
+
 function UserSessionQuestionCreatePage() {
   const [createQuestion, setCreateQuestion] = useState<CreateQuestion>({
     title: "",
     content: "",
   });
+  const [step, setStep] = useState<CreateConfirmErrorModalStep | null>(null);
   const isMobile = useMediaQuery({ maxWidth: 479 });
+
+  const handleClose = useCallback(() => {
+    setStep(null);
+  }, []);
+
+  const handleConfirm = () => {
+    setStep("CONFIRM");
+  };
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
-      {/* <Modal>
-        <Modal.Header>새 질문 등록</Modal.Header>
-        <Modal.Description>
-          새로운 질문 게시글을 업로드할까요?
-        </Modal.Description>
-        <Modal.ButtonLayout>
-          <Button size="modal" variant="primary">
-            확인
-          </Button>
-          <Modal.Cancle />
-        </Modal.ButtonLayout>
-      </Modal> */}
+      {step && (
+        <Modal>
+          <Modal.Header onClick={handleClose}>새 질문 등록</Modal.Header>
+          <Modal.Description>
+            {MODAL_CONFIG[step].description}
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="modal"
+              variant="primary"
+              onClick={step === "CREATE" ? handleConfirm : handleClose}
+            >
+              확인
+            </Button>
+            {step === "CREATE" && <Modal.Cancled onClick={handleClose} />}
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
 
       <TitleSection title="새 질문 등록" />
       <SessionQuestionWarning />
@@ -112,7 +145,14 @@ function UserSessionQuestionCreatePage() {
       </BoxLayout>
 
       <div className="text-right">
-        <Button size="large">등록</Button>
+        <Button
+          size="large"
+          onClick={() => {
+            setStep("CREATE");
+          }}
+        >
+          등록
+        </Button>
       </div>
     </div>
   );

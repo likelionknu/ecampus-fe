@@ -1,6 +1,6 @@
 ﻿import Button from "../Button";
 
-function CommentInput() {
+function CommentInput({ onClick }: { onClick: () => void }) {
   return (
     <div className="flex gap-4 xl:mt-5">
       <input
@@ -8,7 +8,7 @@ function CommentInput() {
         placeholder="댓글을 남겨보세요"
         className="bg-ec-box md:bg-ec-white text-ec-black placeholder:text-ec-sub rounded-ec-10 font-pretendard tracking-ec-normal flex-1 px-4 py-2 text-[14px]/[23px] font-medium"
       />
-      <Button size="large" variant="primary">
+      <Button size="large" variant="primary" onClick={onClick}>
         등록
       </Button>
     </div>

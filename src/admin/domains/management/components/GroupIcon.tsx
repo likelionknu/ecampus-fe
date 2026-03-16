@@ -9,9 +9,10 @@ import type { GroupIconType } from "../types";
 interface GroupIconProps {
   label: string;
   type: GroupIconType;
+  onClick?: () => void;
 }
 
-function GroupIcon({ label, type }: GroupIconProps) {
+function GroupIcon({ label, type, onClick }: GroupIconProps) {
   const iconMap: Record<
     GroupIconProps["type"],
     ComponentType<SVGProps<SVGSVGElement>>
@@ -30,6 +31,7 @@ function GroupIcon({ label, type }: GroupIconProps) {
   return (
     <span
       className={`${textColorClass} inline-flex cursor-pointer items-center gap-1.5`}
+      onClick={onClick}
     >
       <Icon className="h-3.5 w-3.5 fill-current" aria-hidden="true" />
       <span>{label}</span>
