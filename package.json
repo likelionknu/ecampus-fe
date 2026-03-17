@@ -14,11 +14,15 @@
   "dependencies": {
     "@lottiefiles/dotlottie-react": "^0.18.3",
     "axios": "^1.13.5",
+    "highlight.js": "^11.11.1",
+    "lodash.debounce": "^4.0.8",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-markdown": "^10.1.0",
     "react-responsive": "^10.0.1",
     "react-router-dom": "^7.13.1",
+    "rehype-highlight": "^7.0.2",
+    "remark-gfm": "^4.0.1",
     "zustand": "^5.0.12"
   },
   "devDependencies": {
