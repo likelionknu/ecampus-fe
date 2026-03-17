@@ -8,12 +8,12 @@ import {
   getGoogleOAuthErrorMessage,
   normalizeAuthError,
 } from "@auth/utils/authErrors";
+import type { ApiResponse, GoogleLoginResponseData } from "@auth/types/auth";
 import {
   getDefaultRouteByRole,
   useAuthSessionStore,
 } from "@auth/utils/authStore";
 import { validateGoogleOAuthState } from "@auth/api/googleOAuth";
-import { api } from "@shared/apis";
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
@@ -47,19 +47,38 @@ const GoogleCallback = () => {
 
         validateGoogleOAuthState(state);
         const encodedCode = encodeURIComponent(code);
-        const response = await api.post(`/v1/auth/login?code=${encodedCode}`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BASE_API_URL}/v1/auth/login?code=${encodedCode}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+          },
+        );
 
-        if (!response.data.data) {
+        let payload: ApiResponse<GoogleLoginResponseData> | null = null;
+
+        try {
+          payload =
+            (await response.json()) as ApiResponse<GoogleLoginResponseData>;
+        } catch {
+          payload = null;
+        }
+
+        if (!response.ok || !payload?.data) {
           throw new AuthFlowError(
             createAuthErrorInfo({
-              code: response.data.error.code,
-              message: response.data.error.message,
+              code: payload?.error?.code ?? null,
+              message:
+                payload?.error?.message ??
+                (response.ok
+                  ? null
+                  : response.statusText || "Google login failed"),
               status: response.status,
             }),
           );
         }
 
-        const loginResponse = response.data.data;
+        const loginResponse = payload.data;
 
         setSessionFromGoogleResponse(loginResponse);
 
@@ -88,7 +107,14 @@ const GoogleCallback = () => {
     return () => {
       isActive = false;
     };
-  }, [clearSession, code, error, navigate, setSessionFromGoogleResponse, state]);
+  }, [
+    clearSession,
+    code,
+    error,
+    navigate,
+    setSessionFromGoogleResponse,
+    state,
+  ]);
 
   return <LoginLoadingPage />;
 };
