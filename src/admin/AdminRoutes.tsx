@@ -8,7 +8,7 @@ const adminRoutes: RouteObject[] = [
   {
     element: <SessionTabLayout tabType="adminSession" />,
     children: [
-      { path: "dashboard", element: <AdminSessionsPage /> },
+      { path: "sessions", element: <AdminSessionsPage /> },
       { path: "groups", element: <AdminGroupPage /> },
     ],
   },

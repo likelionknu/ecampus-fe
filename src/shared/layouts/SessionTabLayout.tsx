@@ -13,8 +13,8 @@ interface SessionTabLayoutProps {
 
 const TAB_ITEMS_MAP = {
   userSession: SESSION_TAG_ITEMS,
-  adminSession: SESSION_MANAGEMENT_TAG_ITEMS,
-  adminDashboard: SESSION_DASHBOARD_TAG_ITEMS,
+  adminSession: SESSION_DASHBOARD_TAG_ITEMS,
+  adminDashboard: SESSION_MANAGEMENT_TAG_ITEMS,
 } as const;
 
 function SessionTabLayout({ tabType }: SessionTabLayoutProps) {
