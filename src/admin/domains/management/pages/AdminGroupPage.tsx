@@ -8,7 +8,10 @@ import {
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import { SESSION_GROUP_DROPDOWN_OPTIONS } from "@/shared/constants/selectOptions";
+import {
+  ADMIN_GROUP_PART_DEFAULT,
+  SESSION_PART_OPTIONS,
+} from "@/shared/constants/selectOptions";
 import GroupHeader from "../components/GroupHeader";
 import GroupTableRows from "../components/GroupTableRows";
 import type { AdminGroupRow, PagedResponse } from "../types";
@@ -198,8 +201,8 @@ function AdminGroupPage() {
           <SerachBar placeholder="사용자 이름으로 검색" />
         </div>
         <SelectBox
-          options={SESSION_GROUP_DROPDOWN_OPTIONS}
-          defaultValue="정렬"
+          options={SESSION_PART_OPTIONS}
+          defaultValue={ADMIN_GROUP_PART_DEFAULT}
         />
       </div>
 
