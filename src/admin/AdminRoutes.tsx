@@ -5,6 +5,7 @@ import AdminGroupPage from "./domains/management/pages/AdminGroupPage";
 import DataManagementPage from "./domains/session/pages/DataManagementPage";
 import TaskManagementPage from "./domains/session/pages/TaskManagementPage";
 import AdminQuestionPage from "./domains/management/pages/AdminQuestionPage";
+import AdminNotionPage from "./domains/management/pages/AdminNotionPage";
 
 const adminRoutes: RouteObject[] = [
   {
@@ -16,6 +17,7 @@ const adminRoutes: RouteObject[] = [
       { path: "data/management", element: <DataManagementPage /> },
       { path: "task/management", element: <TaskManagementPage /> },
       { path: "question", element: <AdminQuestionPage /> },
+      { path: "notion", element: <AdminNotionPage /> },
     ],
   },
 ];

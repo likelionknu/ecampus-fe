@@ -6,42 +6,42 @@ import {
   PageNationMenu,
 } from "@/shared/components/PageNation";
 
-const DataManagementPage = () => {
+const AdminNotionPage = () => {
   const itemSumNum = 8;
   const itemNum = 18;
-  interface DataComponentProps {
-    DataId: string;
-    DataName: string;
-    DataRegisterDate: string;
-    DataRegistrant: string;
-    DataVisibility: string;
+  interface AdminNotionComponentProps {
+    NotionId: string;
+    NotionTitle: string;
+    NotionFix: string;
+    NotionDate: string;
+    NotionRegistrant: string;
 
     onClick?: () => void;
   }
-  const DataComponent = ({
-    DataId,
-    DataName,
-    DataRegisterDate,
-    DataRegistrant,
-    DataVisibility,
+  const AdminNotionComponent = ({
+    NotionId,
+    NotionTitle,
+    NotionFix,
+    NotionDate,
+    NotionRegistrant,
     onClick,
-  }: DataComponentProps) => {
+  }: AdminNotionComponentProps) => {
     return (
       <div className="flex cursor-pointer items-center" onClick={onClick}>
         <div className="text-ec-black ml-5 w-12.25 justify-start text-center text-sm font-medium">
-          {DataId}
+          {NotionId}
         </div>
-        <div className="text-ec-black ml-2.5 line-clamp-1 w-134.75 justify-start text-sm font-medium">
-          {DataName}
+        <div className="text-ec-black ml-2.5 line-clamp-1 w-132.75 justify-start text-sm font-medium">
+          {NotionTitle}
         </div>
-        <div className="text-ec-black ml-3.5 w-50.5 justify-start text-center text-sm font-medium">
-          {DataRegisterDate}
+        <div className="text-ec-black ml-7.5 w-7 justify-start text-center text-sm font-medium">
+          {NotionFix}
         </div>
-        <div className="text-ec-black ml-6 w-12 justify-start text-center text-sm font-medium">
-          {DataRegistrant}
+        <div className="text-ec-black ml-9 w-50 justify-start text-center text-sm font-medium">
+          {NotionDate}
         </div>
-        <div className="text-ec-black ml-6 w-11 justify-start text-center text-sm font-medium">
-          {DataVisibility}
+        <div className="text-ec-black ml-9 w-11 justify-start text-center text-sm font-medium">
+          {NotionRegistrant}
         </div>
       </div>
     );
@@ -50,7 +50,7 @@ const DataManagementPage = () => {
     <div className="flex w-full items-center justify-center pt-26.25 xl:pt-7.5">
       <div className="flex h-full w-251.5 flex-col items-center">
         <div className="flex w-full justify-between">
-          <TitleSection title={`자료 관리`} />
+          <TitleSection title={`공지사항`} />
           <div className="bg-ec-blue rounded-ec-10 flex h-9.5 w-30 cursor-pointer items-center justify-center">
             <div className="text-ec-gnb-white text-center text-base font-medium">
               새 자료 추가
@@ -67,16 +67,16 @@ const DataManagementPage = () => {
                       ID
                     </div>
                     <div className="text-ec-table-topic ml-7.25 justify-start text-center text-xs font-medium">
-                      자료 명
+                      제목
                     </div>
-                    <div className="text-ec-table-topic ml-151 justify-start text-center text-xs font-medium">
-                      등록일
+                    <div className="text-ec-table-topic ml-136 justify-start text-center text-xs font-medium">
+                      고정
                     </div>
-                    <div className="text-ec-table-topic ml-29.5 justify-start text-center text-xs font-medium">
-                      등록자
+                    <div className="text-ec-table-topic ml-31 justify-start text-center text-xs font-medium">
+                      생성일
                     </div>
-                    <div className="text-ec-table-topic ml-8.25 justify-start text-center text-xs font-medium">
-                      공개 여부
+                    <div className="text-ec-table-topic ml-31.75 justify-start text-center text-xs font-medium">
+                      생성자
                     </div>
                   </PageNationMenu>
                   {currentItems.map((item, index) => (
@@ -84,12 +84,12 @@ const DataManagementPage = () => {
                       key={startIndex + index}
                       absoluteIndex={startIndex + index}
                     >
-                      <DataComponent
-                        DataId={String(startIndex + index + 1)}
-                        DataName={`공지사항 ${item}`}
-                        DataRegisterDate="2026년 2월 13일 오전 12시 38분"
-                        DataRegistrant="김찬주"
-                        DataVisibility="비공개"
+                      <AdminNotionComponent
+                        NotionId={String(startIndex + index + 1)}
+                        NotionTitle={`공지사항 ${item}`}
+                        NotionFix="고정"
+                        NotionDate="2026년 2월 14일 오전 12시 38분"
+                        NotionRegistrant="김찬주"
                       />
                     </PageNationItem>
                   ))}
@@ -104,4 +104,4 @@ const DataManagementPage = () => {
   );
 };
 
-export default DataManagementPage;
+export default AdminNotionPage;
