@@ -1,7 +1,7 @@
 import TabBar from "@/shared/components/TabBar";
 import {
-  SESSION_DASHBOARD_TAG_ITEMS,
-  SESSION_MANAGEMENT_TAG_ITEMS,
+  ADMIN_DASHBOARD_TAG_ITEMS,
+  ADMIN_MANAGEMENT_TAG_ITEMS,
   SESSION_TAG_ITEMS,
 } from "@/shared/constants/tabItems";
 import type { ComponentProps } from "react";
@@ -13,8 +13,8 @@ interface SessionTabLayoutProps {
 
 const TAB_ITEMS_MAP = {
   userSession: SESSION_TAG_ITEMS,
-  adminSession: SESSION_DASHBOARD_TAG_ITEMS,
-  adminDashboard: SESSION_MANAGEMENT_TAG_ITEMS,
+  adminSession: ADMIN_MANAGEMENT_TAG_ITEMS,
+  adminDashboard: ADMIN_DASHBOARD_TAG_ITEMS,
 } as const;
 
 function SessionTabLayout({ tabType }: SessionTabLayoutProps) {
