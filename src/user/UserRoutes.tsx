@@ -61,7 +61,7 @@ const userRoutes: RouteObject[] = [
         handle: { title: "질문 상세", showDeleteButton: true },
       },
       { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
-      { path: "group", element: <UserSessionGroupPage /> },
+      { path: "groups", element: <UserSessionGroupPage /> },
     ],
   },
 ];
