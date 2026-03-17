@@ -12,7 +12,7 @@ import AdminDashboardPage from "./domains/session/pages/AdminDashboardPage";
 
 const adminRoutes: RouteObject[] = [
   {
-    element: <SessionTabLayout tabType="adminSession" />,
+    element: <SessionTabLayout tabType="adminManagement" />,
     children: [
       { path: "sessions", element: <AdminSessionsPage /> },
       { path: "groups", element: <AdminGroupPage /> },

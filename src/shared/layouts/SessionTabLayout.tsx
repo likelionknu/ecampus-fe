@@ -2,18 +2,18 @@ import TabBar from "@/shared/components/TabBar";
 import {
   ADMIN_DASHBOARD_TAG_ITEMS,
   ADMIN_MANAGEMENT_TAG_ITEMS,
-  SESSION_TAG_ITEMS,
+  USER_SESSION_TAG_ITEMS,
 } from "@/shared/constants/tabItems";
 import type { ComponentProps } from "react";
 import { Outlet } from "react-router-dom";
 
 interface SessionTabLayoutProps {
-  tabType: "userSession" | "adminSession" | "adminDashboard";
+  tabType: "userSession" | "adminManagement" | "adminDashboard";
 }
 
 const TAB_ITEMS_MAP = {
-  userSession: SESSION_TAG_ITEMS,
-  adminSession: ADMIN_MANAGEMENT_TAG_ITEMS,
+  userSession: USER_SESSION_TAG_ITEMS,
+  adminManagement: ADMIN_MANAGEMENT_TAG_ITEMS,
   adminDashboard: ADMIN_DASHBOARD_TAG_ITEMS,
 } as const;
 

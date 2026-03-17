@@ -17,7 +17,7 @@ export const ADMIN_MANAGEMENT_TAG_ITEMS: TabItemConfig[] = [
   { label: "공지사항", path: "/admin/sessions/qna", end: true },
 ];
 
-export const SESSION_TAG_ITEMS: TabItemConfig[] = [
+export const USER_SESSION_TAG_ITEMS: TabItemConfig[] = [
   { label: "자료", path: "/user/sessions/files" },
   { label: "과제", path: "/user/sessions/assignments" },
   { label: "사용자 및 그룹", path: "/user/sessions/group" },
