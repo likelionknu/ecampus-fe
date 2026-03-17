@@ -15,68 +15,54 @@ import UserNotificationPage from "./domains/notification/pages/NotificationPage"
 
 const userRoutes: RouteObject[] = [
   {
-    path: "dashboard",
-    element: <UserDashBoardPage />,
-    handle: { title: "대시보드" },
-  },
-  {
-    path: "sessions",
-    element: <UserSessionSelect />,
-    handle: { title: "세션" },
-  },
-  {
-    path: "sessions/files",
-    element: <SessionTabLayout tabType="userSession" />,
     children: [
-      { index: true, element: <UserSessionFilesPage /> },
-      // path: "files/:id",
-      { path: "detail", element: <UserSessionFilesViewPage /> },
-    ],
-  },
-  {
-    path: "sessions/assignments",
-    element: <SessionTabLayout tabType="userSession" />,
-    children: [
-      { index: true, element: <UserSessionAssignments /> },
-      // path: "assignments/:id",
-      { path: "detail", element: <UserSessionAssignmentsView /> },
-    ],
-  },
-  {
-    path: "sessions/questions",
-    element: <SessionTabLayout tabType="userSession" />,
-    children: [
-      { index: true, element: <UserSessionQuestionsPage /> },
-      // path: "sessions/questions/:id",
       {
-        path: "detail",
-        element: <UserQuestionDetailPage />,
-        handle: { title: "질문 상세", showDeleteButton: true },
+        path: "dashboard",
+        element: <UserDashBoardPage />,
+        handle: { title: "대시보드" },
       },
-      { path: "new", element: <UserSessionQuestionCreatePage /> },
+      {
+        path: "sessions",
+        element: <UserSessionSelect />,
+        handle: { title: "세션" },
+      },
+      {
+        path: "notification",
+        element: <UserNotificationPage />,
+        handle: { title: "알림" },
+      },
+      {
+        path: "questions",
+        element: <UserQuestionsPage />,
+        handle: { title: "질문" },
+      },
     ],
-  },
-  {
-    path: "sessions/group",
-    element: <SessionTabLayout tabType="userSession" />,
-    children: [{ index: true, element: <UserSessionGroupPage /> }],
-  },
-
-  {
-    path: "notification",
-    element: <UserNotificationPage />,
-    handle: { title: "알림" },
-  },
-  {
-    path: "questions",
-    element: <UserQuestionsPage />,
-    handle: { title: "질문" },
   },
   {
     // path: "questions/:id",
     path: "questions/detail",
     element: <UserQuestionDetailPage />,
     handle: { title: "질문 상세" },
+  },
+
+  {
+    path: "sessions",
+    element: <SessionTabLayout tabType="userSession" />,
+    handle: { title: "세션" },
+    children: [
+      { path: "files", element: <UserSessionFilesPage /> },
+      { path: "files/detail", element: <UserSessionFilesViewPage /> },
+      { path: "assignments", element: <UserSessionAssignments /> },
+      { path: "assignments/detail", element: <UserSessionAssignmentsView /> },
+      { path: "questions", element: <UserSessionQuestionsPage /> },
+      {
+        path: "questions/detail",
+        element: <UserQuestionDetailPage />,
+        handle: { title: "질문 상세", showDeleteButton: true },
+      },
+      { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
+      { path: "groups", element: <UserSessionGroupPage /> },
+    ],
   },
 ];
 
