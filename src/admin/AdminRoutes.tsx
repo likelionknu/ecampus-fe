@@ -12,6 +12,10 @@ const adminRoutes: RouteObject[] = [
       { path: "group", element: <AdminGroupPage /> },
     ],
   },
+  {
+    path: "/sessions/dashboard",
+    element: <SessionTabLayout tabType="adminDashboard" />,
+  },
 ];
 
 export default adminRoutes;
