@@ -22,7 +22,7 @@ function TabBar({ items }: { items: TabItem[] }) {
   const isTabListVisible = !isMobile || toggle;
 
   return (
-    <nav className="bg-ec-white border-ec-outline-dark absolute top-16.25 z-10 w-dvw overflow-hidden border-r md:relative md:top-0 md:w-50">
+    <nav className="bg-ec-white border-ec-outline absolute top-16.25 z-10 w-dvw overflow-hidden border-r md:relative md:top-0 md:w-50">
       {isMobile && (
         <div
           className="bg-ec-box flex items-center justify-between px-6 py-3"
