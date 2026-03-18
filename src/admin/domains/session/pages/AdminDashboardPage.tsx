@@ -236,7 +236,18 @@ function AdminDashboardPage() {
             defaultValue={ADMIN_DASHBOARD_PART_DEFAULT}
             onChange={setSelectedPart}
           />
-          <Button size="large" variant="primary">
+          <Button
+            size="large"
+            variant="primary"
+            onClick={() =>
+              setMembers((prev) => ({
+                ...prev,
+                id: 9,
+                label: "황형진",
+                type: "user",
+              }))
+            }
+          >
             사용자 등록
           </Button>
         </div>

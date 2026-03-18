@@ -108,7 +108,7 @@ function Header() {
               />
               <HeaderRouterButton
                 label="그룹"
-                to="/user/session/group"
+                to="/user/sessions/group"
                 onClick={(to) => {
                   navigate(to);
                   setIsMobileMenuOpen(false);

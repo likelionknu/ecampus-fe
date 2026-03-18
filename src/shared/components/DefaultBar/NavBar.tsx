@@ -4,6 +4,7 @@ import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";
 import NavAlart from "@shared/assets/NavAlart.svg";
 import NavQuestion from "@shared/assets/NavQuestion.svg";
+import NavAdmin from "@shared/assets/NavAdmin.svg";
 import UserProfileImg from "@shared/assets/UserProfileImg.png";
 
 interface NavItemsProps {
@@ -61,12 +62,20 @@ const NavBar = () => {
   const isSessionSelected = currentSection === "sessions";
   const isNotificationSelected = currentSection === "notification";
   const isQuestionSelected = currentSection === "questions";
+  const isAdminSelected = currentSection === "admin";
 
   return (
     <div className="bg-ec-blue sticky top-0 flex h-screen min-h-screen w-21.5">
       <div className="flex h-full w-full flex-col items-center justify-between px-2.25 pt-9.25 pb-10.75">
         <div className="flex h-105.5 w-full flex-col items-center gap-10">
-          <img src={NavLogo} alt="NavLogo" className="h-9 w-6 cursor-pointer" />
+          <img
+            src={NavLogo}
+            alt="NavLogo"
+            className="h-9 w-6 cursor-pointer"
+            onClick={() => {
+              navigate("/user/dashboard");
+            }}
+          />
           <div className="flex flex-col items-center gap-6.25">
             <NavItems
               iconSrc={NavSession}
@@ -94,6 +103,13 @@ const NavBar = () => {
               label="질문"
               selected={isQuestionSelected}
               onClick={() => navigate("/user/questions")}
+            />
+            <NavItems
+              iconSrc={NavAdmin}
+              iconAlt="NavAdmin"
+              label="관리자"
+              selected={isAdminSelected}
+              onClick={() => navigate("/admin")}
             />
           </div>
         </div>
