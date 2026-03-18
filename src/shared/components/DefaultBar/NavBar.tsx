@@ -4,6 +4,7 @@ import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";
 import NavAlart from "@shared/assets/NavAlart.svg";
 import NavQuestion from "@shared/assets/NavQuestion.svg";
+import NavAdmin from "@shared/assets/NavAdmin.svg";
 import UserProfileImg from "@shared/assets/UserProfileImg.png";
 
 interface NavItemsProps {
@@ -61,6 +62,7 @@ const NavBar = () => {
   const isSessionSelected = currentSection === "sessions";
   const isNotificationSelected = currentSection === "notification";
   const isQuestionSelected = currentSection === "questions";
+  const isAdminSelected = currentSection === "admin";
 
   return (
     <div className="bg-ec-blue sticky top-0 flex h-screen min-h-screen w-21.5">
@@ -94,6 +96,13 @@ const NavBar = () => {
               label="질문"
               selected={isQuestionSelected}
               onClick={() => navigate("/user/questions")}
+            />
+            <NavItems
+              iconSrc={NavAdmin}
+              iconAlt="NavAdmin"
+              label="관리자"
+              selected={isAdminSelected}
+              onClick={() => navigate("/adminSession")}
             />
           </div>
         </div>
