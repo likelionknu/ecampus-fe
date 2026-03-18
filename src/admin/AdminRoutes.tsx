@@ -26,17 +26,17 @@ const adminRoutes: RouteObject[] = [
       { path: "sessions", element: <AdminSessionsPage /> },
       { path: "groups", element: <AdminGroupPage /> },
       {
-        path: "sessions/qna",
+        path: "question",
         element: <AdminQuestionView />,
         handle: { title: "질문" },
       },
       {
-        path: "sessions/qna/manage",
+        path: "question/manage",
         element: <AdminQuestionManageView />,
         handle: { title: "질문" },
       },
       {
-        path: "sessions/notices",
+        path: "notices",
         element: <PreparingPage />,
         handle: { title: "공지사항" },
       },
@@ -48,23 +48,18 @@ const adminRoutes: RouteObject[] = [
   {
     path: "sessions",
     element: <SessionTabLayout tabType="adminDashboard" />,
-
     handle: { title: "세션 관리 / [14기] 아기사자 - 백엔드 파트" },
     children: [
-
-      
       { path: "data/management", element: <DataManagementPage /> },
       { path: "task/management", element: <TaskManagementPage /> },
       { path: "question", element: <AdminQuestionPage /> },
       { path: "notion", element: <AdminNotionPage /> },
-
       { path: "dashboard", element: <AdminDashboardPage /> },
       { path: "assignments", element: <AdminSessionAssignmentsView /> },
-      { path: "assignments/upload", element: <AdminSessionAssignmentUpload /> },{ path: "files/upload", element: <FilesUploadPage /> },
+      { path: "assignments/upload", element: <AdminSessionAssignmentUpload /> },
+      { path: "files/upload", element: <FilesUploadPage /> },
       { path: "files/view", element: <FilesViewPage /> },
       { path: "files/modify", element: <FilesModifyPage /> },
-
-
     ],
   },
 ];

@@ -4,7 +4,7 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import AdminRoutes from "@admin/AdminRoutes";
-import RequireAuth from "@auth/components/RequireAuth";
+// import RequireAuth from "@auth/components/RequireAuth";
 import GoogleCallback from "@auth/api/GoogleCallback";
 import LoginErrorPage from "@auth/pages/LoginErrorPage";
 import LoginPage from "@auth/pages/LoginPage";
@@ -56,9 +56,9 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: (
-      <RequireAuth allowedRoles={["USER"]}>
-        <BaseLayout />
-      </RequireAuth>
+      // <RequireAuth allowedRoles={["USER"]}>
+      <BaseLayout />
+      // </RequireAuth>
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
