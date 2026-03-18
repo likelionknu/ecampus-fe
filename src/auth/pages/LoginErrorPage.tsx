@@ -1,17 +1,34 @@
-import GoogleIcon from "@auth/assets/googleicon.svg";
+import { useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import GoogleLoginButton from "@auth/components/GoogleLoginButton";
+import {
+  buildLoginErrorPath,
+  normalizeAuthError,
+  readAuthErrorFromSearchParams,
+} from "@auth/utils/authErrors";
+import GoogleLogin from "@/auth/api/googleOAuth";
 import NavLogo from "@shared/assets/NavLogo.png";
 import LegalFooter from "@shared/components/LegalFooter";
 import PageBackground from "@shared/components/PageBackground";
-import { useSearchParams } from "react-router-dom";
 
 function LoginErrorPage() {
-  // `?error=social` 쿼리 파라미터가 있으면 소셜 로그인 오류 문구를 노출
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const errorType = searchParams.get("error");
-  const errorMessage =
-    errorType === "social"
-      ? "소셜 로그인 진행 중 오류가 발생했어요"
-      : "이 계정은 승인되지 않은 계정이에요";
+  const [isRedirecting, setIsRedirecting] = useState(false);
+  const authError = readAuthErrorFromSearchParams(searchParams);
+
+  const handleGoogleLogin = () => {
+    setIsRedirecting(true);
+
+    try {
+      GoogleLogin();
+    } catch (error) {
+      setIsRedirecting(false);
+      navigate(buildLoginErrorPath(normalizeAuthError(error)), {
+        replace: true,
+      });
+    }
+  };
 
   return (
     <PageBackground variant="auth">
@@ -35,7 +52,7 @@ function LoginErrorPage() {
             role="alert"
             className="border-ec-red text-ec-red tracking-ec-normal flex h-12 w-full items-center rounded-xl border px-3.5 text-[14px]/[20px] font-medium"
           >
-            {errorMessage}
+            {authError.message}
           </div>
 
           <h1 className="text-ec-black font-pretendard tracking-ec-normal mt-5 text-[24px]/[1.35] font-semibold">
@@ -45,18 +62,11 @@ function LoginErrorPage() {
             멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
           </p>
 
-          <button
-            type="button"
+          <GoogleLoginButton
+            onClick={handleGoogleLogin}
+            disabled={isRedirecting}
             className="text-ec-blue border-ec-blue bg-ec-white font-pretendard hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue tracking-ec-normal mt-10 inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border text-[14px]/[20px] font-medium transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <img
-              src={GoogleIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-5 w-5 shrink-0"
-            />
-            <span>구글 계정으로 시작하기</span>
-          </button>
+          />
         </div>
 
         {/*모바일 푸터*/}
@@ -85,7 +95,7 @@ function LoginErrorPage() {
             role="alert"
             className="border-ec-red text-ec-red rounded-ec-10 flex h-12 w-full max-w-96 items-center border px-4.5 text-sm leading-6 font-medium"
           >
-            {errorMessage}
+            {authError.message}
           </div>
 
           <h1 className="typo-title text-ec-black mt-4.75">
@@ -95,18 +105,12 @@ function LoginErrorPage() {
             멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
           </p>
 
-          <button
-            type="button"
+          <GoogleLoginButton
+            onClick={handleGoogleLogin}
+            disabled={isRedirecting}
             className="text-ec-blue rounded-ec-10 border-ec-blue bg-ec-white hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue mt-10 inline-flex h-14 w-full max-w-96 cursor-pointer items-center justify-center gap-2.5 border transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
-          >
-            <img
-              src={GoogleIcon}
-              alt=""
-              aria-hidden="true"
-              className="h-5 w-5 shrink-0"
-            />
-            <span className="typo-body-1">구글 계정으로 시작하기</span>
-          </button>
+            labelClassName="typo-body-1"
+          />
         </div>
         <LegalFooter />
       </section>
