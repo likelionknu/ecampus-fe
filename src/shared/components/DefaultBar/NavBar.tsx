@@ -68,7 +68,14 @@ const NavBar = () => {
     <div className="bg-ec-blue sticky top-0 flex h-screen min-h-screen w-21.5">
       <div className="flex h-full w-full flex-col items-center justify-between px-2.25 pt-9.25 pb-10.75">
         <div className="flex h-105.5 w-full flex-col items-center gap-10">
-          <img src={NavLogo} alt="NavLogo" className="h-9 w-6 cursor-pointer" />
+          <img
+            src={NavLogo}
+            alt="NavLogo"
+            className="h-9 w-6 cursor-pointer"
+            onClick={() => {
+              navigate("/user/dashboard");
+            }}
+          />
           <div className="flex flex-col items-center gap-6.25">
             <NavItems
               iconSrc={NavSession}
