@@ -75,7 +75,7 @@ export default function FilesUploadLayout({
             >
               확인
             </Button>
-            <Modal.Cancled onClick={() => setModalType(null)} />
+            <Modal.Cancelled onClick={() => setModalType(null)} />
           </Modal.ButtonLayout>
         </Modal>
       )}

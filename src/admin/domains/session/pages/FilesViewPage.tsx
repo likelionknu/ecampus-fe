@@ -113,7 +113,7 @@ function FilesViewPage() {
             >
               확인
             </Button>
-            <Modal.Cancled onClick={() => setModalType(null)} />
+            <Modal.Cancelled onClick={() => setModalType(null)} />
           </Modal.ButtonLayout>
         </Modal>
       )}
@@ -153,16 +153,18 @@ function FilesViewPage() {
             >
               삭제
             </Button>
-            <Modal.Cancled onClick={() => setModalType(null)} />
+            <Modal.Cancelled onClick={() => setModalType(null)} />
           </Modal.ButtonLayout>
         </Modal>
       )}
       {modalType === "deleteSuccess" && (
         <Modal>
           <Modal.Header onClick={() => setModalType(null)}>
-            삭제 완료
+            세션 자료 삭제
           </Modal.Header>
-          <Modal.Description>자료가 삭제되었습니다.</Modal.Description>
+          <Modal.Description>
+            이 세션 자료를 삭제할까요? 이 작업은 되돌릴 수 없어요
+          </Modal.Description>
           <Modal.ButtonLayout>
             <Button size="primary" onClick={() => setModalType(null)}>
               확인

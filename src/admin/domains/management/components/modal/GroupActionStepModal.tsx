@@ -37,7 +37,7 @@ function GroupActionStepModal({
         >
           {isConfirm ? config.confirmLabel : "확인"}
         </Button>
-        {isConfirm && <Modal.Cancled onClick={onClose} />}
+        {isConfirm && <Modal.Cancelled onClick={onClose} />}
       </Modal.ButtonLayout>
     </Modal>
   );

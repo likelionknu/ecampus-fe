@@ -123,7 +123,7 @@ function UserQuestionDetailPage() {
           >
             {isConfirm ? config.confirmLabel : "확인"}
           </Button>
-          {isConfirm && <Modal.Cancled onClick={handleClose} />}
+          {isConfirm && <Modal.Cancelled onClick={handleClose} />}
         </Modal.ButtonLayout>
       </Modal>
     );
