@@ -1,21 +1,21 @@
-import { useEffect, useRef } from "react"
-import InputBox from "@/shared/components/InputBox"
-import Button from "@/shared/components/Button"
-import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync"
-import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor"
-import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview"
+import { useEffect, useRef } from "react";
+import Button from "@/shared/components/Button";
+import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync";
+import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor";
+import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview";
+import Input from "@/shared/components/Input";
 
 interface Props {
-  title: string
-  content: string
-  setTitle: (v: string) => void
-  setContent: (v: string) => void
+  title: string;
+  content: string;
+  setTitle: (v: string) => void;
+  setContent: (v: string) => void;
 }
 
 interface FileData {
-  fileId: number
-  name: string
-  content: string
+  fileId: number;
+  name: string;
+  content: string;
 }
 
 const mockFile: FileData = {
@@ -38,7 +38,7 @@ const mockFile: FileData = {
 2. 사용자 A가 등록한 상점
 3. 사용자 A가 상점에 등록한 상품 A, B, C
 `,
-}
+};
 
 export default function ModifyLayout({
   title,
@@ -46,29 +46,26 @@ export default function ModifyLayout({
   setTitle,
   setContent,
 }: Props) {
+  const editorRef = useRef<HTMLTextAreaElement | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
 
-  const editorRef = useRef<HTMLTextAreaElement | null>(null)
-  const previewRef = useRef<HTMLDivElement | null>(null)
-
-  useScrollSync(editorRef, previewRef)
+  useScrollSync(editorRef, previewRef);
   useEffect(() => {
-    setTitle(mockFile.name)
-    setContent(mockFile.content)
-  }, [setContent, setTitle])
+    setTitle(mockFile.name);
+    setContent(mockFile.content);
+  }, [setContent, setTitle]);
 
   return (
     <div className="px-5 pt-5">
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <div className="w-228.5">
-          <InputBox
+          <Input
             placeholder="제목을 입력하세요"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="large">
-          수정
-        </Button>
+        <Button size="large">수정</Button>
       </div>
       <div className="flex gap-1">
         <div className="w-125.25">
@@ -79,12 +76,9 @@ export default function ModifyLayout({
           />
         </div>
         <div className="w-125.25">
-          <MarkdownPreview
-            ref={previewRef}
-            content={content}
-          />
+          <MarkdownPreview ref={previewRef} content={content} />
         </div>
       </div>
     </div>
-  )
+  );
 }

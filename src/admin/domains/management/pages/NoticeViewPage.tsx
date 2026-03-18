@@ -1,6 +1,7 @@
 import Button from "@/shared/components/Button";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import ReactMarkdown from "react-markdown";
+import { markdownComponents } from "../../session/components/markdown/MarkdownComponents";
 
 interface FileData {
   fileId: number;
@@ -39,11 +40,8 @@ const file: FileData = {
 function NoticeViewPage() {
   return (
     <div className="prose bg-ec-white w-full max-w-251.5 px-12 py-12">
-
-      <h1 className="text-3xl font-semibold text-ec-black mb-2 ">
-        {file.name}
-      </h1>
-      <div className="flex gap-8 text-xs mb-6">
+      <h1 className="text-ec-black mb-2 text-3xl font-semibold">{file.name}</h1>
+      <div className="mb-6 flex gap-8 text-xs">
         <div className="flex gap-2">
           <span className="text-ec-sub">작성</span>
           <span className="text-ec-black">
@@ -52,14 +50,12 @@ function NoticeViewPage() {
         </div>
         <div className="flex gap-2">
           <span className="text-ec-sub">등록자</span>
-          <span className="text-ec-black">
-            {file.writer}
-          </span>
+          <span className="text-ec-black">{file.writer}</span>
         </div>
       </div>
 
       {/* 버튼 */}
-      <div className="flex gap-2 mb-6">
+      <div className="mb-6 flex gap-2">
         <Button size="primary" variant="primary">
           고정
         </Button>
@@ -72,51 +68,9 @@ function NoticeViewPage() {
       </div>
 
       {/* markdown */}
- <ReactMarkdown
-        components={{
-          h1: ({children}) => (
-            <h1 className="text-3xl font-semibold text-ec-black mt-10 mb-4">
-              {children}
-            </h1>
-          ),
-
-          h2: ({children}) => (
-            <h2 className="text-2xl font-semibold text-ec-black mt-8 mb-3 border-b pb-2 border-ec-outline">
-              {children}
-            </h2>
-          ),
-
-          p: ({children}) => (
-            <p className="text-ec-black leading-7 mb-4">
-              {children}
-            </p>
-          ),
-
-          li: ({children}) => (
-            <li className="text-ec-black leading-7">
-              {children}
-            </li>
-          ),
-
-          img: ({src, alt}) => (
-            <img
-              src={src || ""}
-              alt={alt || ""}
-              className="rounded-ec-10 border border-ec-outline my-6"
-            />
-          ),
-
-        blockquote: ({children}) => (
-  <blockquote className="bg-ec-blue text-ec-white px-4 py-2 rounded-ec-10 [&>p]:text-ec-white [&>p]:m-0 border-none [&>p]:after:content-none [&>p]:before:content-none not-italic">
-    {children}
-  </blockquote>
-),
-        }}
-      >
+      <ReactMarkdown components={markdownComponents}>
         {file.content}
       </ReactMarkdown>
-
-
     </div>
   );
 }
