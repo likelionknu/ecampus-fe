@@ -14,44 +14,28 @@ import type { NotificationRow } from "../types/NotificationRow";
 import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
 import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
-import { getNotification } from "../apis";
-
-const notificationContent =
-  "[14기] 아기사자 - 백엔드 파트 세션에 새로운 자료가 업로드되었어요";
-
-const mockNotifications: NotificationRow[] = [
-  {
-    id: 1,
-    content: notificationContent,
-    status: "안 읽음",
-    receivedAt: "3일 전",
-  },
-  { id: 2, content: notificationContent, status: "읽음", receivedAt: "3일 전" },
-  {
-    id: 3,
-    content: notificationContent,
-    status: "안 읽음",
-    receivedAt: "3일 전",
-  },
-  { id: 4, content: notificationContent, status: "읽음", receivedAt: "3일 전" },
-  {
-    id: 5,
-    content: notificationContent,
-    status: "안 읽음",
-    receivedAt: "3일 전",
-  },
-  { id: 6, content: notificationContent, status: "읽음", receivedAt: "3일 전" },
-  {
-    id: 7,
-    content: notificationContent,
-    status: "안 읽음",
-    receivedAt: "3일 전",
-  },
-  { id: 8, content: notificationContent, status: "읽음", receivedAt: "3일 전" },
-];
+import { getNotification } from "../apis/notification";
 
 type ActionType = "MARK_ALL_READ" | "DELETE_ALL" | "DELETE_READ";
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
+
+interface NotificationPageState {
+  notifications: NotificationRow[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
+const INITIAL_NOTIFICATION_PAGE_STATE: NotificationPageState = {
+  notifications: [],
+  page: 0,
+  size: 8,
+  totalElements: 0,
+  totalPages: 0,
+  hasNext: false,
+};
 
 const MODAL_CONFIG: Record<
   ActionType,
@@ -88,12 +72,16 @@ const MODAL_CONFIG: Record<
 };
 
 function UserNotificationPage() {
-  const itemSumNum = 8;
-  const [notifications, setNotifications] =
-    useState<NotificationRow[]>(mockNotifications);
+  // api 응답(데이터, 페이지네이션)
+  const [notificationPage, setNotificationPage] =
+    useState<NotificationPageState>(INITIAL_NOTIFICATION_PAGE_STATE);
+
+  // 모달 활성화
   const [modalState, setModalState] = useState<ModalState>(null);
+  // 로딩
   const [isLoading, setIsLoading] = useState(false);
-  const itemNum = notifications.length;
+  const itemNum = notificationPage.totalElements;
+  const itemSumNum = notificationPage.size;
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   const titleActions = useMemo(
@@ -123,23 +111,47 @@ function UserNotificationPage() {
   const runAction = (action: ActionType) => {
     switch (action) {
       case "MARK_ALL_READ":
-        setNotifications((prev) =>
-          prev.map((notification) => ({ ...notification, status: "읽음" })),
-        );
+        setNotificationPage((prev) => ({
+          ...prev,
+          notifications: prev.notifications.map((notification) => ({
+            ...notification,
+            status: "읽음",
+          })),
+        }));
         break;
       case "DELETE_ALL":
-        setNotifications([]);
+        setNotificationPage((prev) => ({
+          ...prev,
+          notifications: [],
+          totalElements: 0,
+          totalPages: 0,
+          hasNext: false,
+        }));
         break;
       case "DELETE_READ":
-        setNotifications((prev) =>
-          prev.filter((notification) => notification.status !== "읽음"),
-        );
+        setNotificationPage((prev) => {
+          const unreadNotifications = prev.notifications.filter(
+            (notification) => notification.status !== "읽음",
+          );
+          const nextTotalElements = unreadNotifications.length;
+          const nextTotalPages =
+            prev.size > 0 ? Math.ceil(nextTotalElements / prev.size) : 0;
+
+          return {
+            ...prev,
+            notifications: unreadNotifications,
+            totalElements: nextTotalElements,
+            totalPages: nextTotalPages,
+            hasNext: prev.page + 1 < nextTotalPages,
+          };
+        });
         break;
       default:
         break;
     }
   };
 
+  // 모달 비활성화
   const handleClose = useCallback(() => {
     setModalState(null);
   }, []);
@@ -151,6 +163,7 @@ function UserNotificationPage() {
     setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
   };
 
+  // 모달
   const renderStepModal = () => {
     if (!modalState) return null;
 
@@ -177,13 +190,25 @@ function UserNotificationPage() {
     );
   };
 
+  // 알림 조회
   useEffect(() => {
     const fetchNotifications = async () => {
       setIsLoading(true);
+
       try {
         const res = await getNotification();
+        const responseData = res.data?.data;
 
-        setNotifications(res.data?.notifications ?? []);
+        setNotificationPage({
+          notifications: Array.isArray(responseData?.notifications)
+            ? responseData.notifications
+            : [],
+          page: responseData?.page ?? 0,
+          size: responseData?.size ?? INITIAL_NOTIFICATION_PAGE_STATE.size,
+          totalElements: responseData?.totalElements ?? 0,
+          totalPages: responseData?.totalPages ?? 0,
+          hasNext: responseData?.hasNext ?? false,
+        });
       } catch (error) {
         console.log(error);
       } finally {
@@ -206,7 +231,7 @@ function UserNotificationPage() {
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
-          const pagedNotifications = notifications.slice(
+          const pagedNotifications = notificationPage.notifications.slice(
             startIndex,
             startIndex + currentItems.length,
           );
