@@ -92,8 +92,8 @@ function UserNotificationPage() {
   const [notifications, setNotifications] =
     useState<NotificationRow[]>(mockNotifications);
   const [modalState, setModalState] = useState<ModalState>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const itemNum = notifications.length;
-  const isLoading = false;
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   const titleActions = useMemo(
@@ -179,12 +179,15 @@ function UserNotificationPage() {
 
   useEffect(() => {
     const fetchNotifications = async () => {
+      setIsLoading(true);
       try {
         const res = await getNotification();
 
         setNotifications(res.data?.notifications ?? []);
       } catch (error) {
         console.log(error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
