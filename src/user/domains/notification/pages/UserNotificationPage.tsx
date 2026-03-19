@@ -1,5 +1,5 @@
 ﻿import { useMediaQuery } from "react-responsive";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   PageNationButton,
   PageNationFrame,
@@ -14,6 +14,7 @@ import type { NotificationRow } from "../types/NotificationRow";
 import Modal from "@/shared/components/Modal";
 import Button from "@/shared/components/Button";
 import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
+import { getNotification } from "../apis";
 
 const notificationContent =
   "[14기] 아기사자 - 백엔드 파트 세션에 새로운 자료가 업로드되었어요";
@@ -176,6 +177,20 @@ function UserNotificationPage() {
     );
   };
 
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const res = await getNotification();
+
+        setNotifications(res.data?.notifications ?? []);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchNotifications();
+  }, []);
+
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-280">
       {renderStepModal()}
@@ -192,6 +207,7 @@ function UserNotificationPage() {
             startIndex,
             startIndex + currentItems.length,
           );
+          const isEmpty = pagedNotifications.length === 0;
 
           return (
             <>
@@ -201,7 +217,7 @@ function UserNotificationPage() {
                 </PageNationMenu>
               )}
 
-              {pagedNotifications.length === 0 && !isLoading ? (
+              {isEmpty && !isLoading ? (
                 <TableEmptyState label="받은 알림이 없어요" />
               ) : isMobile ? (
                 <MobileNotifitcationTableRows
