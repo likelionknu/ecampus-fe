@@ -25,13 +25,14 @@ const adminRoutes: RouteObject[] = [
     children: [
       { path: "sessions", element: <AdminSessionsPage /> },
       { path: "groups", element: <AdminGroupPage /> },
+      { path: "questions", element: <AdminQuestionPage /> },
       {
-        path: "question",
-        element: <AdminQuestionView />,
         handle: { title: "질문" },
+        path: "questions/detail",
+        element: <AdminQuestionView />,
       },
       {
-        path: "question/manage",
+        path: "questions/manage",
         element: <AdminQuestionManageView />,
         handle: { title: "질문" },
       },
@@ -52,7 +53,6 @@ const adminRoutes: RouteObject[] = [
     children: [
       { path: "data/management", element: <DataManagementPage /> },
       { path: "task/management", element: <TaskManagementPage /> },
-      { path: "question", element: <AdminQuestionPage /> },
       { path: "notion", element: <AdminNotionPage /> },
       { path: "dashboard", element: <AdminDashboardPage /> },
       { path: "assignments", element: <AdminSessionAssignmentsView /> },

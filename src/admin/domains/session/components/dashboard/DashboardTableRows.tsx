@@ -11,14 +11,14 @@ function DashboardTableRows({ isLoading, members }: DashboardTableRowsProps) {
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
       {isLoading && (
-        <div className="flex animate-pulse items-center px-8 py-5">
+        <div className="flex animate-pulse items-center px-6 py-5">
           <SkeletonCell className="h-4 w-10" />
           <SkeletonCell className="ml-8 h-4 w-16" />
-          <SkeletonCell className="ml-6 h-4 w-16" />
-          <SkeletonCell className="ml-6 h-4 w-48" />
-          <SkeletonCell className="ml-6 h-4 w-56" />
-          <SkeletonCell className="ml-6 h-4 w-16" />
-          <SkeletonCell className="ml-6 h-4 w-18" />
+          <SkeletonCell className="ml-10 h-4 w-16" />
+          <SkeletonCell className="ml-6 h-4 w-38" />
+          <SkeletonCell className="ml-28 h-4 w-52" />
+          <SkeletonCell className="ml-19 h-4 w-20" />
+          <SkeletonCell className="ml-10 h-4 w-22" />
         </div>
       )}
 

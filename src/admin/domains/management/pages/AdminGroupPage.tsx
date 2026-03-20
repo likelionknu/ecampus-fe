@@ -155,7 +155,7 @@ export type ModalState = {
 function AdminGroupPage() {
   const itemNum = mockGroupMembers.totalElements;
   const itemSumNum = 8;
-  const isLoading = true;
+  const isLoading = false;
   const [modalState, setModalState] = useState<ModalState>(null);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
