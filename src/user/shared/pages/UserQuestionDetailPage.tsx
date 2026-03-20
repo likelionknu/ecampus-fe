@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react";
-import { useMatches } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import TextBox from "@/shared/components/TextBox";
 import CommentInput from "@/shared/components/comment/CommentInput";
 import QuestionCommentItem from "@/shared/components/comment/QuestionCommentItem";
@@ -10,9 +10,15 @@ import QuestionCommentSkeleton from "@/user/domains/session/components/skeleton/
 import QuestionMetaRowSkeleton from "@/user/domains/session/components/skeleton/QuestionMetaRowSkeleton";
 import TitleSection from "@/shared/components/TitleSection";
 import { useMediaQuery } from "react-responsive";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import Button from "@/shared/components/Button";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
+import {
+  getQuestionsErrorState,
+  type QuestionErrorState,
+} from "@/shared/utils/questionError";
+import { getSessionQuestion } from "../apis/sessionQuestion";
 
 type ActionType = "COMMENT" | "QUESTION";
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
@@ -79,19 +85,13 @@ const questionMetaRows = [
 const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답변자", "상태"];
 
 function UserQuestionDetailPage() {
+  const { questionId, sessionId } = useParams();
   const [modalState, setModalState] = useState<ModalState>(null);
-  const isLoading = false;
-  const matches = useMatches();
+  const [errors, setErrors] = useState<QuestionErrorState | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  // const isLoading = false;
+  const isMyQuestion = mockQuestionDetail.isMyQuestion;
   const isMobile = useMediaQuery({ maxWidth: 479 });
-  const shouldShowDeleteButton =
-    [...matches]
-      .reverse()
-      .map(
-        (match) =>
-          (match.handle as { showDeleteButton?: boolean } | undefined)
-            ?.showDeleteButton,
-      )
-      .find((value): value is boolean => typeof value === "boolean") ?? false;
 
   const handleClose = useCallback(() => {
     setModalState(null);
@@ -129,16 +129,43 @@ function UserQuestionDetailPage() {
     );
   };
 
+  useEffect(() => {
+    const fetchQeustionDeatil = async () => {
+      setIsLoading(true);
+      const { qid, sid } = { qid: Number(questionId), sid: Number(sessionId) };
+
+      try {
+        const res = await getSessionQuestion({ qid, sid });
+
+        setErrors(null);
+        console.log(res);
+      } catch (error) {
+        setErrors(getQuestionsErrorState(error));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQeustionDeatil();
+  }, [questionId, sessionId]);
+
   return (
     <div
-      className={`${shouldShowDeleteButton ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280`}
+      className={`${mockQuestionDetail.isMyQuestion ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280`}
     >
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
       {renderStepModal()}
 
       <div className="flex flex-col gap-5">
         <TitleSection
           title={mockQuestionDetail.title}
-          {...(shouldShowDeleteButton
+          {...(isMyQuestion
             ? {
                 actions: [
                   {

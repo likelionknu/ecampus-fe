@@ -1,4 +1,4 @@
-import CloseImg from "../assets/close.png";
+import CloseImg from "../../assets/close.png";
 
 interface ModalProps {
   children?: React.ReactNode;

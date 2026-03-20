@@ -1,4 +1,4 @@
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import { useCallback, useState, type ChangeEvent, type ReactNode } from "react";
 import { useMediaQuery } from "react-responsive";
 import Button from "@/shared/components/Button";

@@ -1,5 +1,5 @@
 import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import type { ModalProps } from "@/shared/types/Modal";
 
 function DoneModal({ onClose }: ModalProps) {
