@@ -37,7 +37,6 @@ const userRoutes: RouteObject[] = [
         handle: { title: "질문" },
       },
       {
-        // path: "questions/:id",
         path: "questions/:questionId/:sessionId",
         element: <UserQuestionDetailPage />,
         handle: { title: "질문 상세" },

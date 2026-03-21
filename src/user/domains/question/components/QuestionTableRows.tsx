@@ -2,6 +2,10 @@
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
 import { useNavigate } from "react-router-dom";
+import {
+  formatQuestionStatus,
+  isCompletedQuestionStatus,
+} from "@/user/utils/question";
 
 interface QuestionTableRowsProps {
   isLoading: boolean;
@@ -86,10 +90,12 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
             </span>
             <span
               className={`text-body-2 mr-0.5 ${
-                question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
+                isCompletedQuestionStatus(question.status)
+                  ? "text-ec-blue"
+                  : "text-ec-sub"
               }`}
             >
-              {question.status}
+              {formatQuestionStatus(question.status)}
             </span>
           </div>
         </div>

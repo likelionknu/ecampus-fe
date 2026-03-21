@@ -1,3 +1,5 @@
+import type { QuestionRequestStatus } from "@/shared/types/QuestionRequestStatus";
+
 export const SESSION_PART_OPTIONS = [
   "전체",
   "운영진",
@@ -14,3 +16,13 @@ export const ADMIN_DASHBOARD_PART_DEFAULT = "또는 파트 선택";
 
 export const QUESTION_STATUS_OPTIONS = ["전체", "완료", "대기"];
 
+export const QUESTION_STATUS_DEFAULT_OPTION = QUESTION_STATUS_OPTIONS[0];
+
+export const QUESTION_STATUS_OPTION_TO_REQUEST_STATUS: Record<
+  string,
+  QuestionRequestStatus
+> = {
+  [QUESTION_STATUS_OPTIONS[0]]: "ALL",
+  [QUESTION_STATUS_OPTIONS[1]]: "COMPLETED",
+  [QUESTION_STATUS_OPTIONS[2]]: "PENDING",
+};

@@ -10,7 +10,7 @@ interface QuestionApiResponse<T> {
   error: QuestionApiErrorPayload;
 }
 
-export interface QuestionErrorState {
+export interface CommonErrorState {
   status: string;
   message: string;
 }
@@ -29,7 +29,7 @@ const QUESTION_STATUS_BY_CODE: Record<string, number> = {
   C500: 500,
 };
 
-function resolveQuestionErrorByStatus(status: number): QuestionErrorState {
+function resolveCommonErrorByStatus(status: number): CommonErrorState {
   const resolvedStatus = QUESTION_ERROR_MESSAGE_BY_STATUS[status]
     ? status
     : 500;
@@ -44,12 +44,12 @@ function isObjectRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
 
-export function getQuestionsErrorState(error: unknown): QuestionErrorState {
+export function getCommonErrorState(error: unknown): CommonErrorState {
   if (axios.isAxiosError<QuestionApiResponse<null>>(error)) {
     const status = error.response?.status;
 
     if (typeof status === "number") {
-      return resolveQuestionErrorByStatus(status);
+      return resolveCommonErrorByStatus(status);
     }
 
     const code = error.response?.data?.error?.code;
@@ -59,17 +59,17 @@ export function getQuestionsErrorState(error: unknown): QuestionErrorState {
         : undefined;
 
     if (typeof statusByCode === "number") {
-      return resolveQuestionErrorByStatus(statusByCode);
+      return resolveCommonErrorByStatus(statusByCode);
     }
 
-    return resolveQuestionErrorByStatus(500);
+    return resolveCommonErrorByStatus(500);
   }
 
   if (isObjectRecord(error)) {
     const status = error.status;
 
     if (typeof status === "number") {
-      return resolveQuestionErrorByStatus(status);
+      return resolveCommonErrorByStatus(status);
     }
 
     const maybeError = error.error;
@@ -82,10 +82,13 @@ export function getQuestionsErrorState(error: unknown): QuestionErrorState {
           : undefined;
 
       if (typeof statusByCode === "number") {
-        return resolveQuestionErrorByStatus(statusByCode);
+        return resolveCommonErrorByStatus(statusByCode);
       }
     }
   }
 
-  return resolveQuestionErrorByStatus(500);
+  return resolveCommonErrorByStatus(500);
 }
+
+export type QuestionErrorState = CommonErrorState;
+export const getQuestionsErrorState = getCommonErrorState;

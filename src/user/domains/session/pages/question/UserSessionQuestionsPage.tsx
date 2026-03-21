@@ -11,100 +11,80 @@ import SessionQuestionTableRows from "../../components/question/SessionQuestionT
 import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
 import { useMediaQuery } from "react-responsive";
 import SessionMobileQuestionTableRows from "../../components/question/SessionMobileQuestionTableRows";
+import { useEffect, useState } from "react";
+import { getSessionQuestions } from "../../apis/sessionQuestion";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
 
-const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
-  {
-    content: [
-      {
-        answer: null,
-        answeredAt: null,
-        answeredUserId: null,
-        answeredUserName: null,
-        content: "ㅎㅇㅇggggㅇ",
-        createdAt: "2026-03-03T01:51:40.664772",
-        createdUserId: null,
-        createdUserName: "한종민",
-        id: 4,
-        isMyQuestion: true,
-        sessionId: 1,
-        status: "대기",
-        title: "ㅎㅇ",
-      },
-      {
-        answer: "네, 확인했습니다.",
-        answeredAt: "2026-03-03T03:20:10.000000",
-        answeredUserId: 23,
-        answeredUserName: "관리자",
-        content: "오늘 과제 제출 마감이 언제인가요?",
-        createdAt: "2026-03-03T02:05:40.000000",
-        createdUserId: 11,
-        createdUserName: "김찬주",
-        id: 5,
-        isMyQuestion: false,
-        sessionId: 1,
-        status: "완료",
-        title: "과제 마감 시간 문의",
-      },
-      {
-        answer: null,
-        answeredAt: null,
-        answeredUserId: null,
-        answeredUserName: null,
-        content: "다음 주 세션 자료는 어디서 볼 수 있나요?",
-        createdAt: "2026-03-03T04:10:30.000000",
-        createdUserId: 12,
-        createdUserName: "이서연",
-        id: 6,
-        isMyQuestion: false,
-        sessionId: 1,
-        status: "대기",
-        title: "세션 자료 위치 질문",
-      },
-      {
-        answer: "업로드 완료되었습니다.",
-        answeredAt: "2026-03-03T06:00:00.000000",
-        answeredUserId: 25,
-        answeredUserName: "운영진",
-        content: "녹화본 링크가 열리지 않습니다.",
-        createdAt: "2026-03-03T05:22:18.000000",
-        createdUserId: 15,
-        createdUserName: "박민수",
-        id: 7,
-        isMyQuestion: false,
-        sessionId: 1,
-        status: "완료",
-        title: "녹화본 링크 오류",
-      },
-      {
-        answer: null,
-        answeredAt: null,
-        answeredUserId: null,
-        answeredUserName: null,
-        content: "출석 체크가 반영되지 않았어요.",
-        createdAt: "2026-03-03T07:11:01.000000",
-        createdUserId: 19,
-        createdUserName: "최유진",
-        id: 8,
-        isMyQuestion: false,
-        sessionId: 1,
-        status: "대기",
-        title: "출석 반영 문의",
-      },
-    ],
-    totalElements: 4,
-  };
+interface QuestionsPageState {
+  questions: SessionQuestionRow[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
+const INITIAL_QUESTIONS_PAGE_STATE: QuestionsPageState = {
+  questions: [],
+  page: 0,
+  size: 8,
+  totalElements: 0,
+  totalPages: 0,
+  hasNext: false,
+};
 
 function UserSessionQuestionsPage() {
   const navigate = useNavigate();
+  const [questionsPage, setQuestionsPage] = useState<QuestionsPageState>(
+    INITIAL_QUESTIONS_PAGE_STATE,
+  );
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const itemSumNum = 4;
-  const itemNum = mockQuestions.totalElements;
-  const isLoading = false;
+  const itemNum = questionsPage.totalElements;
+  const [isLoading, setIsLoading] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setIsLoading(true);
+
+      try {
+        const res = await getSessionQuestions({ sid: Number(1) });
+
+        setQuestionsPage({
+          questions: Array.isArray(res.data?.content) ? res.data.content : [],
+          page: res.data?.number ?? 0,
+          size: res.data?.size ?? INITIAL_QUESTIONS_PAGE_STATE.size,
+          totalElements: res.data?.totalElements ?? 0,
+          totalPages: res.data?.totalPages ?? 0,
+          hasNext: !(res.data?.last ?? true),
+        });
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 md:max-w-187.5 xl:max-w-251 xl:px-0">
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
+
       <TitleSection
-        title={`질문 및 답변(${mockQuestions.totalElements})`}
+        title={`질문 및 답변(${questionsPage.totalElements})`}
         subText="궁금한 내용이 있다면 질문하고, 답변받을 수 있어요"
         actions={[
           {
@@ -117,7 +97,7 @@ function UserSessionQuestionsPage() {
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
-          const pagedQuestions = mockQuestions.content.slice(
+          const pagedQuestions = questionsPage.questions.slice(
             startIndex,
             startIndex + currentItems.length,
           );

@@ -15,10 +15,11 @@ import Button from "@/shared/components/Button";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
 import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
 import {
-  getQuestionsErrorState,
-  type QuestionErrorState,
+  getCommonErrorState,
+  type CommonErrorState,
 } from "@/shared/utils/questionError";
 import { getSessionQuestion } from "../apis/sessionQuestion";
+import CommentSection from "../components/CommnentSection";
 
 type ActionType = "COMMENT" | "QUESTION";
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
@@ -87,7 +88,7 @@ const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답�
 function UserQuestionDetailPage() {
   const { questionId, sessionId } = useParams();
   const [modalState, setModalState] = useState<ModalState>(null);
-  const [errors, setErrors] = useState<QuestionErrorState | null>(null);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   // const isLoading = false;
   const isMyQuestion = mockQuestionDetail.isMyQuestion;
@@ -140,7 +141,7 @@ function UserQuestionDetailPage() {
         setErrors(null);
         console.log(res);
       } catch (error) {
-        setErrors(getQuestionsErrorState(error));
+        setErrors(getCommonErrorState(error));
       } finally {
         setIsLoading(false);
       }
@@ -236,21 +237,14 @@ function UserQuestionDetailPage() {
           ) : (
             <TextBox>
               <div>
-                <div className="border-ec-outline-dark flex items-center justify-center border-b py-5">
-                  <span className="text-ec-sub font-pretendard tracking-ec-normal bg-ec-box text-[14px]/[23px] font-medium">
-                    첫 댓글을 남겨보세요!
-                  </span>
-                </div>
                 {isLoading ? (
                   <>
                     <QuestionCommentSkeleton />
                     <QuestionCommentSkeleton />
+                    <QuestionCommentSkeleton />
                   </>
                 ) : (
-                  <>
-                    <QuestionCommentItem />
-                    <QuestionCommentItem isMy={true} />
-                  </>
+                  <CommentSection qid={Number(questionId)} />
                 )}
               </div>
               <CommentInput

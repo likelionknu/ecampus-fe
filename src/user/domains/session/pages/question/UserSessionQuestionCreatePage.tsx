@@ -6,11 +6,13 @@ import TitleSection from "@/shared/components/TitleSection";
 import type { CreateConfirmErrorModalStep } from "@/shared/types/ModalStep";
 import BoxLayout from "@/user/shared/components/BoxLayout";
 import SessionQuestionWarning from "../../components/question/SessionQuestionWarning";
-
-interface CreateQuestion {
-  title: string;
-  content: string;
-}
+import type { CreateQuestion } from "../../types/CreateQuestion";
+import { postSessionQuestions } from "../../apis/sessionQuestion";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
@@ -78,14 +80,26 @@ function UserSessionQuestionCreatePage() {
     content: "",
   });
   const [step, setStep] = useState<CreateConfirmErrorModalStep | null>(null);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   const handleClose = useCallback(() => {
     setStep(null);
   }, []);
 
-  const handleConfirm = () => {
-    setStep("CONFIRM");
+  const handleConfirm = async () => {
+    try {
+      const res = await postSessionQuestions({
+        sid: 1,
+        payload: createQuestion,
+      });
+
+      console.log(res);
+      setStep("CONFIRM");
+    } catch (error) {
+      setStep(null);
+      setErrors(getCommonErrorState(error));
+    }
   };
 
   return (
@@ -107,6 +121,14 @@ function UserSessionQuestionCreatePage() {
             {step === "CREATE" && <Modal.Cancled onClick={handleClose} />}
           </Modal.ButtonLayout>
         </Modal>
+      )}
+
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
       )}
 
       <TitleSection title="새 질문 등록" />
