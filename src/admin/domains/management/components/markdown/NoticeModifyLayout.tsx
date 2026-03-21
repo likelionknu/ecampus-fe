@@ -1,21 +1,22 @@
-import { useEffect, useRef } from "react"
-import InputBox from "@/shared/components/InputBox"
-import Button from "@/shared/components/Button"
-import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync"
-import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor"
-import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview"
+import { useEffect, useRef, useState } from "react";
+import Button from "@/shared/components/Button";
+import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync";
+import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor";
+import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview";
+import Input from "@/shared/components/Input";
+import Modal from "@/shared/components/Modal";
 
 interface Props {
-  title: string
-  content: string
-  setTitle: (v: string) => void
-  setContent: (v: string) => void
+  title: string;
+  content: string;
+  setTitle: (v: string) => void;
+  setContent: (v: string) => void;
 }
 
 interface FileData {
-  fileId: number
-  name: string
-  content: string
+  fileId: number;
+  name: string;
+  content: string;
 }
 
 const mockFile: FileData = {
@@ -38,7 +39,7 @@ const mockFile: FileData = {
 2. 사용자 A가 등록한 상점
 3. 사용자 A가 상점에 등록한 상품 A, B, C
 `,
-}
+};
 
 export default function ModifyLayout({
   title,
@@ -46,27 +47,29 @@ export default function ModifyLayout({
   setTitle,
   setContent,
 }: Props) {
+  const editorRef = useRef<HTMLTextAreaElement | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
+  const [modalType, setModalType] = useState<
+    "noticeModify" | "noticeModifySuccess" | null
+  >(null);
 
-  const editorRef = useRef<HTMLTextAreaElement | null>(null)
-  const previewRef = useRef<HTMLDivElement | null>(null)
-
-  useScrollSync(editorRef, previewRef)
+  useScrollSync(editorRef, previewRef);
   useEffect(() => {
-    setTitle(mockFile.name)
-    setContent(mockFile.content)
-  }, [setContent, setTitle])
+    setTitle(mockFile.name);
+    setContent(mockFile.content);
+  }, [setContent, setTitle]);
 
   return (
     <div className="px-5 pt-5">
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <div className="w-228.5">
-          <InputBox
+          <Input
             placeholder="제목을 입력하세요"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="large">
+        <Button size="large" onClick={() => setModalType("noticeModify")}>
           수정
         </Button>
       </div>
@@ -79,12 +82,45 @@ export default function ModifyLayout({
           />
         </div>
         <div className="w-125.25">
-          <MarkdownPreview
-            ref={previewRef}
-            content={content}
-          />
+          <MarkdownPreview ref={previewRef} content={content} />
         </div>
       </div>
+      {modalType === "noticeModify" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지사항 수정
+          </Modal.Header>
+          <Modal.Description>
+            이 공지사항을 수정할까요? <br />
+            작성일이 수정일 기준으로 변경됩니다
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              variant="primary"
+              onClick={() => {
+                setModalType("noticeModifySuccess");
+              }}
+            >
+              확인
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "noticeModifySuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지사항 수정
+          </Modal.Header>
+          <Modal.Description>공지 사항을 수정했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={() => setModalType(null)}>
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
     </div>
-  )
+  );
 }

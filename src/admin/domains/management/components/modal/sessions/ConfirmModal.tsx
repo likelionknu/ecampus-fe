@@ -11,7 +11,7 @@ function ConfirmModal({ onNext, onClose }: ModalProps) {
         <Button size="modal" variant="primary" onClick={onNext}>
           확인
         </Button>
-        <Modal.Cancled onClick={onClose} />
+        <Modal.Cancelled onClick={onClose} />
       </Modal.ButtonLayout>
     </Modal>
   );
