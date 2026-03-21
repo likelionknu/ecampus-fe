@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+﻿import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import TextBox from "@/shared/components/TextBox";
 import CommentInput from "@/shared/components/comment/CommentInput";
@@ -6,7 +6,6 @@ import QuestionCommentItem from "@/shared/components/comment/QuestionCommentItem
 import { formatKoreanDateTime24 } from "@/shared/utils/formatKoreanDateTime";
 import QuestionContentSection from "@/user/domains/session/components/question/QuestionContentSection";
 import QuestionMetaRow from "@/user/domains/session/components/question/QuestionMetaRow";
-import QuestionCommentSkeleton from "@/user/domains/session/components/skeleton/QuestionCommentSkeleton";
 import QuestionMetaRowSkeleton from "@/user/domains/session/components/skeleton/QuestionMetaRowSkeleton";
 import TitleSection from "@/shared/components/TitleSection";
 import { useMediaQuery } from "react-responsive";
@@ -20,6 +19,7 @@ import {
 } from "@/shared/utils/questionError";
 import { getSessionQuestion } from "../apis/sessionQuestion";
 import CommentSection from "../components/CommnentSection";
+import { createComment } from "../apis/comment";
 
 type ActionType = "COMMENT" | "QUESTION";
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
@@ -86,22 +86,37 @@ const questionMetaRows = [
 const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답변자", "상태"];
 
 function UserQuestionDetailPage() {
-  const { questionId, sessionId } = useParams();
-  const [modalState, setModalState] = useState<ModalState>(null);
-  const [errors, setErrors] = useState<CommonErrorState | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  // const isLoading = false;
-  const isMyQuestion = mockQuestionDetail.isMyQuestion;
-  const isMobile = useMediaQuery({ maxWidth: 479 });
+  const { questionId, sessionId } = useParams(); // 질문/세션 id
+  const [modalState, setModalState] = useState<ModalState>(null); // 모달 상태
+  const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
+  const [content, setContent] = useState(""); // 댓글 입력 상태
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const isMyQuestion = mockQuestionDetail.isMyQuestion; // 내 질문 여부
+  const isMobile = useMediaQuery({ maxWidth: 479 }); // 모바일 반응형 분기 처리
 
+  // 모달 비활성화
   const handleClose = useCallback(() => {
     setModalState(null);
   }, []);
 
-  const handleComfirm = () => {
-    if (!modalState) return;
+  // 댓글 등록
+  const handleCreateComment = async () => {
+    if (!content.trim()) return;
 
-    setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
+    try {
+      await createComment({
+        qid: Number(questionId),
+        content: content,
+      });
+      setErrors(null);
+      setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
+      setContent("");
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    }
   };
 
   const renderStepModal = () => {
@@ -120,7 +135,7 @@ function UserQuestionDetailPage() {
           <Button
             size="modal"
             variant={isConfirm ? config.confirmVariant : "primary"}
-            onClick={isConfirm ? handleComfirm : handleClose}
+            onClick={isConfirm ? handleCreateComment : handleClose}
           >
             {isConfirm ? config.confirmLabel : "확인"}
           </Button>
@@ -130,6 +145,7 @@ function UserQuestionDetailPage() {
     );
   };
 
+  // 질문 상세 정보 조회
   useEffect(() => {
     const fetchQeustionDeatil = async () => {
       setIsLoading(true);
@@ -218,7 +234,7 @@ function UserQuestionDetailPage() {
 
         <div className="flex flex-col gap-2">
           <span className="text-body-2 xl:text-ec-sub text-ec-black">
-            2개의 댓글
+            {`${commentCount}개의 댓글`}
           </span>
           {isMobile ? (
             <>
@@ -226,9 +242,11 @@ function UserQuestionDetailPage() {
                 <QuestionCommentItem />
               </TextBox>
               <TextBox px={false} py={false}>
-                <QuestionCommentItem isMy={true} />
+                <QuestionCommentItem />
               </TextBox>
               <CommentInput
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 onClick={() => {
                   setModalState({ action: "COMMENT", phase: "CONFIRM" });
                 }}
@@ -237,17 +255,16 @@ function UserQuestionDetailPage() {
           ) : (
             <TextBox>
               <div>
-                {isLoading ? (
-                  <>
-                    <QuestionCommentSkeleton />
-                    <QuestionCommentSkeleton />
-                    <QuestionCommentSkeleton />
-                  </>
-                ) : (
-                  <CommentSection qid={Number(questionId)} />
-                )}
+                <CommentSection
+                  qid={Number(questionId)}
+                  isLoading={isLoading}
+                  refreshKey={refreshKey}
+                  onCountChange={setCommentCount}
+                />
               </div>
               <CommentInput
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
                 onClick={() => {
                   setModalState({ action: "COMMENT", phase: "CONFIRM" });
                 }}

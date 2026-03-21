@@ -56,11 +56,21 @@ function UserQuestionsPage() {
     title: "",
     status: QUESTION_STATUS_DEFAULT_OPTION,
   });
+  const [debouncedTitle, setDebouncedTitle] = useState(filter.title);
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const itemSumNum = questionsPage.size;
   const itemNum = questionsPage.totalElements;
   const [isLoading, setIsLoading] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  // 과도한 api 요청 방지
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedTitle(filter.title);
+    }, 400);
+
+    return () => window.clearTimeout(timer);
+  }, [filter.title]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -69,7 +79,7 @@ function UserQuestionsPage() {
       try {
         const status =
           QUESTION_STATUS_OPTION_TO_REQUEST_STATUS[filter.status] ?? "ALL";
-        const res = await getQuestions({ title: filter.title, status });
+        const res = await getQuestions({ title: debouncedTitle, status });
         setErrors(null);
         setQuestionsPage({
           questions: Array.isArray(res.data?.content) ? res.data.content : [],
@@ -87,7 +97,7 @@ function UserQuestionsPage() {
     };
 
     fetchQuestions();
-  }, [filter.title, filter.status]);
+  }, [debouncedTitle, filter.status]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280">
