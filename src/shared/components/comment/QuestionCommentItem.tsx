@@ -64,7 +64,7 @@ function QuestionCommentItem({
             <Button size="modal" variant="danger" onClick={handleDeleteComment}>
               삭제
             </Button>
-            <Modal.Cancled onClick={() => setIsDeleteConfirmOpen(false)} />
+            <Modal.Cancelled onClick={() => setIsDeleteConfirmOpen(false)} />
           </Modal.ButtonLayout>
         </Modal>
       )}

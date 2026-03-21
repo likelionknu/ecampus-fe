@@ -4,7 +4,7 @@ import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync";
 import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor";
 import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview";
 import Input from "@/shared/components/Input";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 
 interface Props {
   title: string;

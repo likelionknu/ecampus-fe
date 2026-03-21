@@ -82,7 +82,7 @@ function CommentInput({ qid, setRefresh }: CommentInputProps) {
               확인
             </Button>
             {step === "CONFIRM" && !isSubmitting && (
-              <Modal.Cancled onClick={handleClose} />
+              <Modal.Cancelled onClick={handleClose} />
             )}
           </Modal.ButtonLayout>
         </Modal>

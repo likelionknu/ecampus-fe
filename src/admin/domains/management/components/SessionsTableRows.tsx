@@ -10,15 +10,35 @@ function SessionsTableRows({ isLoading, sessions }: SessionsTableRowsProps) {
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
       {isLoading && (
-        <div className="flex animate-pulse items-center px-6 py-5">
-          <SkeletonCell className="ml-0.5 h-4 w-6" />
-          <SkeletonCell className="ml-7 h-4 w-148" />
-          <SkeletonCell className="ml-3 h-4 w-16" />
-          <SkeletonCell className="ml-6.5 h-4 w-12" />
-          <SkeletonCell className="ml-6 h-4 w-12" />
-          <SkeletonCell className="ml-4 h-4 w-12" />
-          <SkeletonCell className="ml-4 h-4 w-14" />
-        </div>
+        <>
+          <div className="flex animate-pulse items-center px-6 py-5">
+            <SkeletonCell className="ml-0.5 h-4 w-6" />
+            <SkeletonCell className="ml-7 h-4 w-148" />
+            <SkeletonCell className="ml-3 h-4 w-16" />
+            <SkeletonCell className="ml-6.5 h-4 w-12" />
+            <SkeletonCell className="ml-6 h-4 w-12" />
+            <SkeletonCell className="ml-4 h-4 w-12" />
+            <SkeletonCell className="ml-4 h-4 w-14" />
+          </div>
+          <div className="flex animate-pulse items-center px-6 py-5">
+            <SkeletonCell className="ml-0.5 h-4 w-6" />
+            <SkeletonCell className="ml-7 h-4 w-148" />
+            <SkeletonCell className="ml-3 h-4 w-16" />
+            <SkeletonCell className="ml-6.5 h-4 w-12" />
+            <SkeletonCell className="ml-6 h-4 w-12" />
+            <SkeletonCell className="ml-4 h-4 w-12" />
+            <SkeletonCell className="ml-4 h-4 w-14" />
+          </div>
+          <div className="flex animate-pulse items-center px-6 py-5">
+            <SkeletonCell className="ml-0.5 h-4 w-6" />
+            <SkeletonCell className="ml-7 h-4 w-148" />
+            <SkeletonCell className="ml-3 h-4 w-16" />
+            <SkeletonCell className="ml-6.5 h-4 w-12" />
+            <SkeletonCell className="ml-6 h-4 w-12" />
+            <SkeletonCell className="ml-4 h-4 w-12" />
+            <SkeletonCell className="ml-4 h-4 w-14" />
+          </div>
+        </>
       )}
 
       {sessions.map((session, index) => (
