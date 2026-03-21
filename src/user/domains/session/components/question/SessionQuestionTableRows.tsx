@@ -63,7 +63,7 @@ function SessionQuestionTableRows({
             <span className="text-body-2 text-ec-black">
               {formatKoreanDateTime12(question.createdAt)}
             </span>
-            <span className="text-body-2 text-ec-black">
+            <span className="text-body-2 text-ec-black w-12 truncate">
               {question.createdUserName ?? "없음"}
             </span>
             <span
