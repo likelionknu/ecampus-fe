@@ -68,10 +68,10 @@ function SessionQuestionTableRows({
             </span>
             <span
               className={`text-body-2 ${
-                question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
+                question.status === "COMPLETED" ? "text-ec-blue" : "text-ec-sub"
               }`}
             >
-              {question.status}
+              {question.status === "COMPLETED" ? "완료" : "대기"}
             </span>
           </div>
         </div>

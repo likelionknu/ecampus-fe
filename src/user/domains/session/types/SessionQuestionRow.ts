@@ -10,6 +10,6 @@ export interface SessionQuestionRow {
   id: number;
   isMyQuestion: boolean;
   sessionId: number;
-  status: "대기" | "완료";
+  status: "PENDING" | "COMPLETED";
   title: string;
 }

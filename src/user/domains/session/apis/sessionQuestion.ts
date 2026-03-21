@@ -1,12 +1,14 @@
 import { api } from "@/shared/apis";
 import type { CreateQuestion } from "../types/CreateQuestion";
 
+// 세션 질문 조회
 export const getSessionQuestions = async ({ sid }: { sid: number }) => {
   const res = await api.get(`/v1/questions/sessions/${sid}`);
 
   return res;
 };
 
+// 세션 질문 등록
 export const postSessionQuestions = async ({
   sid,
   payload,
@@ -19,6 +21,7 @@ export const postSessionQuestions = async ({
   return res;
 };
 
+// 세션 질문 삭제
 export const deleteSessionQuestions = async ({
   qid,
   sid,
