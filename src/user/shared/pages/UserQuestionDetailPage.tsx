@@ -18,51 +18,65 @@ import {
 import { getSessionQuestion } from "../apis/sessionQuestion";
 import CommentSection from "../components/CommnentSection";
 import MobileCommentSection from "../components/MobileCommentSection";
+import type { SessionQuestionDetailRow } from "@/user/domains/session/types/SessionQuestionDetailRow";
 
 type ModalState = "CONFIRM" | "DONE" | null;
+type QuestionMetaRow = {
+  label: string;
+  value: string;
+};
 
-const mockQuestionDetail = {
+const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답변자", "상태"];
+
+const INITIAL_QUESTION_DETAIL_STATE: SessionQuestionDetailRow = {
   answer: null,
   answeredAt: null,
   answeredUserId: null,
   answeredUserName: null,
-  content: "질문입니다",
-  createdAt: "2026-03-03T01:33:50.785902",
+  content: "",
+  createdAt: "",
   createdUserId: null,
   createdUserName: null,
-  id: 1,
+  id: 0,
   isMyQuestion: false,
-  sessionId: 1,
-  status: "대기",
-  title: "질문있어요",
-} as const;
+  sessionId: 0,
+  sessionName: "",
+  status: "PENDING",
+  title: "",
+};
 
-const questionMetaRows = [
+const createQuestionMetaRows = (
+  detail: SessionQuestionDetailRow,
+): QuestionMetaRow[] => [
   {
     label: "질문 등록일",
-    value: formatKoreanDateTime24(mockQuestionDetail.createdAt),
+    value: detail.createdAt ? formatKoreanDateTime24(detail.createdAt) : "-",
   },
-  { label: "등록자", value: mockQuestionDetail.createdUserName ?? "-" },
+  { label: "등록자", value: detail.createdUserName ?? "-" },
   {
     label: "답변 등록일",
-    value: mockQuestionDetail.answeredAt
-      ? formatKoreanDateTime24(mockQuestionDetail.answeredAt)
-      : "-",
+    value: detail.answeredAt ? formatKoreanDateTime24(detail.answeredAt) : "-",
   },
-  { label: "답변자", value: mockQuestionDetail.answeredUserName ?? "-" },
-  { label: "상태", value: mockQuestionDetail.status },
-] as const;
-
-const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답변자", "상태"];
+  { label: "답변자", value: detail.answeredUserName ?? "-" },
+  {
+    label: "상태",
+    value: detail.status === "COMPLETED" ? "완료" : "대기",
+  },
+];
 
 function UserQuestionDetailPage() {
   const { questionId, sessionId } = useParams(); // 질문/세션 id
+  const [qeustionDetail, setQuestionDetail] =
+    useState<SessionQuestionDetailRow>(INITIAL_QUESTION_DETAIL_STATE);
+  const [questionsMeta, setQuestionsMeta] = useState<QuestionMetaRow[]>(
+    createQuestionMetaRows(INITIAL_QUESTION_DETAIL_STATE),
+  );
   const [modalState, setModalState] = useState<ModalState>(null); // 모달 상태
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const [refreshKey, setRefreshKey] = useState(0); // 등록/삭제 후 질문 재조회
   const [commentCount, setCommentCount] = useState(0); // 댓글 개수
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
-  const isMyQuestion = mockQuestionDetail.isMyQuestion; // 내 질문 여부
+
   const isMobile = useMediaQuery({ maxWidth: 479 }); // 모바일 반응형 분기 처리
 
   // 모달 비활성화
@@ -112,9 +126,13 @@ function UserQuestionDetailPage() {
 
       try {
         const res = await getSessionQuestion({ qid, sid });
+        const responseData = res.data;
 
+        if (responseData) {
+          setQuestionDetail(responseData);
+          setQuestionsMeta(createQuestionMetaRows(responseData));
+        }
         setErrors(null);
-        console.log(res);
       } catch (error) {
         setErrors(getCommonErrorState(error));
       } finally {
@@ -125,9 +143,11 @@ function UserQuestionDetailPage() {
     fetchQeustionDeatil();
   }, [questionId, sessionId]);
 
+  const isMyQuestion = qeustionDetail.isMyQuestion; // 내 질문 여부
+
   return (
     <div
-      className={`${mockQuestionDetail.isMyQuestion ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280`}
+      className={`${isMyQuestion ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280`}
     >
       {/* 에러 모달 */}
       {errors && (
@@ -142,7 +162,7 @@ function UserQuestionDetailPage() {
 
       <div className="flex flex-col gap-5">
         <TitleSection
-          title={mockQuestionDetail.title}
+          title={qeustionDetail.title}
           {...(isMyQuestion
             ? {
                 actions: [
@@ -164,7 +184,7 @@ function UserQuestionDetailPage() {
               ? skeletonRows.map((row) => (
                   <QuestionMetaRowSkeleton key={row} label={row} />
                 ))
-              : questionMetaRows.map((row, index) => (
+              : questionsMeta.map((row, index) => (
                   <QuestionMetaRow
                     key={row.label}
                     label={row.label}
@@ -174,7 +194,7 @@ function UserQuestionDetailPage() {
                         ? `px-5 py-4 ${index % 2 === 0 ? "bg-ec-box" : "bg-ec-white border-ec-outline border"} ${
                             index === 0 ? "rounded-t-ec-10" : ""
                           } ${
-                            index === questionMetaRows.length - 1
+                            index === questionsMeta.length - 1
                               ? "rounded-b-ec-10"
                               : ""
                           }`
@@ -185,13 +205,10 @@ function UserQuestionDetailPage() {
           </div>
         </TextBox>
 
-        <QuestionContentSection
-          label="질문"
-          content={mockQuestionDetail.content}
-        />
+        <QuestionContentSection label="질문" content={qeustionDetail.content} />
         <QuestionContentSection
           label="답변"
-          content={mockQuestionDetail.answer ?? "아직 등록된 답변이 없어요."}
+          content={qeustionDetail.answer ?? "아직 등록된 답변이 없어요."}
         />
         {/* 댓글 섹션 */}
         <div className="flex flex-col gap-2">
