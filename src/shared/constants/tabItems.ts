@@ -13,7 +13,7 @@ export const ADMIN_DASHBOARD_TAG_ITEMS: TabItemConfig[] = [
 export const ADMIN_MANAGEMENT_TAG_ITEMS: TabItemConfig[] = [
   { label: "세션 관리", path: "/admin/sessions", end: true },
   { label: "사용자 및 그룹", path: "/admin/groups", end: true },
-  { label: "질문 및 답변", path: "/admin/question" },
+  { label: "질문 및 답변", path: "/admin/questions" },
   { label: "공지사항", path: "/admin/notices", end: true },
 ];
 

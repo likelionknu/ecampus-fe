@@ -13,160 +13,103 @@ import QuestionTableRows from "../components/QuestionTableRows";
 import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
 import SelectBox from "@/shared/components/SelectBox";
 import { QUESTION_STATUS_OPTIONS } from "@/shared/constants/selectOptions";
+import { useEffect, useState } from "react";
+import { getQuestions } from "../apis/questions";
 
-const mockQuestions: { content: SessionQuestionRow[]; totalElements: number } =
-  {
-    content: [
-      {
-        answer: null,
-        answeredAt: null,
-        answeredUserId: null,
-        answeredUserName: null,
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 8,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "대기",
-        title: "이거 어떻게 하는 건가요?",
-      },
-      {
-        answer: "확인해보겠습니다.",
-        answeredAt: "2026-02-14T01:15:00.000000",
-        answeredUserId: 2,
-        answeredUserName: "황형진",
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 7,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "완료",
-        title: "이거 어떻게 하는 건가요?",
-      },
-      {
-        answer: null,
-        answeredAt: null,
-        answeredUserId: null,
-        answeredUserName: null,
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 6,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "대기",
-        title: "이거 어떻게 하는 건가요?",
-      },
-      {
-        answer: "확인해보겠습니다.",
-        answeredAt: "2026-02-14T01:15:00.000000",
-        answeredUserId: 2,
-        answeredUserName: "황형진",
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 5,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "완료",
-        title: "이거 어떻게 하는 건가요?",
-      },
-      {
-        answer: null,
-        answeredAt: null,
-        answeredUserId: null,
-        answeredUserName: null,
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 4,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "대기",
-        title: "이거 어떻게 하는 건가요?",
-      },
-      {
-        answer: "확인해보겠습니다.",
-        answeredAt: "2026-02-14T01:15:00.000000",
-        answeredUserId: 2,
-        answeredUserName: "황형진",
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 3,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "완료",
-        title: "이거 어떻게 하는 건가요?",
-      },
-      {
-        answer: null,
-        answeredAt: null,
-        answeredUserId: null,
-        answeredUserName: null,
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 2,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "대기",
-        title: "이거 어떻게 하는 건가요?",
-      },
-      {
-        answer: "확인해보겠습니다.",
-        answeredAt: "2026-02-14T01:15:00.000000",
-        answeredUserId: 2,
-        answeredUserName: "황형진",
-        content: "이거 어떻게 하는 건가요?",
-        createdAt: "2026-02-14T00:38:00.000000",
-        createdUserId: 1,
-        createdUserName: "황진형",
-        id: 1,
-        isMyQuestion: false,
-        sessionId: 14,
-        status: "완료",
-        title: "이거 어떻게 하는 건가요?",
-      },
-    ],
-    totalElements: 8,
-  };
+interface QuestionsPageState {
+  questions: SessionQuestionRow[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
+interface FilterState {
+  title: string;
+  status: string;
+}
+
+const INITIAL_QUESTIONS_PAGE_STATE: QuestionsPageState = {
+  questions: [],
+  page: 0,
+  size: 8,
+  totalElements: 0,
+  totalPages: 0,
+  hasNext: false,
+};
 
 function UserQuestionsPage() {
-  const itemSumNum = 8;
-  const itemNum = mockQuestions.totalElements;
-  const isLoading = false;
+  const [questionsPage, setQuestionsPage] = useState<QuestionsPageState>(
+    INITIAL_QUESTIONS_PAGE_STATE,
+  );
+  const [filter, setFilter] = useState<FilterState>({
+    title: "",
+    status: "전체",
+  });
+  const itemSumNum = questionsPage.size;
+  const itemNum = questionsPage.totalElements;
+  const [isLoading, setIsLoading] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      setIsLoading(true);
+
+      try {
+        const res = await getQuestions();
+        setQuestionsPage({
+          questions: Array.isArray(res.data?.content) ? res.data.content : [],
+          page: res.data?.number ?? 0,
+          size: res.data?.size ?? INITIAL_QUESTIONS_PAGE_STATE.size,
+          totalElements: res.data?.totalElements ?? 0,
+          totalPages: res.data?.totalPages ?? 0,
+          hasNext: !(res.data?.last ?? true),
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQuestions();
+  }, []);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280">
       <TitleSection
-        title={`질문(${mockQuestions.totalElements})`}
+        title={`질문(${questionsPage.totalElements})`}
         subText="이캠퍼스에서 생성된 모든 질문을 확인할 수 있어요"
       />
 
       <div className="flex flex-col gap-2 md:flex-row">
         <div className="xl:w-108">
-          <SerachBar placeholder="질문 제목으로 검색" />
+          <SerachBar
+            value={filter.title}
+            onChange={(e) =>
+              setFilter((prev) => ({ ...prev, title: e.target.value }))
+            }
+            placeholder="질문 제목으로 검색"
+          />
         </div>
-        <SelectBox options={QUESTION_STATUS_OPTIONS} defaultValue="전체" />
+        <SelectBox
+          options={QUESTION_STATUS_OPTIONS}
+          defaultValue="전체"
+          onChange={(value) =>
+            setFilter((prev) => ({ ...prev, status: value }))
+          }
+        />
       </div>
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
-          const pagedQuestions = mockQuestions.content.slice(
+          const pagedQuestions = questionsPage.questions.slice(
             startIndex,
             startIndex + currentItems.length,
           );
+
+          const isEmpty = pagedQuestions.length === 0;
 
           return (
             <>
@@ -175,7 +118,7 @@ function UserQuestionsPage() {
                   <QuestionTableHeader />
                 </PageNationMenu>
               )}
-              {pagedQuestions.length === 0 && !isLoading ? (
+              {isEmpty && !isLoading ? (
                 <TableEmptyState label="등록된 질문을 찾을 수 없거나 존재하지 않아요" />
               ) : isTablet ? (
                 <MobileQuestionsTableRows questions={pagedQuestions} />
