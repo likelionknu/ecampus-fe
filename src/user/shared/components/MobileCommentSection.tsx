@@ -1,31 +1,28 @@
-import ErrorModal from "@/shared/components/modal/ErrorModal";
+import { useEffect, useState } from "react";
 import QuestionCommentItem from "@/shared/components/comment/QuestionCommentItem";
-import QuestionCommentSkeleton from "@/user/domains/session/components/skeleton/QuestionCommentSkeleton";
+import TextBox from "@/shared/components/TextBox";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils/questionError";
-import { useEffect, useState } from "react";
 import { getComments } from "../apis/comment";
 import type { CommentState } from "../types/CommentState";
 
-function CommentSection({
+function MobileCommentSection({
   qid,
-  isLoading,
   refreshKey,
   onCountChange,
   setRefresh,
 }: {
   qid: number;
-  isLoading: boolean;
   refreshKey: number;
   onCountChange?: (count: number) => void;
   setRefresh?: (updater: (prev: number) => number) => void;
 }) {
-  const [comments, setComments] = useState<CommentState[]>([]); // 등록 댓글 상태
-  const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
+  const [comments, setComments] = useState<CommentState[]>([]);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
 
-  // 댓글 조회
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -54,26 +51,21 @@ function CommentSection({
         />
       )}
 
-      {isLoading ? (
-        <>
-          <QuestionCommentSkeleton />
-          <QuestionCommentSkeleton />
-          <QuestionCommentSkeleton />
-        </>
-      ) : comments.length === 0 ? (
+      {comments.length === 0 ? (
         <div className="border-ec-outline-dark flex items-center justify-center border-b py-5">
-          <span className="text-ec-sub font-pretendard tracking-ec-normal bg-ec-box text-[14px]/[23px] font-medium">
+          <span className="text-ec-sub font-pretendard tracking-ec-normal text-[14px]/[23px] font-medium">
             첫 댓글을 남겨보세요!
           </span>
         </div>
       ) : (
         <>
           {comments.map((comment) => (
-            <QuestionCommentItem
-              key={comment.commentId}
-              comment={comment}
-              onDeleted={() => setRefresh?.((prev) => prev + 1)}
-            />
+            <TextBox key={comment.commentId} px={false} py={false}>
+              <QuestionCommentItem
+                comment={comment}
+                onDeleted={() => setRefresh?.((prev) => prev + 1)}
+              />
+            </TextBox>
           ))}
         </>
       )}
@@ -81,4 +73,4 @@ function CommentSection({
   );
 }
 
-export default CommentSection;
+export default MobileCommentSection;

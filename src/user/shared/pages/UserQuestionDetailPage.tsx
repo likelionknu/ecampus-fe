@@ -2,7 +2,6 @@
 import { useParams } from "react-router-dom";
 import TextBox from "@/shared/components/TextBox";
 import CommentInput from "@/shared/components/comment/CommentInput";
-import QuestionCommentItem from "@/shared/components/comment/QuestionCommentItem";
 import { formatKoreanDateTime24 } from "@/shared/utils/formatKoreanDateTime";
 import QuestionContentSection from "@/user/domains/session/components/question/QuestionContentSection";
 import QuestionMetaRow from "@/user/domains/session/components/question/QuestionMetaRow";
@@ -12,44 +11,15 @@ import { useMediaQuery } from "react-responsive";
 import Modal from "@/shared/components/modal/Modal";
 import Button from "@/shared/components/Button";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
-import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
 import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils/questionError";
 import { getSessionQuestion } from "../apis/sessionQuestion";
 import CommentSection from "../components/CommnentSection";
-import { createComment } from "../apis/comment";
+import MobileCommentSection from "../components/MobileCommentSection";
 
-type ActionType = "COMMENT" | "QUESTION";
-type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
-
-const MODAL_CONFIG: Record<
-  ActionType,
-  {
-    title: string;
-    confirmMessage: string;
-    doneMessage: string;
-    confirmLabel: string;
-    confirmVariant: "primary" | "danger";
-  }
-> = {
-  QUESTION: {
-    title: "질문 삭제",
-    confirmMessage:
-      "질문을 정말 삭제하시겠어요? 이 질문을 그대로 남겨두어\n 다른 사용자에게 도움이 될 수 있도록 도와주세요",
-    doneMessage: "질문을 삭제했어요.",
-    confirmLabel: "삭제",
-    confirmVariant: "danger",
-  },
-  COMMENT: {
-    title: "새 댓글 등록",
-    confirmMessage: "이 질문 게시글에 댓글을 등록할게요.",
-    doneMessage: "게시글에 댓글을 등록했어요.",
-    confirmLabel: "확인",
-    confirmVariant: "primary",
-  },
-};
+type ModalState = "CONFIRM" | "DONE" | null;
 
 const mockQuestionDetail = {
   answer: null,
@@ -89,9 +59,8 @@ function UserQuestionDetailPage() {
   const { questionId, sessionId } = useParams(); // 질문/세션 id
   const [modalState, setModalState] = useState<ModalState>(null); // 모달 상태
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
-  const [content, setContent] = useState(""); // 댓글 입력 상태
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [commentCount, setCommentCount] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0); // 등록/삭제 후 질문 재조회
+  const [commentCount, setCommentCount] = useState(0); // 댓글 개수
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isMyQuestion = mockQuestionDetail.isMyQuestion; // 내 질문 여부
   const isMobile = useMediaQuery({ maxWidth: 479 }); // 모바일 반응형 분기 처리
@@ -101,43 +70,33 @@ function UserQuestionDetailPage() {
     setModalState(null);
   }, []);
 
-  // 댓글 등록
-  const handleCreateComment = async () => {
-    if (!content.trim()) return;
-
-    try {
-      await createComment({
-        qid: Number(questionId),
-        content: content,
-      });
-      setErrors(null);
-      setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
-      setContent("");
-      setRefreshKey((prev) => prev + 1);
-    } catch (error) {
-      setErrors(getCommonErrorState(error));
-    }
+  // 삭제 api 추가 예정
+  const handleQuestionConfirm = () => {
+    if (!modalState) return;
+    setModalState("DONE");
   };
 
+  // 삭제 확인 모달
   const renderStepModal = () => {
     if (!modalState) return null;
 
-    const config = MODAL_CONFIG[modalState.action];
-    const isConfirm = modalState.phase === "CONFIRM";
+    const isConfirm = modalState === "CONFIRM";
 
     return (
       <Modal>
-        <Modal.Header onClick={handleClose}>{config.title}</Modal.Header>
+        <Modal.Header onClick={handleClose}>질문 삭제</Modal.Header>
         <Modal.Description>
-          {isConfirm ? config.confirmMessage : config.doneMessage}
+          {isConfirm
+            ? "질문을 정말 삭제하시겠어요? 이 질문을 그대로 남겨두어\n 다른 사용자에게 도움이 될 수 있도록 도와주세요"
+            : "질문을 삭제했어요."}
         </Modal.Description>
         <Modal.ButtonLayout>
           <Button
             size="modal"
-            variant={isConfirm ? config.confirmVariant : "primary"}
-            onClick={isConfirm ? handleCreateComment : handleClose}
+            variant={isConfirm ? "danger" : "primary"}
+            onClick={isConfirm ? handleQuestionConfirm : handleClose}
           >
-            {isConfirm ? config.confirmLabel : "확인"}
+            {isConfirm ? "삭제" : "확인"}
           </Button>
           {isConfirm && <Modal.Cancled onClick={handleClose} />}
         </Modal.ButtonLayout>
@@ -170,6 +129,7 @@ function UserQuestionDetailPage() {
     <div
       className={`${mockQuestionDetail.isMyQuestion ? "xl:px-8" : "xl:ml-30"} text-ec-black mx-auto w-full max-w-87.5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280`}
     >
+      {/* 에러 모달 */}
       {errors && (
         <ErrorModal
           status={errors.status}
@@ -177,6 +137,7 @@ function UserQuestionDetailPage() {
           onClick={() => setErrors(null)}
         />
       )}
+      {/* 삭제 확인 모달 */}
       {renderStepModal()}
 
       <div className="flex flex-col gap-5">
@@ -189,13 +150,14 @@ function UserQuestionDetailPage() {
                     label: "삭제",
                     buttonType: "danger" as const,
                     onClick: () => {
-                      setModalState({ action: "QUESTION", phase: "CONFIRM" });
+                      setModalState("CONFIRM");
                     },
                   },
                 ],
               }
             : {})}
         />
+        {/* 질문 기본 정보 */}
         <TextBox px={!isMobile} py={!isMobile}>
           <div className="flex flex-col gap-0 xl:gap-2">
             {isLoading
@@ -231,25 +193,22 @@ function UserQuestionDetailPage() {
           label="답변"
           content={mockQuestionDetail.answer ?? "아직 등록된 답변이 없어요."}
         />
-
+        {/* 댓글 섹션 */}
         <div className="flex flex-col gap-2">
           <span className="text-body-2 xl:text-ec-sub text-ec-black">
             {`${commentCount}개의 댓글`}
           </span>
           {isMobile ? (
             <>
-              <TextBox px={false} py={false}>
-                <QuestionCommentItem />
-              </TextBox>
-              <TextBox px={false} py={false}>
-                <QuestionCommentItem />
-              </TextBox>
+              <MobileCommentSection
+                qid={Number(questionId)}
+                refreshKey={refreshKey}
+                onCountChange={setCommentCount}
+                setRefresh={setRefreshKey}
+              />
               <CommentInput
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                onClick={() => {
-                  setModalState({ action: "COMMENT", phase: "CONFIRM" });
-                }}
+                qid={Number(questionId)}
+                setRefresh={setRefreshKey}
               />
             </>
           ) : (
@@ -260,14 +219,12 @@ function UserQuestionDetailPage() {
                   isLoading={isLoading}
                   refreshKey={refreshKey}
                   onCountChange={setCommentCount}
+                  setRefresh={setRefreshKey}
                 />
               </div>
               <CommentInput
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                onClick={() => {
-                  setModalState({ action: "COMMENT", phase: "CONFIRM" });
-                }}
+                qid={Number(questionId)}
+                setRefresh={setRefreshKey}
               />
             </TextBox>
           )}

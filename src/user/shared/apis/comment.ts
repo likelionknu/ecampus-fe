@@ -10,7 +10,7 @@ export const createComment = async ({
   qid,
   content,
 }: {
-  qid: number | undefined;
+  qid: number;
   content: string;
 }) => {
   const res = await api.post(`/v1/questions/${qid}/comments`, { content });
@@ -18,7 +18,7 @@ export const createComment = async ({
   return res;
 };
 
-export const deleteComment = async ({ cid }: { cid: number | undefined }) => {
+export const deleteComment = async ({ cid }: { cid: number }) => {
   const res = await api.delete(`/v1/questions/${cid}/comments`);
 
   return res;

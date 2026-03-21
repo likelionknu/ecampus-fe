@@ -23,18 +23,19 @@ function QuestionCommentItem({
   onDeleted,
 }: {
   comment?: CommentState;
-  onDeleted?: (cid: number) => void;
+  onDeleted?: () => void;
 }) {
-  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
-  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false); // 삭제 확인 모달
+  const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
 
+  // 댓글 삭제
   const handleDeleteComment = async () => {
     const cid = comment?.commentId;
     if (typeof cid !== "number") return;
 
     try {
       await deleteComment({ cid });
-      onDeleted?.(cid);
+      onDeleted?.();
       setIsDeleteConfirmOpen(false);
     } catch (error) {
       setErrors(getCommonErrorState(error));
