@@ -12,6 +12,7 @@ import UserSessionFilesViewPage from "./domains/session/pages/UserSessionFilesVi
 import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
 import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
 import UserNotificationPage from "./domains/notification/pages/NotificationPage";
+import UserListPage from "./domains/session/pages/UserList";
 
 const userRoutes: RouteObject[] = [
   {
@@ -35,6 +36,11 @@ const userRoutes: RouteObject[] = [
         path: "questions",
         element: <UserQuestionsPage />,
         handle: { title: "질문" },
+      },
+      {
+        path: "list",
+        element: <UserListPage />,
+        handle: { title: "그룹" },
       },
     ],
   },
@@ -62,6 +68,7 @@ const userRoutes: RouteObject[] = [
       },
       { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
       { path: "groups", element: <UserSessionGroupPage /> },
+      { path: "list", element: <UserSessionGroupPage /> },
     ],
   },
 ];
