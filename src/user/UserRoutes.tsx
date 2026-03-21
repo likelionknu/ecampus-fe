@@ -14,7 +14,6 @@ import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
 import UserNotificationPage from "./domains/notification/pages/UserNotificationPage";
 import UserListPage from "./domains/session/pages/UserList";
 
-
 const userRoutes: RouteObject[] = [
   {
     children: [
@@ -38,7 +37,15 @@ const userRoutes: RouteObject[] = [
         element: <UserQuestionsPage />,
         handle: { title: "질문" },
       },
+      // {
+      //   path: "list",
+      //   element: <UserListPage />,
+      //   handle: { title: "그룹" },
 
+      //   path: "questions/:questionId/:sessionId",
+      //   element: <UserQuestionDetailPage />,
+      //   handle: { title: "질문 상세" },
+      // },
     ],
   },
 
