@@ -1,4 +1,5 @@
-﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
 import type { NotificationRow } from "../types/NotificationRow";
 
 interface NotificationTableRowsProps {
@@ -52,15 +53,13 @@ function NotificationTableRows({
           <div className="flex items-center gap-7">
             <span
               className={`text-body-2 w-10 text-center ${
-                notification.status === "안 읽음"
-                  ? "text-ec-red"
-                  : "text-ec-blue"
+                notification.read ? "text-ec-red" : "text-ec-blue"
               }`}
             >
-              {notification.status}
+              {notification.read ? "안 읽음" : "읽음"}
             </span>
             <span className="text-body-2 text-ec-black w-12 text-right">
-              {notification.receivedAt}
+              {formatDaysAgo(notification.createdAt)}
             </span>
           </div>
         </div>

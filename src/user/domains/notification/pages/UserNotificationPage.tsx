@@ -131,7 +131,7 @@ function UserNotificationPage() {
       case "DELETE_READ":
         setNotificationPage((prev) => {
           const unreadNotifications = prev.notifications.filter(
-            (notification) => notification.status !== "읽음",
+            (notification) => notification.read === false,
           );
           const nextTotalElements = unreadNotifications.length;
           const nextTotalPages =
