@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
 
 import DashboardArrow from "@shared/assets/DashboardArrow.png";
@@ -26,19 +26,62 @@ function UserDashBoardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
+  // --------------------------------------api 부분 시작--------------------------------------
+
+  // const [data, setData] = useState({
+  //   profileUrl: "",
+  //   name: "",
+  //   course: 0,
+  //   part: "",
+  //   unsubmittedAssignmentCount: 0,
+  //   sessionCount: 0,
+  //   demeritCount: 0,
+  // });
+
+  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   const fetchDashboard = async () => {
+  //     try {
+  //       const accessToken = JSON.parse(localStorage.getItem("state"))?.session
+  //         ?.accessToken;
+
+  //       const response = await fetch("/v1/users/me/dashboard", {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error("API 요청 실패");
+  //       }
+
+  //       const result = await response.json();
+
+  //       setData(result.data);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchDashboard();
+  // }, []);
+
+  // --------------------------------------api 부분 끝--------------------------------------
+
   // ----------------------------------프로필 컴포넌트 시작----------------------------------
 
-  interface DashboardProfileComponentProps {
-    isLoading?: boolean;
-  }
-
-  const DashboardProfileComponent = ({
-    isLoading,
-  }: DashboardProfileComponentProps) => {
+  const DashboardProfileComponent = () => {
     return (
       <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109">
         <div className="flex items-center gap-5">
-          {isLoading ? (
+          {loading ? (
             <>
               <img
                 className="ml-2.5 h-17.25 w-17.25 rounded-full"
@@ -86,7 +129,6 @@ function UserDashBoardPage() {
     count: number;
     bgColorClass?: string;
     darkBgColorClass?: string;
-    isLoading?: boolean;
   }
   const DashboardMainComponent = ({
     imageSrc,
@@ -94,7 +136,6 @@ function UserDashBoardPage() {
     count,
     bgColorClass = "bg-[#E7EDFF]",
     darkBgColorClass = "dark:bg-black",
-    isLoading = false,
   }: DashboardMainComponentProps) => {
     return (
       <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center rounded-full border lg:w-52">
@@ -107,7 +148,7 @@ function UserDashBoardPage() {
 
           <div className="flex h-11.5 flex-col justify-between">
             <div className="text-ec-sub text-sm font-medium">{description}</div>
-            {isLoading ? (
+            {loading ? (
               <SkeletonCell className="h-4 w-10" rounded="rounded-ec-10" />
             ) : (
               <div className="text-ec-blue text-base font-medium">
@@ -142,18 +183,16 @@ function UserDashBoardPage() {
     noticeTitle: string;
     createdAt: string;
     onClick?: () => void;
-    isLoading: boolean;
   }
   const NotionComponent = ({
     noticeId,
     noticeTitle,
     createdAt,
     onClick,
-    isLoading,
   }: NotionComponentProps) => {
     return (
       <div className="flex cursor-pointer items-center" onClick={onClick}>
-        {isLoading ? (
+        {loading ? (
           <>
             <div className="text-ec-black ml-5.25 w-8 justify-start text-center text-sm font-medium">
               {noticeId}
@@ -217,18 +256,16 @@ function UserDashBoardPage() {
     alartStatus: string;
     alartDate: string;
     onClick?: () => void;
-    isLoading: boolean;
   }
   const MissAlartComponent = ({
     alartContent,
     alartStatus,
     alartDate,
     onClick,
-    isLoading,
   }: MissAlartComponentProps) => {
     return (
       <div className="flex cursor-pointer items-center" onClick={onClick}>
-        {isLoading ? (
+        {loading ? (
           <>
             <div className="text-ec-black ml-8 w-218 justify-start text-sm font-medium">
               {alartContent}
@@ -372,7 +409,6 @@ function UserDashBoardPage() {
                           noticeTitle={`공지사항 ${item}`}
                           createdAt="2026년 2월 13일 오전 12시 38분"
                           onClick={() => setIsModalOpen(true)}
-                          isLoading={false}
                         />
                       </PageNationItem>
                     ))}
@@ -441,7 +477,6 @@ function UserDashBoardPage() {
                           alartStatus="안 읽음"
                           alartDate="3일 전"
                           onClick={() => setIsModalOpen(true)}
-                          isLoading={false}
                         />
                       </PageNationItem>
                     ))}
