@@ -2,6 +2,10 @@
 import type { SessionQuestionRow } from "@/user/domains/session/types/SessionQuestionRow";
 import MobileItem from "../../../shared/components/MobileItem";
 import TableIcon from "../assets/tableIcon.png";
+import {
+  formatQuestionStatus,
+  isCompletedQuestionStatus,
+} from "@/user/utils/question";
 
 interface MobileQuestionsTableRowsProps {
   questions: SessionQuestionRow[];
@@ -19,7 +23,7 @@ function MobileQuestionsTableRows({
       {questions.map((question, index) => (
         <div
           key={`${question.id}-${question.createdUserName ?? "anonymous"}-${index}`}
-          className="bg-ec-box rounded-ec-10 max-w-87.5 px-5 py-5.5"
+          className="bg-ec-box rounded-ec-10 max-w-87.5 cursor-pointer px-5 py-5.5"
         >
           <div className="border-ec-outline-dark flex flex-col gap-2 border-b pb-5">
             <div className="flex items-center gap-1">
@@ -47,9 +51,11 @@ function MobileQuestionsTableRows({
             />
             <MobileItem
               label="상태"
-              value={question.status}
+              value={formatQuestionStatus(question.status)}
               valueClassName={
-                question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
+                isCompletedQuestionStatus(question.status)
+                  ? "text-ec-blue"
+                  : "text-ec-sub"
               }
             />
           </div>

@@ -13,13 +13,29 @@ function NotificationTableRows({
   return (
     <div className="text-ec-black flex w-full flex-col">
       {isLoading && (
-        <div className="flex animate-pulse items-center justify-between px-6 py-5">
-          <SkeletonCell className="h-4 w-220" />
-          <div className="flex gap-7">
-            <SkeletonCell className="h-4 w-14" />
-            <SkeletonCell className="h-4 w-12" />
+        <>
+          <div className="flex animate-pulse items-center justify-between px-6 py-5">
+            <SkeletonCell className="h-4 w-220" />
+            <div className="flex gap-7">
+              <SkeletonCell className="h-4 w-14" />
+              <SkeletonCell className="h-4 w-12" />
+            </div>
           </div>
-        </div>
+          <div className="flex animate-pulse items-center justify-between px-6 py-5">
+            <SkeletonCell className="h-4 w-220" />
+            <div className="flex gap-7">
+              <SkeletonCell className="h-4 w-14" />
+              <SkeletonCell className="h-4 w-12" />
+            </div>
+          </div>
+          <div className="flex animate-pulse items-center justify-between px-6 py-5">
+            <SkeletonCell className="h-4 w-220" />
+            <div className="flex gap-7">
+              <SkeletonCell className="h-4 w-14" />
+              <SkeletonCell className="h-4 w-12" />
+            </div>
+          </div>
+        </>
       )}
 
       {notifications.map((notification, index) => (

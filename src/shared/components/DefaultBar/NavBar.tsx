@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthSessionStore } from "@auth/utils/authStore";
 import NavLogo from "@shared/assets/NavLogo.png";
 import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";
@@ -56,13 +57,15 @@ const NavItems = ({
 const NavBar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const role = useAuthSessionStore((state) => state.session?.role);
   const pathSegments = pathname.split("/").filter(Boolean);
   const currentSection = pathSegments[1] ?? "";
+  const isAdmin = role?.toUpperCase() === "ADMIN";
 
   const isSessionSelected = currentSection === "sessions";
   const isNotificationSelected = currentSection === "notification";
   const isQuestionSelected = currentSection === "questions";
-  const isAdminSelected = currentSection === "admin";
+  const isAdminSelected = pathSegments[0] === "admin";
 
   return (
     <div className="bg-ec-blue sticky top-0 flex h-screen min-h-screen w-21.5">
@@ -104,13 +107,15 @@ const NavBar = () => {
               selected={isQuestionSelected}
               onClick={() => navigate("/user/questions")}
             />
-            <NavItems
-              iconSrc={NavAdmin}
-              iconAlt="NavAdmin"
-              label="관리자"
-              selected={isAdminSelected}
-              onClick={() => navigate("/admin")}
-            />
+            {isAdmin && (
+              <NavItems
+                iconSrc={NavAdmin}
+                iconAlt="NavAdmin"
+                label="관리자"
+                selected={isAdminSelected}
+                onClick={() => navigate("/admin")}
+              />
+            )}
           </div>
         </div>
         <div className="flex h-17 w-17 flex-col items-center gap-1.25">

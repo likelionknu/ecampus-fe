@@ -1,5 +1,5 @@
 import TitleSection from "@/shared/components/TitleSection";
-import AssignmentUploadForm from "../components/assignments/upload/AssignmentUploadForm";
+import AssignmentUploadForm from "../components/assignments/AssignmentUploadForm";
 
 function AdminSessionAssignmentUpload() {
   return (

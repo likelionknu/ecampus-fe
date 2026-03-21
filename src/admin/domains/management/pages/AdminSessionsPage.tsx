@@ -9,11 +9,12 @@ import {
 import SessionsTableRows from "../components/SessionsTableRows";
 import SessionHeader from "../components/SessionHeader";
 import type { AdminSessionRow, PagedResponse } from "../types";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import CreateModal from "../components/modal/sessions/CreateModal";
 import ConfirmModal from "../components/modal/sessions/ConfirmModal";
 import DoneModal from "../components/modal/sessions/DoneModal";
 import type { CreateConfirmDoneModalStep } from "@/shared/types/ModalStep";
+import { getSessions } from "../apis/session";
 
 const mockSessions: PagedResponse<AdminSessionRow> = {
   content: [
@@ -132,7 +133,7 @@ const mockSessions: PagedResponse<AdminSessionRow> = {
 function AdminSessionsPage() {
   const itemNum = mockSessions.totalElements;
   const itemSumNum = 8;
-  const isLoading = true;
+  const [isLoading, setIsLoading] = useState(false);
   const [name, setName] = useState<string>("");
   const [step, setStep] = useState<CreateConfirmDoneModalStep | null>(null);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
@@ -164,6 +165,22 @@ function AdminSessionsPage() {
         return null;
     }
   };
+
+  useEffect(() => {
+    const fetchSessions = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getSessions();
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSessions();
+  }, []);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">

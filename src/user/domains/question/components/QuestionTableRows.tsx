@@ -1,6 +1,11 @@
 ﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
+import { useNavigate } from "react-router-dom";
+import {
+  formatQuestionStatus,
+  isCompletedQuestionStatus,
+} from "@/user/utils/question";
 
 interface QuestionTableRowsProps {
   isLoading: boolean;
@@ -12,26 +17,51 @@ const sessionNameById: Record<number, string> = {
 };
 
 function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="text-ec-black flex w-full flex-col">
       {isLoading && (
-        <div className="flex animate-pulse items-center gap-4 rounded-2xl px-5.5 py-4">
-          <SkeletonCell className="ml-1 h-4 w-6" />
-          <SkeletonCell className="h-4 w-65" />
-          <SkeletonCell className="ml-2 h-4 w-76" />
-          <SkeletonCell className="h-4 w-50" />
-          <SkeletonCell className="ml-2 h-4 w-14" />
-          <SkeletonCell className="ml-2 h-4 w-14" />
-          <SkeletonCell className="ml-3 h-4 w-10" />
-        </div>
+        <>
+          <div className="flex animate-pulse items-center gap-4 rounded-2xl px-5.5 py-4">
+            <SkeletonCell className="ml-1 h-4 w-6" />
+            <SkeletonCell className="h-4 w-65" />
+            <SkeletonCell className="ml-2 h-4 w-76" />
+            <SkeletonCell className="h-4 w-50" />
+            <SkeletonCell className="ml-2 h-4 w-14" />
+            <SkeletonCell className="ml-2 h-4 w-14" />
+            <SkeletonCell className="ml-3 h-4 w-10" />
+          </div>
+          <div className="flex animate-pulse items-center gap-4 rounded-2xl px-5.5 py-4">
+            <SkeletonCell className="ml-1 h-4 w-6" />
+            <SkeletonCell className="h-4 w-65" />
+            <SkeletonCell className="ml-2 h-4 w-76" />
+            <SkeletonCell className="h-4 w-50" />
+            <SkeletonCell className="ml-2 h-4 w-14" />
+            <SkeletonCell className="ml-2 h-4 w-14" />
+            <SkeletonCell className="ml-3 h-4 w-10" />
+          </div>
+          <div className="flex animate-pulse items-center gap-4 rounded-2xl px-5.5 py-4">
+            <SkeletonCell className="ml-1 h-4 w-6" />
+            <SkeletonCell className="h-4 w-65" />
+            <SkeletonCell className="ml-2 h-4 w-76" />
+            <SkeletonCell className="h-4 w-50" />
+            <SkeletonCell className="ml-2 h-4 w-14" />
+            <SkeletonCell className="ml-2 h-4 w-14" />
+            <SkeletonCell className="ml-3 h-4 w-10" />
+          </div>
+        </>
       )}
 
       {questions.map((question, index) => (
         <div
           key={`${question.id}-${question.createdUserName ?? "anonymous"}-${index}`}
-          className={`flex w-full items-center justify-between px-6 py-4 ${
+          className={`flex w-full cursor-pointer items-center justify-between px-6 py-4 ${
             index % 2 === 1 ? "bg-ec-box" : ""
           }`}
+          onClick={() =>
+            navigate(`/user/questions/${question.id}/${question.sessionId}`)
+          }
         >
           <div className="flex min-w-0 items-center gap-5">
             <span className="text-body-2 text-ec-black w-6 text-center">
@@ -60,10 +90,12 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
             </span>
             <span
               className={`text-body-2 mr-0.5 ${
-                question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
+                isCompletedQuestionStatus(question.status)
+                  ? "text-ec-blue"
+                  : "text-ec-sub"
               }`}
             >
-              {question.status}
+              {formatQuestionStatus(question.status)}
             </span>
           </div>
         </div>

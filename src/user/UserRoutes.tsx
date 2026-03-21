@@ -14,6 +14,7 @@ import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
 import UserNotificationPage from "./domains/notification/pages/NotificationPage";
 import UserListPage from "./domains/session/pages/UserList";
 
+
 const userRoutes: RouteObject[] = [
   {
     children: [
@@ -41,14 +42,13 @@ const userRoutes: RouteObject[] = [
         path: "list",
         element: <UserListPage />,
         handle: { title: "그룹" },
+
+        path: "questions/:questionId/:sessionId",
+        element: <UserQuestionDetailPage />,
+        handle: { title: "질문 상세" },
+
       },
     ],
-  },
-  {
-    // path: "questions/:id",
-    path: "questions/detail",
-    element: <UserQuestionDetailPage />,
-    handle: { title: "질문 상세" },
   },
 
   {
@@ -61,11 +61,6 @@ const userRoutes: RouteObject[] = [
       { path: "assignments", element: <UserSessionAssignments /> },
       { path: "assignments/detail", element: <UserSessionAssignmentsView /> },
       { path: "questions", element: <UserSessionQuestionsPage /> },
-      {
-        path: "questions/detail",
-        element: <UserQuestionDetailPage />,
-        handle: { title: "질문 상세", showDeleteButton: true },
-      },
       { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
       { path: "groups", element: <UserSessionGroupPage /> },
       { path: "list", element: <UserSessionGroupPage /> },

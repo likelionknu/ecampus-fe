@@ -1,4 +1,4 @@
-import CloseImg from "../assets/close.png";
+import CloseImg from "../../assets/close.png";
 
 interface ModalProps {
   children?: React.ReactNode;
@@ -7,7 +7,7 @@ interface ModalProps {
 
 function ModalHeader({ children, onClick }: ModalProps) {
   return (
-    <div className="text-ec-black flex items-center justify-between text-[16px] font-semibold">
+    <div className="text-ec-black flex max-h-6 items-center justify-between text-[16px] font-semibold">
       {children}
       <img
         src={CloseImg}
@@ -33,7 +33,7 @@ function ModalButtonLayout({ children }: ModalProps) {
   );
 }
 
-function ModalCancled({ onClick }: ModalProps) {
+function ModalCancelled({ onClick }: ModalProps) {
   return (
     <span
       className="text-ec-black tracking-ec-normal cursor-pointer text-[12px] leading-120 font-medium"
@@ -59,7 +59,7 @@ const Modal = Object.assign(ModalMain, {
   Header: ModalHeader,
   Description: ModalDescription,
   ButtonLayout: ModalButtonLayout,
-  Cancled: ModalCancled,
+  Cancelled: ModalCancelled,
 });
 
 export default Modal;
