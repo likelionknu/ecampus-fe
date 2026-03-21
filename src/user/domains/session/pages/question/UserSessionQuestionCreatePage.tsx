@@ -118,7 +118,7 @@ function UserSessionQuestionCreatePage() {
             >
               확인
             </Button>
-            {step === "CREATE" && <Modal.Cancled onClick={handleClose} />}
+            {step === "CREATE" && <Modal.Cancelled onClick={handleClose} />}
           </Modal.ButtonLayout>
         </Modal>
       )}

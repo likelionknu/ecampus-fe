@@ -98,7 +98,7 @@ function UserQuestionDetailPage() {
           >
             {isConfirm ? "삭제" : "확인"}
           </Button>
-          {isConfirm && <Modal.Cancled onClick={handleClose} />}
+          {isConfirm && <Modal.Cancelled onClick={handleClose} />}
         </Modal.ButtonLayout>
       </Modal>
     );

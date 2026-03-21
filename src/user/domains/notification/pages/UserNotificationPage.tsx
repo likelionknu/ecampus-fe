@@ -184,7 +184,7 @@ function UserNotificationPage() {
           >
             {isConfirm ? config.confirmLabel : "확인"}
           </Button>
-          {isConfirm ? <Modal.Cancled onClick={handleClose} /> : null}
+          {isConfirm ? <Modal.Cancelled onClick={handleClose} /> : null}
         </Modal.ButtonLayout>
       </Modal>
     );

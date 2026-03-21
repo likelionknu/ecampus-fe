@@ -1,21 +1,22 @@
-import { useEffect, useRef } from "react"
-import InputBox from "@/shared/components/InputBox"
-import { useScrollSync } from "../../hooks/useScrollSync"
-import Button from "@/shared/components/Button"
-import MarkdownEditor from "./MarkdownEditor"
-import MarkdownPreview from "./MarkdownPreview"
+import { useEffect, useRef, useState } from "react";
+import { useScrollSync } from "../../hooks/useScrollSync";
+import Button from "@/shared/components/Button";
+import MarkdownEditor from "./MarkdownEditor";
+import MarkdownPreview from "./MarkdownPreview";
+import Input from "@/shared/components/Input";
+import Modal from "@/shared/components/Modal";
 
 interface Props {
-  title: string
-  content: string
-  setTitle: (v: string) => void
-  setContent: (v: string) => void
+  title: string;
+  content: string;
+  setTitle: (v: string) => void;
+  setContent: (v: string) => void;
 }
 
 interface FileData {
-  fileId: number
-  name: string
-  content: string
+  fileId: number;
+  name: string;
+  content: string;
 }
 
 const mockFile: FileData = {
@@ -38,7 +39,7 @@ const mockFile: FileData = {
 2. 사용자 A가 등록한 상점
 3. 사용자 A가 상점에 등록한 상품 A, B, C
 `,
-}
+};
 
 export default function FilesModifyLayout({
   title,
@@ -46,28 +47,30 @@ export default function FilesModifyLayout({
   setTitle,
   setContent,
 }: Props) {
-
   // 스크롤 동기화
-  const editorRef = useRef<HTMLTextAreaElement | null>(null)
-  const previewRef = useRef<HTMLDivElement | null>(null)
+  const editorRef = useRef<HTMLTextAreaElement | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
+  const [modalType, setModalType] = useState<
+    "modifyConfirm" | "modifySuccess" | null
+  >(null);
 
-  useScrollSync(editorRef, previewRef)
+  useScrollSync(editorRef, previewRef);
   useEffect(() => {
-    setTitle(mockFile.name)
-    setContent(mockFile.content)
-  }, [setContent, setTitle])
+    setTitle(mockFile.name);
+    setContent(mockFile.content);
+  }, [setContent, setTitle]);
 
   return (
     <div className="px-5 pt-5">
-      <div className="flex items-center justify-between mb-8">
+      <div className="mb-8 flex items-center justify-between">
         <div className="w-228.5">
-          <InputBox
+          <Input
             placeholder="제목을 입력하세요"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="large">
+        <Button size="large" onClick={() => setModalType("modifyConfirm")}>
           수정
         </Button>
       </div>
@@ -80,12 +83,45 @@ export default function FilesModifyLayout({
           />
         </div>
         <div className="w-125.25">
-          <MarkdownPreview
-            ref={previewRef}
-            content={content}
-          />
+          <MarkdownPreview ref={previewRef} content={content} />
         </div>
       </div>
+      {modalType === "modifyConfirm" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            세션 자료 수정
+          </Modal.Header>
+          <Modal.Description>
+            이 세션 자료를 수정할까요? <br />
+            작성일이 수정일 기준으로 변경됩니다
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              variant="primary"
+              onClick={() => {
+                setModalType("modifySuccess");
+              }}
+            >
+              확인
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "modifySuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            세션 자료 수정
+          </Modal.Header>
+          <Modal.Description>세션 자료를 수정했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={() => setModalType(null)}>
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
     </div>
-  )
+  );
 }
