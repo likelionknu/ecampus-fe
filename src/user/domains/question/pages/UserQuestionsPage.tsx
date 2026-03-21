@@ -49,18 +49,20 @@ const INITIAL_QUESTIONS_PAGE_STATE: QuestionsPageState = {
 };
 
 function UserQuestionsPage() {
+  // 질문 페이지 상태
   const [questionsPage, setQuestionsPage] = useState<QuestionsPageState>(
     INITIAL_QUESTIONS_PAGE_STATE,
   );
+  // 필터 상태
   const [filter, setFilter] = useState<FilterState>({
     title: "",
     status: QUESTION_STATUS_DEFAULT_OPTION,
   });
-  const [debouncedTitle, setDebouncedTitle] = useState(filter.title);
-  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [debouncedTitle, setDebouncedTitle] = useState(filter.title); // api 요청 타이틀 상태
+  const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const itemSumNum = questionsPage.size;
   const itemNum = questionsPage.totalElements;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isTablet = useMediaQuery({ maxWidth: 1023 });
 
   // 과도한 api 요청 방지

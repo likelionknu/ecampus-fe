@@ -80,7 +80,7 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
             <span className="text-body-2 text-ec-black mr-6">
               {formatKoreanDateTime12(question.createdAt)}
             </span>
-            <span className="text-body-2 text-ec-black mr-6 truncate">
+            <span className="text-body-2 text-ec-black mr-6 w-12 truncate">
               {question.createdUserName ?? "-"}
             </span>
             <span
