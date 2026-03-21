@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useScrollSync } from "../../hooks/useScrollSync";
 import Button from "@/shared/components/Button";
 import MarkdownEditor from "./MarkdownEditor";
 import MarkdownPreview from "./MarkdownPreview";
 import Input from "@/shared/components/Input";
+import Modal from "@/shared/components/Modal";
 
 interface Props {
   title: string;
@@ -49,6 +50,9 @@ export default function FilesModifyLayout({
   // 스크롤 동기화
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
+  const [modalType, setModalType] = useState<
+    "modifyConfirm" | "modifySuccess" | null
+  >(null);
 
   useScrollSync(editorRef, previewRef);
   useEffect(() => {
@@ -66,7 +70,9 @@ export default function FilesModifyLayout({
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="large">수정</Button>
+        <Button size="large" onClick={() => setModalType("modifyConfirm")}>
+          수정
+        </Button>
       </div>
       <div className="flex gap-1">
         <div className="w-125.25">
@@ -80,6 +86,42 @@ export default function FilesModifyLayout({
           <MarkdownPreview ref={previewRef} content={content} />
         </div>
       </div>
+      {modalType === "modifyConfirm" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            세션 자료 수정
+          </Modal.Header>
+          <Modal.Description>
+            이 세션 자료를 수정할까요? <br />
+            작성일이 수정일 기준으로 변경됩니다
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              variant="primary"
+              onClick={() => {
+                setModalType("modifySuccess");
+              }}
+            >
+              확인
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "modifySuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            세션 자료 수정
+          </Modal.Header>
+          <Modal.Description>세션 자료를 수정했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={() => setModalType(null)}>
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
     </div>
   );
 }

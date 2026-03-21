@@ -137,11 +137,10 @@ function FilesViewPage() {
       {modalType === "deleteConfirm" && (
         <Modal>
           <Modal.Header onClick={() => setModalType(null)}>
-            자료 삭제
+            세션 자료 삭제
           </Modal.Header>
           <Modal.Description>
-            해당 자료를 삭제하시겠습니까? <br />
-            삭제 후에는 복구할 수 없습니다.
+            이 세션 자료를 삭제할까요? <br />이 작업은 되돌릴 수 없어요
           </Modal.Description>
           <Modal.ButtonLayout>
             <Button
@@ -162,9 +161,7 @@ function FilesViewPage() {
           <Modal.Header onClick={() => setModalType(null)}>
             세션 자료 삭제
           </Modal.Header>
-          <Modal.Description>
-            이 세션 자료를 삭제할까요? 이 작업은 되돌릴 수 없어요
-          </Modal.Description>
+          <Modal.Description>세션 자료를 삭제했어요</Modal.Description>
           <Modal.ButtonLayout>
             <Button size="primary" onClick={() => setModalType(null)}>
               확인
