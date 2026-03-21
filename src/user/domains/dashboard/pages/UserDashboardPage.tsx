@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useMediaQuery } from "react-responsive";
+
 import DashboardArrow from "@shared/assets/DashboardArrow.png";
 import UserProfileImg from "@shared/assets/UserProfileImg.png";
 import DashboardMain1 from "@shared/assets/DashboardMain1.png";
@@ -12,9 +14,10 @@ import { PageNationButton } from "@shared/components/PageNation";
 import { PageNationMobileFrame } from "@/shared/components/PageNationMobile";
 import { PageNationMobileItem } from "@/shared/components/PageNationMobile";
 import { PageNationMobileButton } from "@/shared/components/PageNationMobile";
+
 import DashboardModal from "../components/DashboardModal";
 
-import { useMediaQuery } from "react-responsive";
+import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 
 function UserDashBoardPage() {
   const itemSumNum = 4;
@@ -22,6 +25,103 @@ function UserDashBoardPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  // --------------------------------------api 부분 시작--------------------------------------
+
+  // const [data, setData] = useState({
+  //   profileUrl: "",
+  //   name: "",
+  //   course: 0,
+  //   part: "",
+  //   unsubmittedAssignmentCount: 0,
+  //   sessionCount: 0,
+  //   demeritCount: 0,
+  // });
+
+  const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
+
+  // useEffect(() => {
+  //   const fetchDashboard = async () => {
+  //     try {
+  //       const accessToken = JSON.parse(localStorage.getItem("state"))?.session
+  //         ?.accessToken;
+
+  //       const response = await fetch("/v1/users/me/dashboard", {
+  //         method: "GET",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error("API 요청 실패");
+  //       }
+
+  //       const result = await response.json();
+
+  //       setData(result.data);
+  //     } catch (err) {
+  //       console.error(err);
+  //       setError(err.message);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchDashboard();
+  // }, []);
+
+  // --------------------------------------api 부분 끝--------------------------------------
+
+  // ----------------------------------프로필 컴포넌트 시작----------------------------------
+
+  const DashboardProfileComponent = () => {
+    return (
+      <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109">
+        <div className="flex items-center gap-5">
+          {loading ? (
+            <>
+              <img
+                className="ml-2.5 h-17.25 w-17.25 rounded-full"
+                alt="NavUserProfileImg"
+                src={UserProfileImg}
+              />
+
+              <div className="flex h-11.5 flex-col justify-between">
+                <div className="text-ec-blue justify-start text-base font-medium">
+                  김멋사
+                </div>
+                <div className="text-ec-sub justify-start text-sm font-medium">
+                  14기 아기사자
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <SkeletonCell
+                className="ml-2.5 h-17.25 w-17.25"
+                rounded="rounded-full"
+              />
+              <div className="flex h-11.5 flex-col justify-between">
+                <SkeletonCell className="h-4 w-13.25" rounded="rounded-full" />
+                <SkeletonCell className="h-4 w-30" rounded="rounded-full" />
+              </div>
+            </>
+          )}
+        </div>
+        <img
+          className="h-6.5 w-6.5"
+          alt="DashboardArrow"
+          src={DashboardArrow}
+        />
+      </div>
+    );
+  };
+
+  // ----------------------------------프로필 컴포넌트 끝----------------------------------
+  // ----------------------------------세션,과제,벌점 컴포넌트 시작----------------------------------
 
   interface DashboardMainComponentProps {
     imageSrc: string;
@@ -48,12 +148,21 @@ function UserDashBoardPage() {
 
           <div className="flex h-11.5 flex-col justify-between">
             <div className="text-ec-sub text-sm font-medium">{description}</div>
-            <div className="text-ec-blue text-base font-medium">{count}개</div>
+            {loading ? (
+              <SkeletonCell className="h-4 w-10" rounded="rounded-ec-10" />
+            ) : (
+              <div className="text-ec-blue text-base font-medium">
+                {count}개
+              </div>
+            )}
           </div>
         </div>
       </div>
     );
   };
+
+  // ----------------------------------세션,과제,벌점 컴포넌트 끝----------------------------------
+  // ----------------------------------페이지네이션 제목 컴포넌트 시작----------------------------------
 
   interface DashboardMainTitleProps {
     title: string;
@@ -65,6 +174,9 @@ function UserDashBoardPage() {
       </div>
     );
   };
+
+  // ----------------------------------페이지네이션 제목 컴포넌트 끝----------------------------------
+  // ----------------------------------페이지네이션 공지사항 컴포넌트 시작----------------------------------
 
   interface NotionComponentProps {
     noticeId: string;
@@ -80,23 +192,39 @@ function UserDashBoardPage() {
   }: NotionComponentProps) => {
     return (
       <div className="flex cursor-pointer items-center" onClick={onClick}>
-        <div className="text-ec-black ml-5.25 w-8 justify-start text-center text-sm font-medium">
-          {noticeId}
-        </div>
-        <div className="text-ec-black ml-5 line-clamp-1 w-190 justify-start text-sm font-medium">
-          {noticeTitle}
-        </div>
-        <div className="text-ec-black ml-12 w-56 justify-start text-center text-sm font-medium">
-          {createdAt}
-        </div>
+        {loading ? (
+          <>
+            <div className="text-ec-black ml-5.25 w-8 justify-start text-center text-sm font-medium">
+              {noticeId}
+            </div>
+            <div className="text-ec-black ml-5 line-clamp-1 w-190 justify-start text-sm font-medium">
+              {noticeTitle}
+            </div>
+            <div className="text-ec-black mr-4 ml-12 w-54 justify-start text-center text-sm font-medium">
+              {createdAt}
+            </div>
+          </>
+        ) : (
+          <>
+            <SkeletonCell className="ml-5.25 h-4 w-8" rounded="rounded-full" />
+            <SkeletonCell className="ml-5 h-4 w-190" rounded="rounded-full" />
+            <SkeletonCell
+              className="mr-4 ml-12 h-4 w-52"
+              rounded="rounded-full"
+            />
+          </>
+        )}
       </div>
     );
   };
 
-  type NotionMoblieComponentProps = {
+  // ----------------------------------페이지네이션 공지사항 컴포넌트 끝----------------------------------
+  // ----------------------------------페이지네이션 모바일 공지사항 컴포넌트 시작----------------------------------
+
+  interface NotionMoblieComponentProps {
     title: string;
     date: string;
-  };
+  }
 
   const NotionMoblieComponent = ({
     title,
@@ -120,6 +248,9 @@ function UserDashBoardPage() {
     );
   };
 
+  // ----------------------------------페이지네이션 모바일 공지사항 컴포넌트 끝----------------------------------
+  // ----------------------------------페이지네이션 알람 컴포넌트 시작----------------------------------
+
   interface MissAlartComponentProps {
     alartContent: string;
     alartStatus: string;
@@ -134,18 +265,60 @@ function UserDashBoardPage() {
   }: MissAlartComponentProps) => {
     return (
       <div className="flex cursor-pointer items-center" onClick={onClick}>
-        <div className="text-ec-black ml-8 w-218 justify-start text-sm font-medium">
-          {alartContent}
+        {loading ? (
+          <>
+            <div className="text-ec-black ml-8 w-218 justify-start text-sm font-medium">
+              {alartContent}
+            </div>
+            <div className="text-ec-black ml-10 line-clamp-1 w-14 justify-center text-sm font-medium">
+              {alartStatus}
+            </div>
+            <div className="text-ec-black ml-9.5 w-14 justify-start text-center text-sm font-medium">
+              {alartDate}
+            </div>
+          </>
+        ) : (
+          <>
+            <SkeletonCell className="ml-8 h-4 w-218" rounded="rounded-full" />
+            <SkeletonCell className="ml-10 h-4 w-14" rounded="rounded-full" />
+            <SkeletonCell className="ml-9.5 h-4 w-14" rounded="rounded-full" />
+          </>
+        )}
+      </div>
+    );
+  };
+
+  // ----------------------------------페이지네이션 알람 컴포넌트 끝----------------------------------
+  // ----------------------------------페이지네이션 모바일 알람 컴포넌트 시작----------------------------------
+
+  interface MissAlartMoblieComponentProps {
+    title: string;
+    date: string;
+  }
+
+  const MissAlartMoblieComponent = ({
+    title,
+    date,
+  }: MissAlartMoblieComponentProps) => {
+    return (
+      <div className="flex flex-col justify-between gap-2.5 p-5">
+        <div className="text-ec-black line-clamp-1 w-80 justify-start text-sm font-medium">
+          {title}
         </div>
-        <div className="text-ec-black ml-10 line-clamp-1 w-14 justify-center text-sm font-medium">
-          {alartStatus}
-        </div>
-        <div className="text-ec-black ml-9.5 w-14 justify-start text-center text-sm font-medium">
-          {alartDate}
+
+        <div className="flex items-center gap-2.5">
+          <div className="text-ec-sub line-clamp-1 justify-start text-xs font-medium">
+            작성일
+          </div>
+          <div className="text-ec-sub line-clamp-1 justify-start text-xs font-medium">
+            {date}
+          </div>
         </div>
       </div>
     );
   };
+
+  // ----------------------------------페이지네이션 모바일 알람 컴포넌트 끝----------------------------------
 
   return (
     <>
@@ -156,28 +329,7 @@ function UserDashBoardPage() {
           </div>
 
           <div className="flex h-93.5 w-full flex-wrap justify-between md:h-47 lg:h-21.5 lg:items-center">
-            <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109">
-              <div className="flex items-center gap-5">
-                <img
-                  className="ml-2.5 h-17.25 w-17.25 rounded-full"
-                  alt="NavUserProfileImg"
-                  src={UserProfileImg}
-                />
-                <div className="flex h-11.5 flex-col justify-between">
-                  <div className="text-ec-blue justify-start text-base font-medium">
-                    김멋사
-                  </div>
-                  <div className="text-ec-sub justify-start text-sm font-medium">
-                    14기 아기사자
-                  </div>
-                </div>
-              </div>
-              <img
-                className="h-6.5 w-6.5"
-                alt="DashboardArrow"
-                src={DashboardArrow}
-              />
-            </div>
+            <DashboardProfileComponent />
             <DashboardMainComponent
               imageSrc={DashboardMain1}
               description="미제출 과제"
@@ -273,25 +425,25 @@ function UserDashBoardPage() {
             <>
               <PageNationMobileFrame>
                 <PageNationMobileItem>
-                  <NotionMoblieComponent
+                  <MissAlartMoblieComponent
                     title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
                     date="2026년 2월 14일 오전 12시 38분"
                   />
                 </PageNationMobileItem>
                 <PageNationMobileItem>
-                  <NotionMoblieComponent
+                  <MissAlartMoblieComponent
                     title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
                     date="2026년 2월 14일 오전 12시 38분"
                   />
                 </PageNationMobileItem>
                 <PageNationMobileItem>
-                  <NotionMoblieComponent
+                  <MissAlartMoblieComponent
                     title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
                     date="2026년 2월 14일 오전 12시 38분"
                   />
                 </PageNationMobileItem>
                 <PageNationMobileItem>
-                  <NotionMoblieComponent
+                  <MissAlartMoblieComponent
                     title="멋쟁이사자처럼의 첫 번째 공지사항이에요"
                     date="2026년 2월 14일 오전 12시 38분"
                   />

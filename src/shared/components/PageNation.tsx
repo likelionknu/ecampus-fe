@@ -7,6 +7,8 @@ import {
   type ReactNode,
 } from "react";
 
+import SkeletonCell from "./skeleton/SkeletonCell";
+
 interface PageNationContextValue {
   currentPage: number;
   setCurrentPage: (page: number) => void;
