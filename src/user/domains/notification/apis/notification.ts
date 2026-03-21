@@ -20,6 +20,13 @@ export const readNotification = async ({ nid }: { nid: number }) => {
   return res;
 };
 
+// 알림 전체 읽음
+export const readAllNotification = async () => {
+  const res = await api.post("/v1/notifications/read-all");
+
+  return res;
+};
+
 // 알림 전체 삭제
 export const deleteAllNotification = async () => {
   const res = await api.delete("/v1/notifications");
