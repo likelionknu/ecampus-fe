@@ -2,7 +2,7 @@ import Button from "@/shared/components/Button";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import ReactMarkdown from "react-markdown";
 import { markdownComponents } from "../../session/components/markdown/MarkdownComponents";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import { useState } from "react";
 
 interface FileData {

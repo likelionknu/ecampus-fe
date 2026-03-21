@@ -3,7 +3,7 @@ import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import ReactMarkdown from "react-markdown";
 import { markdownComponents } from "../components/markdown/MarkdownComponents";
 import { useState } from "react";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 
 interface FileData {
   fileId: number;

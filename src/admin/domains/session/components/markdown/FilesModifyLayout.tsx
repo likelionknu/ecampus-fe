@@ -4,7 +4,7 @@ import Button from "@/shared/components/Button";
 import MarkdownEditor from "./MarkdownEditor";
 import MarkdownPreview from "./MarkdownPreview";
 import Input from "@/shared/components/Input";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 
 interface Props {
   title: string;
