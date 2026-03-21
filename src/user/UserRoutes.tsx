@@ -11,6 +11,7 @@ import UserSessionFilesPage from "./domains/session/pages/UserSessionFilesPage";
 import UserSessionFilesViewPage from "./domains/session/pages/UserSessionFilesViewPage";
 import UserQuestionsPage from "./domains/question/pages/UserQuestionsPage";
 import UserQuestionDetailPage from "./shared/pages/UserQuestionDetailPage";
+import UserNotificationPage from "./domains/notification/pages/UserNotificationPage";
 import UserListPage from "./domains/session/pages/UserList";
 
 
