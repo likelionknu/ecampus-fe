@@ -36,13 +36,12 @@ const userRoutes: RouteObject[] = [
         element: <UserQuestionsPage />,
         handle: { title: "질문" },
       },
+      {
+        path: "questions/:questionId/:sessionId",
+        element: <UserQuestionDetailPage />,
+        handle: { title: "질문 상세" },
+      },
     ],
-  },
-  {
-    // path: "questions/:id",
-    path: "questions/detail",
-    element: <UserQuestionDetailPage />,
-    handle: { title: "질문 상세" },
   },
 
   {
@@ -55,11 +54,6 @@ const userRoutes: RouteObject[] = [
       { path: "assignments", element: <UserSessionAssignments /> },
       { path: "assignments/detail", element: <UserSessionAssignmentsView /> },
       { path: "questions", element: <UserSessionQuestionsPage /> },
-      {
-        path: "questions/detail",
-        element: <UserQuestionDetailPage />,
-        handle: { title: "질문 상세", showDeleteButton: true },
-      },
       { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
       { path: "groups", element: <UserSessionGroupPage /> },
     ],

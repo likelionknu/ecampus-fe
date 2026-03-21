@@ -1,6 +1,6 @@
 import Button from "@/shared/components/Button";
 import Input from "@/shared/components/Input";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import type { ModalProps } from "@/shared/types/Modal";
 
 function CreateModal({ name, onChange, onNext, onClose }: ModalProps) {

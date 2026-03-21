@@ -12,8 +12,17 @@ import QuestionTableHeader from "../components/QuestionTableHeader";
 import QuestionTableRows from "../components/QuestionTableRows";
 import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
 import SelectBox from "@/shared/components/SelectBox";
-import { QUESTION_STATUS_OPTIONS } from "@/shared/constants/selectOptions";
+import {
+  QUESTION_STATUS_DEFAULT_OPTION,
+  QUESTION_STATUS_OPTIONS,
+  QUESTION_STATUS_OPTION_TO_REQUEST_STATUS,
+} from "@/shared/constants/selectOptions";
 import { useEffect, useState } from "react";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
 import { getQuestions } from "../apis/questions";
 
 interface QuestionsPageState {
@@ -45,19 +54,33 @@ function UserQuestionsPage() {
   );
   const [filter, setFilter] = useState<FilterState>({
     title: "",
-    status: "전체",
+    status: QUESTION_STATUS_DEFAULT_OPTION,
   });
+  const [debouncedTitle, setDebouncedTitle] = useState(filter.title);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const itemSumNum = questionsPage.size;
   const itemNum = questionsPage.totalElements;
   const [isLoading, setIsLoading] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  // 과도한 api 요청 방지
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setDebouncedTitle(filter.title);
+    }, 400);
+
+    return () => window.clearTimeout(timer);
+  }, [filter.title]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
       setIsLoading(true);
 
       try {
-        const res = await getQuestions();
+        const status =
+          QUESTION_STATUS_OPTION_TO_REQUEST_STATUS[filter.status] ?? "ALL";
+        const res = await getQuestions({ title: debouncedTitle, status });
+        setErrors(null);
         setQuestionsPage({
           questions: Array.isArray(res.data?.content) ? res.data.content : [],
           page: res.data?.number ?? 0,
@@ -67,17 +90,25 @@ function UserQuestionsPage() {
           hasNext: !(res.data?.last ?? true),
         });
       } catch (error) {
-        console.log(error);
+        setErrors(getCommonErrorState(error));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchQuestions();
-  }, []);
+  }, [debouncedTitle, filter.status]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280">
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
+
       <TitleSection
         title={`질문(${questionsPage.totalElements})`}
         subText="이캠퍼스에서 생성된 모든 질문을 확인할 수 있어요"
@@ -95,7 +126,7 @@ function UserQuestionsPage() {
         </div>
         <SelectBox
           options={QUESTION_STATUS_OPTIONS}
-          defaultValue="전체"
+          defaultValue={QUESTION_STATUS_DEFAULT_OPTION}
           onChange={(value) =>
             setFilter((prev) => ({ ...prev, status: value }))
           }

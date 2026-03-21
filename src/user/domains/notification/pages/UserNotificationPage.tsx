@@ -11,7 +11,7 @@ import MobileNotifitcationTableRows from "../components/MobileNotificationTableR
 import NotificationTableHeader from "../components/NotificationTableHeader";
 import NotificationTableRows from "../components/NotificationTableRows";
 import type { NotificationRow } from "../types/NotificationRow";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import Button from "@/shared/components/Button";
 import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
 import { getNotification } from "../apis/notification";

@@ -1,5 +1,5 @@
 ﻿import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import type { ModalState } from "../../pages/AdminGroupPage";
 import { MODAL_CONFIG } from "./constants/groupActionModal.constants";
 export type {
