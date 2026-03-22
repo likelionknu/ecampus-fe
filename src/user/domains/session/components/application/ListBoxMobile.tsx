@@ -2,15 +2,20 @@ interface ListBoxProps {
   title: string;
   subText?: string;
   children?: React.ReactNode;
+  onClick?: () => void;
 }
 
 export default function ListBoxMobile({
   title,
   subText,
   children,
+  onClick,
 }: ListBoxProps) {
   return (
-    <div className="bg-ec-box rounded-ec-10 w-full px-5 py-4">
+    <div
+      className="bg-ec-box rounded-ec-10 w-full cursor-pointer px-5 py-4"
+      onClick={onClick}
+    >
       <div className="text-ec-black line-clamp-1 text-[14px]">{title}</div>
       {subText && <div className="text-ec-sub mt-1 text-[12px]">{subText}</div>}
       {children && (

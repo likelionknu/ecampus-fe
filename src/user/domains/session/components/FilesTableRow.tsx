@@ -1,33 +1,33 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-
-interface FilesRow {
-  id: number;
-  name: string;
-  createdAt: string;
-  createdBy: string;
-}
+import type { SessionFile } from "../types/SessionFile";
 
 interface FilesTableRowsProps {
-  files: FilesRow[];
+  files: SessionFile[];
   isLoading: boolean;
+  onRowClick?: (file: SessionFile) => void;
 }
 
-function FilesTableRow({ files, isLoading }: FilesTableRowsProps) {
+function FilesTableRow({ files, isLoading, onRowClick }: FilesTableRowsProps) {
   return (
-    <div className="flex flex-col">
-      {isLoading && (
-        <div className="flex animate-pulse gap-4 rounded-2xl px-4 py-4">
-          <SkeletonCell className="ml-2 h-4 w-7" />
-          <SkeletonCell className="h-4 w-121" />
-          <SkeletonCell className="h-4 w-46" />
-          <SkeletonCell className="ml-10 h-4 w-20" />
-        </div>
-      )}
+    <div className="flex w-235 flex-col">
+      {isLoading &&
+        Array.from({ length: 3 }, (_, index) => (
+          <div
+            className="flex animate-pulse gap-4 rounded-2xl px-4 py-4"
+            key={index}
+          >
+            <SkeletonCell className="ml-2 h-4 w-7" />
+            <SkeletonCell className="h-4 w-121" />
+            <SkeletonCell className="h-4 w-46" />
+            <SkeletonCell className="ml-10 h-4 w-20" />
+          </div>
+        ))}
       {files.map((file, index) => (
         <div
           key={`${file.id}-${file.createdBy}-${index}`}
-          className={`px-8 py-4 ${index % 2 === 1 ? "bg-ec-box" : ""}`}
+          onClick={() => onRowClick?.(file)}
+          className={`cursor-pointer px-8 py-4 ${index % 2 === 1 ? "bg-ec-box" : ""}`}
         >
           <div
             className="grid w-full items-center gap-x-10"
