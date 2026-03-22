@@ -20,16 +20,3 @@ export const postSessionQuestions = async ({
 
   return res;
 };
-
-// 세션 질문 삭제
-export const deleteSessionQuestions = async ({
-  qid,
-  sid,
-}: {
-  qid: number;
-  sid: number;
-}) => {
-  const res = await api.delete(`/v1/questions/${qid}/sessions/${sid}`);
-
-  return res;
-};

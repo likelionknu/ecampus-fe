@@ -13,6 +13,7 @@ import {
   type CommonErrorState,
 } from "@/shared/utils/questionError";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
+import { useNavigate } from "react-router-dom";
 
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
@@ -75,6 +76,7 @@ const MODAL_CONFIG: Record<
 };
 
 function UserSessionQuestionCreatePage() {
+  const navigate = useNavigate();
   const [createQuestion, setCreateQuestion] = useState<CreateQuestion>({
     title: "",
     content: "",
@@ -83,18 +85,24 @@ function UserSessionQuestionCreatePage() {
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
+  // 모달 비활성화
   const handleClose = useCallback(() => {
     setStep(null);
   }, []);
 
+  // 요청 성공 후 이동
+  const handleSuccess = useCallback(() => {
+    setStep(null);
+    navigate(-1);
+  }, [navigate]);
+
   const handleConfirm = async () => {
     try {
-      const res = await postSessionQuestions({
+      await postSessionQuestions({
         sid: 1,
         payload: createQuestion,
       });
 
-      console.log(res);
       setStep("CONFIRM");
     } catch (error) {
       setStep(null);
@@ -106,7 +114,11 @@ function UserSessionQuestionCreatePage() {
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
       {step && (
         <Modal>
-          <Modal.Header onClick={handleClose}>새 질문 등록</Modal.Header>
+          <Modal.Header
+            onClick={step === "CREATE" ? handleClose : handleSuccess}
+          >
+            새 질문 등록
+          </Modal.Header>
           <Modal.Description>
             {MODAL_CONFIG[step].description}
           </Modal.Description>
@@ -114,11 +126,15 @@ function UserSessionQuestionCreatePage() {
             <Button
               size="modal"
               variant="primary"
-              onClick={step === "CREATE" ? handleConfirm : handleClose}
+              onClick={step === "CREATE" ? handleConfirm : handleSuccess}
             >
               확인
             </Button>
-            {step === "CREATE" && <Modal.Cancelled onClick={handleClose} />}
+            {step === "CREATE" && (
+              <Modal.Cancelled
+                onClick={step === "CREATE" ? handleClose : handleSuccess}
+              />
+            )}
           </Modal.ButtonLayout>
         </Modal>
       )}
