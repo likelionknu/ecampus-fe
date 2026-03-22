@@ -17,6 +17,7 @@ import { PageNationMobileButton } from "@/shared/components/PageNationMobile";
 
 import { DashboardModal } from "../components/DashboardModal";
 import { DashboardProfileModal } from "../components/DashboardModal";
+import { DashboardDemeritsModal } from "../components/DashboardModal";
 
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 
@@ -26,6 +27,8 @@ import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 function UserDashBoardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const [isDashboardDemeritsModalOpen, setisDashboardDemeritsModalOpen] =
+    useState(false);
 
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const [loading, setLoading] = useState(true);
@@ -38,7 +41,7 @@ function UserDashBoardPage() {
   const token = authData?.state?.session?.accessToken;
 
   // --------------------------------------토큰 로컬스토리지 부분 끝--------------------------------------
-  // --------------------------------------대시보드 api 부분 끝--------------------------------------
+  // --------------------------------------대시보드 api 부분 시작--------------------------------------
 
   interface DashboardDataType {
     course: number;
@@ -237,7 +240,10 @@ function UserDashBoardPage() {
 
   const DashboardProfileComponent = () => {
     return (
-      <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109" onClick={()=>}>
+      <div
+        className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109"
+        onClick={() => setIsProfileModalOpen(true)}
+      >
         <div className="flex items-center gap-5">
           {loading ? (
             <>
@@ -287,6 +293,7 @@ function UserDashBoardPage() {
     count: number;
     bgColorClass?: string;
     darkBgColorClass?: string;
+    onClick?: () => void;
   }
   const DashboardMainComponent = ({
     imageSrc,
@@ -294,9 +301,13 @@ function UserDashBoardPage() {
     count,
     bgColorClass = "bg-[#E7EDFF]",
     darkBgColorClass = "dark:bg-black",
+    onClick,
   }: DashboardMainComponentProps) => {
     return (
-      <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center rounded-full border lg:w-52">
+      <div
+        className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center rounded-full border lg:w-52"
+        onClick={onClick}
+      >
         <div className="flex items-center gap-2.5">
           <div
             className={`ml-2.5 flex h-17.25 w-17.25 items-center justify-center rounded-full ${bgColorClass} ${darkBgColorClass}`}
@@ -513,6 +524,7 @@ function UserDashBoardPage() {
               count={dashboardData?.demeritCount ?? 0}
               bgColorClass="bg-[#FFE0EB]"
               darkBgColorClass="dark:bg-[#3A242B]"
+              onClick={() => setisDashboardDemeritsModalOpen(true)}
             />
           </div>
           <DashboardMainTitle title="최근 공지사항을 확인하세요" />
@@ -663,7 +675,12 @@ function UserDashBoardPage() {
         <DashboardModal title="테스트" onClose={() => setIsModalOpen(false)} />
       )}
       {isProfileModalOpen && (
-        <DashboardProfileModal onClose={() => setIsModalOpen(false)} />
+        <DashboardProfileModal onClose={() => setIsProfileModalOpen(false)} />
+      )}
+      {isDashboardDemeritsModalOpen && (
+        <DashboardDemeritsModal
+          onClose={() => setisDashboardDemeritsModalOpen(false)}
+        />
       )}
     </>
   );
