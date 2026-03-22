@@ -1,4 +1,5 @@
-﻿import MobileItem from "@/user/shared/components/MobileItem";
+import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
+import MobileItem from "@/user/shared/components/MobileItem";
 import type { NotificationRow } from "../types/NotificationRow";
 
 interface MobileNotifitcationTableRowsProps {
@@ -22,14 +23,12 @@ function MobileNotifitcationTableRows({
           <div className="mt-2 flex gap-4">
             <MobileItem
               label="상태"
-              value={notification.status}
+              value={notification.read ? "읽음" : "안 읽음"}
               valueClassName={
-                notification.status === "안 읽음"
-                  ? "text-ec-red"
-                  : "text-ec-blue"
+                notification.read ? "text-ec-red" : "text-ec-blue"
               }
             />
-            <MobileItem label="수신일" value={notification.receivedAt} />
+            <MobileItem label="수신일" value={formatDaysAgo(notification.createdAt)} />
           </div>
         </div>
       ))}
