@@ -15,12 +15,16 @@ interface AssignmentsTableRowProps {
   isLoading: boolean;
 }
 
-const ASSIGNMENT_STATUS_MAP: Record<AssignmentRow["assignmentStatus"], string> = {
-  NOT_SUBMITTED: "미제출",
-  SUBMITTED: "제출",
-};
+const ASSIGNMENT_STATUS_MAP: Record<AssignmentRow["assignmentStatus"], string> =
+  {
+    NOT_SUBMITTED: "미제출",
+    SUBMITTED: "제출",
+  };
 
-const ASSIGNMENT_EVALUATE_MAP: Record<Exclude<AssignmentRow["evaluate"], null>, string> = {
+const ASSIGNMENT_EVALUATE_MAP: Record<
+  Exclude<AssignmentRow["evaluate"], null>,
+  string
+> = {
   PASS: "성공",
   FAIL: "-",
 };
@@ -53,7 +57,7 @@ function AssignmentsTableRow({
       {assignments.map((assignment, index) => (
         <div
           key={assignment.id}
-          className={`flex items-center px-4 py-4 ${
+          className={`flex cursor-pointer items-center px-4 py-4 ${
             index % 2 === 1 ? "bg-ec-table-header" : ""
           }`}
         >

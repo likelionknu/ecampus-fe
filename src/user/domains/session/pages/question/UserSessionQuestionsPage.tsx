@@ -43,7 +43,7 @@ function UserSessionQuestionsPage() {
     INITIAL_QUESTIONS_PAGE_STATE,
   );
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
-  const itemSumNum = 4;
+  const itemSumNum = 8;
   const itemNum = questionsPage.totalElements;
   const [isLoading, setIsLoading] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
