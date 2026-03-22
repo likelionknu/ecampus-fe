@@ -1,5 +1,5 @@
 ﻿import { useCallback, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import TextBox from "@/shared/components/TextBox";
 import CommentInput from "@/shared/components/comment/CommentInput";
 import { formatKoreanDateTime24 } from "@/shared/utils/formatKoreanDateTime";
@@ -15,7 +15,10 @@ import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils/questionError";
-import { getSessionQuestion } from "../apis/sessionQuestion";
+import {
+  deleteSessionQuestions,
+  getSessionQuestion,
+} from "../apis/sessionQuestion";
 import CommentSection from "../components/CommnentSection";
 import MobileCommentSection from "../components/MobileCommentSection";
 import type { SessionQuestionDetailRow } from "@/user/domains/session/types/SessionQuestionDetailRow";
@@ -66,8 +69,11 @@ const createQuestionMetaRows = (
 
 function UserQuestionDetailPage() {
   const { questionId, sessionId } = useParams(); // 질문/세션 id
+  const navigate = useNavigate();
+  // 질문 내용 상태
   const [qeustionDetail, setQuestionDetail] =
     useState<SessionQuestionDetailRow>(INITIAL_QUESTION_DETAIL_STATE);
+  // 상단 메타 데이터 상태
   const [questionsMeta, setQuestionsMeta] = useState<QuestionMetaRow[]>(
     createQuestionMetaRows(INITIAL_QUESTION_DETAIL_STATE),
   );
@@ -84,10 +90,21 @@ function UserQuestionDetailPage() {
     setModalState(null);
   }, []);
 
-  // 삭제 api 추가 예정
-  const handleQuestionConfirm = () => {
-    if (!modalState) return;
-    setModalState("DONE");
+  // 요청 성공 후 이동
+  const handleSuccess = useCallback(() => {
+    setModalState(null);
+    navigate(-1);
+  }, [navigate]);
+
+  // 삭제 api
+  const handleDeleteQuestion = async () => {
+    try {
+      await deleteSessionQuestions({ qid: Number(questionId) });
+      setErrors(null);
+      setModalState("DONE");
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    }
   };
 
   // 삭제 확인 모달
@@ -98,7 +115,9 @@ function UserQuestionDetailPage() {
 
     return (
       <Modal>
-        <Modal.Header onClick={handleClose}>질문 삭제</Modal.Header>
+        <Modal.Header onClick={isConfirm ? handleClose : handleSuccess}>
+          질문 삭제
+        </Modal.Header>
         <Modal.Description>
           {isConfirm
             ? "질문을 정말 삭제하시겠어요? 이 질문을 그대로 남겨두어\n 다른 사용자에게 도움이 될 수 있도록 도와주세요"
@@ -108,7 +127,7 @@ function UserQuestionDetailPage() {
           <Button
             size="modal"
             variant={isConfirm ? "danger" : "primary"}
-            onClick={isConfirm ? handleQuestionConfirm : handleClose}
+            onClick={isConfirm ? handleDeleteQuestion : handleSuccess}
           >
             {isConfirm ? "삭제" : "확인"}
           </Button>
@@ -126,7 +145,7 @@ function UserQuestionDetailPage() {
 
       try {
         const res = await getSessionQuestion({ qid, sid });
-        const responseData = res.data;
+        const responseData = res.data.data;
 
         if (responseData) {
           setQuestionDetail(responseData);

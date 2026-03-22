@@ -1,14 +1,13 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatDateTime } from "@/shared/utils/date";
-
-const ASSIGNMENTS_TABLE_COLUMNS = "52px minmax(0,1fr) 208px 72px 56px";
+import { ASSIGNMENTS_TABLE_COLUMNS } from "../constants/assignmentsTable";
 
 interface AssignmentRow {
   id: number;
   name: string;
   endAt: string;
   assignmentStatus: "NOT_SUBMITTED" | "SUBMITTED";
-  evaluate: string | null;
+  evaluate: "PASS" | "FAIL" | null;
 }
 
 interface AssignmentsTableRowProps {
@@ -16,11 +15,12 @@ interface AssignmentsTableRowProps {
   isLoading: boolean;
 }
 
-const ASSIGNMENT_STATUS_MAP: Record<string, string> = {
+const ASSIGNMENT_STATUS_MAP: Record<AssignmentRow["assignmentStatus"], string> = {
   NOT_SUBMITTED: "미제출",
   SUBMITTED: "제출",
 };
-const ASSIGNMENT_EVALUATE_MAP: Record<string, string> = {
+
+const ASSIGNMENT_EVALUATE_MAP: Record<Exclude<AssignmentRow["evaluate"], null>, string> = {
   PASS: "성공",
   FAIL: "-",
 };
@@ -30,29 +30,39 @@ function AssignmentsTableRow({
   isLoading,
 }: AssignmentsTableRowProps) {
   return (
-    <div className="flex flex-col">
-      {isLoading && (
-        <div className="flex animate-pulse gap-4 rounded-2xl px-4 py-4">
-          <SkeletonCell className="ml-2 h-4 w-7" />
-          <SkeletonCell className="h-4 w-121" />
-          <SkeletonCell className="h-4 w-46" />
-          <SkeletonCell className="h-4 w-20" />
-          <SkeletonCell className="h-4 w-20" />
-        </div>
-      )}
+    <div className="flex w-full flex-col">
+      {isLoading &&
+        [0, 1, 2].map((idx) => (
+          <div
+            key={`assignment-skeleton-${idx}`}
+            className="flex animate-pulse items-center px-4 py-4"
+          >
+            <div
+              className="grid w-full min-w-0 items-center gap-5"
+              style={{ gridTemplateColumns: ASSIGNMENTS_TABLE_COLUMNS }}
+            >
+              <SkeletonCell className="mx-auto h-4 w-6" />
+              <SkeletonCell className="h-4 w-full" />
+              <SkeletonCell className="h-4 w-full" />
+              <SkeletonCell className="mx-auto h-4 w-12" />
+              <SkeletonCell className="mx-auto h-4 w-10" />
+            </div>
+          </div>
+        ))}
+
       {assignments.map((assignment, index) => (
         <div
           key={assignment.id}
-          className={`flex items-center px-8 py-4 ${
+          className={`flex items-center px-4 py-4 ${
             index % 2 === 1 ? "bg-ec-table-header" : ""
           }`}
         >
           <div
-            className="grid w-full items-center gap-5"
+            className="grid w-full min-w-0 items-center gap-5"
             style={{ gridTemplateColumns: ASSIGNMENTS_TABLE_COLUMNS }}
           >
             <span className="text-body-2 text-center">{assignment.id}</span>
-            <span className="text-body-2 overflow-hidden text-ellipsis whitespace-nowrap">
+            <span className="text-body-2 min-w-0 truncate whitespace-nowrap">
               {assignment.name}
             </span>
             <span className="text-body-2 text-center whitespace-nowrap">
@@ -68,7 +78,9 @@ function AssignmentsTableRow({
               {ASSIGNMENT_STATUS_MAP[assignment.assignmentStatus]}
             </span>
             <span
-              className={`text-body-2 text-center ${assignment.evaluate === "PASS" ? "text-ec-blue" : ""}`}
+              className={`text-body-2 text-center ${
+                assignment.evaluate === "PASS" ? "text-ec-blue" : ""
+              }`}
             >
               {assignment.evaluate
                 ? ASSIGNMENT_EVALUATE_MAP[assignment.evaluate]
@@ -80,4 +92,5 @@ function AssignmentsTableRow({
     </div>
   );
 }
+
 export default AssignmentsTableRow;
