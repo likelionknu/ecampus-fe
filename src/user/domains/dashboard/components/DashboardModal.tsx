@@ -2,6 +2,7 @@ import { useEffect, type ReactNode, useState } from "react";
 import xWhite from "@user/domains/dashboard/assets/xWhite.png";
 import xBlack from "@user/domains/dashboard/assets/xBlack.png";
 import axios from "axios";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
 // --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
 const authData = JSON.parse(
@@ -36,7 +37,7 @@ export const DashboardModal = ({
     <div className="fixed inset-0 z-100 flex items-center justify-center">
       <button
         aria-label="모달 닫기"
-        className="fixed inset-0 bg-black/20 backdrop-blur-[3px]"
+        className="fixed inset-0 cursor-pointer bg-black/20 backdrop-blur-[3px]"
         onClick={onClose}
         type="button"
       />
@@ -173,15 +174,32 @@ interface DashboardDemeritsModalProps {
   onClose?: () => void;
 }
 
-const DashboardDemeritsModalComponent = () => {
+interface DemeritsModalDataType {
+  reason: string;
+  createdAt: string;
+  demerit: number;
+  grantedUser: string | null;
+}
+
+interface DemeritsModalDataItemProps {
+  reason: string;
+  grantedAt?: ReactNode;
+  demerit?: ReactNode;
+}
+
+const DashboardDemeritsModalComponent = ({
+  reason,
+  grantedAt,
+  demerit,
+}: DemeritsModalDataItemProps) => {
   return (
     <div className="bg-ec-white rounded-ec-10 border-ec-outline h-20 w-full border">
       <div className="flex flex-col gap-2.5 px-5.75 py-4">
         <div className="text-ec-black line-clamp-1 w-full justify-start text-sm font-medium">
-          과제 미제출
+          {reason}
         </div>
         <div className="text-ec-sub w-full justify-start text-xs font-medium">
-          2026년 2월 26일 오전 2시 42분, 벌점 1점
+          {grantedAt}, 벌점{demerit}점
         </div>
       </div>
     </div>
@@ -191,14 +209,127 @@ const DashboardDemeritsModalComponent = () => {
 export const DashboardDemeritsModal = ({
   onClose,
 }: DashboardDemeritsModalProps) => {
+  const [DemeritsModalData, setDemeritsModalData] = useState<
+    DemeritsModalDataType[]
+  >([]);
+
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_API_URL}/v1/users/me/demerits`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        const result = response.data;
+
+        if (Array.isArray(result.data)) {
+          setDemeritsModalData(result.data);
+          console.log("벌점 상세 내용 데이터:", result.data);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(
+            "서버 응답 에러:",
+            error.response?.status,
+            error.response?.data,
+          );
+        } else {
+          console.error("네트워크 통신 오류:", error);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, []);
   return (
     <DashboardModal title="내게 부여된 벌점" onClose={onClose}>
       <div className="flex flex-col gap-2.5">
-        <DashboardDemeritsModalComponent />
-        <DashboardDemeritsModalComponent />
-        <DashboardDemeritsModalComponent />
+        {DemeritsModalData.map((item, index) => (
+          <DashboardDemeritsModalComponent
+            key={`${item.reason}-${item.createdAt}-${index}`}
+            reason={item.reason}
+            grantedAt={formatKoreanDateTime12(item.createdAt)}
+            demerit={item.demerit}
+          />
+        ))}
       </div>
     </DashboardModal>
   );
 };
 // -------------------------------- 벌점 컴포넌트 끝--------------------------------
+
+interface NotionSpecificModalDataTypeProps {
+  onClose?: () => void;
+  noticeId: number;
+}
+
+interface NotionSpecificModalDataType {
+  title: string;
+  createdAt: string;
+  content: string;
+}
+
+export const NotionSpecificModal = ({
+  onClose,
+  noticeId,
+}: NotionSpecificModalDataTypeProps) => {
+  const [NotionSpecificModalData, setNotionSpecificModalData] =
+    useState<NotionSpecificModalDataType | null>(null);
+
+  useEffect(() => {
+    const fetchNoticeDetail = async () => {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_BASE_API_URL}/v1/notices/${noticeId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        const result = response.data;
+
+        if (result.data) {
+          setNotionSpecificModalData(result.data);
+          console.log("공지사항 상세 데이터:", result.data);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(
+            "서버 응답 에러:",
+            error.response?.status,
+            error.response?.data,
+          );
+        } else {
+          console.error("네트워크 통신 오류:", error);
+        }
+      }
+    };
+
+    fetchNoticeDetail();
+  }, [noticeId]);
+  return (
+    <DashboardModal
+      title={NotionSpecificModalData?.title ?? "공지사항 상세"}
+      onClose={onClose}
+    >
+      <div className="flex flex-col">
+        <div className="text-ec-sub w-full justify-start text-xs font-medium">
+          {NotionSpecificModalData?.createdAt
+            ? formatKoreanDateTime12(NotionSpecificModalData.createdAt)
+            : ""}
+        </div>
+        <div className="outline-ec-outline mt-4.5 mb-2.5 h-0 w-153.5 outline-1 outline-offset-[-0.50px]" />
+        <div className="text-ec-black text-sm font-medium whitespace-pre-wrap">
+          {NotionSpecificModalData?.content ?? ""}
+        </div>
+      </div>
+    </DashboardModal>
+  );
+};

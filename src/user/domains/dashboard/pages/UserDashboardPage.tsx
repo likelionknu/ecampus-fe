@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import DashboardArrow from "@shared/assets/DashboardArrow.png";
@@ -18,6 +19,7 @@ import { PageNationMobileButton } from "@/shared/components/PageNationMobile";
 import { DashboardModal } from "../components/DashboardModal";
 import { DashboardProfileModal } from "../components/DashboardModal";
 import { DashboardDemeritsModal } from "../components/DashboardModal";
+import { NotionSpecificModal } from "../components/DashboardModal";
 
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 
@@ -27,11 +29,15 @@ import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 function UserDashBoardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-  const [isDashboardDemeritsModalOpen, setisDashboardDemeritsModalOpen] =
+  const [isDashboardDemeritsModalOpen, setIsDashboardDemeritsModalOpen] =
     useState(false);
+  const [isNotionSpecificModalOpen, setIsNotionSpecificModalOpen] =
+    useState(false);
+  const [selectedNoticeId, setSelectedNoticeId] = useState<number | null>(null);
 
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   // --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
 
@@ -303,10 +309,12 @@ function UserDashBoardPage() {
     darkBgColorClass = "dark:bg-black",
     onClick,
   }: DashboardMainComponentProps) => {
+    const handleClick = typeof onClick === "function" ? onClick : undefined;
+
     return (
       <div
         className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center rounded-full border lg:w-52"
-        onClick={onClick}
+        onClick={handleClick}
       >
         <div className="flex items-center gap-2.5">
           <div
@@ -510,6 +518,7 @@ function UserDashBoardPage() {
               count={dashboardData?.unsubmittedAssignmentCount ?? 0}
               bgColorClass="bg-[#FFF5D9]"
               darkBgColorClass="dark:bg-[#332D1E]"
+              onClick={() => navigate("/user/sessions/assignments")}
             />
             <DashboardMainComponent
               imageSrc={DashboardMain2}
@@ -517,6 +526,7 @@ function UserDashBoardPage() {
               count={dashboardData?.sessionCount ?? 0}
               bgColorClass="bg-[#E7EDFF]"
               darkBgColorClass="dark:bg-[#1E2A4A]"
+              onClick={() => navigate("/user/sessions")}
             />
             <DashboardMainComponent
               imageSrc={DashboardMain3}
@@ -524,7 +534,7 @@ function UserDashBoardPage() {
               count={dashboardData?.demeritCount ?? 0}
               bgColorClass="bg-[#FFE0EB]"
               darkBgColorClass="dark:bg-[#3A242B]"
-              onClick={() => setisDashboardDemeritsModalOpen(true)}
+              onClick={() => setIsDashboardDemeritsModalOpen(true)}
             />
           </div>
           <DashboardMainTitle title="최근 공지사항을 확인하세요" />
@@ -586,7 +596,10 @@ function UserDashBoardPage() {
                           noticeId={String(notice.id)}
                           noticeTitle={notice.title}
                           createdAt={formatKoreanDateTime12(notice.createdAt)}
-                          onClick={() => setIsModalOpen(true)}
+                          onClick={() => {
+                            setSelectedNoticeId(notice.id);
+                            setIsNotionSpecificModalOpen(true);
+                          }}
                         />
                       </PageNationItem>
                     ))}
@@ -658,7 +671,7 @@ function UserDashBoardPage() {
                             alartContent={String(Notifications.content)}
                             alartStatus={Notifications.read}
                             alartDate={formatDaysAgo(Notifications.createdAt)}
-                            onClick={() => setIsModalOpen(true)}
+                            onClick={() => navigate("/user/notification")}
                           />
                         </PageNationItem>
                       ),
@@ -679,7 +692,13 @@ function UserDashBoardPage() {
       )}
       {isDashboardDemeritsModalOpen && (
         <DashboardDemeritsModal
-          onClose={() => setisDashboardDemeritsModalOpen(false)}
+          onClose={() => setIsDashboardDemeritsModalOpen(false)}
+        />
+      )}
+      {isNotionSpecificModalOpen && selectedNoticeId !== null && (
+        <NotionSpecificModal
+          noticeId={selectedNoticeId}
+          onClose={() => setIsNotionSpecificModalOpen(false)}
         />
       )}
     </>
