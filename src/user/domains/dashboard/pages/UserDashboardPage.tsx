@@ -16,7 +16,6 @@ import { PageNationMobileFrame } from "@/shared/components/PageNationMobile";
 import { PageNationMobileItem } from "@/shared/components/PageNationMobile";
 import { PageNationMobileButton } from "@/shared/components/PageNationMobile";
 
-import { DashboardModal } from "../components/DashboardModal";
 import { DashboardProfileModal } from "../components/DashboardModal";
 import { DashboardDemeritsModal } from "../components/DashboardModal";
 import { NotionSpecificModal } from "../components/DashboardModal";
@@ -27,7 +26,6 @@ import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
 function UserDashBoardPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [isDashboardDemeritsModalOpen, setIsDashboardDemeritsModalOpen] =
     useState(false);
@@ -684,9 +682,6 @@ function UserDashBoardPage() {
           )}
         </div>
       </div>
-      {isModalOpen && (
-        <DashboardModal title="테스트" onClose={() => setIsModalOpen(false)} />
-      )}
       {isProfileModalOpen && (
         <DashboardProfileModal onClose={() => setIsProfileModalOpen(false)} />
       )}
