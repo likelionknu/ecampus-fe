@@ -15,7 +15,8 @@ import { PageNationMobileFrame } from "@/shared/components/PageNationMobile";
 import { PageNationMobileItem } from "@/shared/components/PageNationMobile";
 import { PageNationMobileButton } from "@/shared/components/PageNationMobile";
 
-import DashboardModal from "../components/DashboardModal";
+import { DashboardModal } from "../components/DashboardModal";
+import { DashboardProfileModal } from "../components/DashboardModal";
 
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 
@@ -24,6 +25,8 @@ import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
 function UserDashBoardPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const [loading, setLoading] = useState(true);
 
@@ -234,7 +237,7 @@ function UserDashBoardPage() {
 
   const DashboardProfileComponent = () => {
     return (
-      <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109">
+      <div className="bg-ec-white border-ec-outline hover:bg-ec-outline flex h-21.5 w-87.5 cursor-pointer items-center justify-between rounded-full border pr-7.5 lg:w-109" onClick={()=>}>
         <div className="flex items-center gap-5">
           {loading ? (
             <>
@@ -656,7 +659,12 @@ function UserDashBoardPage() {
           )}
         </div>
       </div>
-      {isModalOpen && <DashboardModal onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && (
+        <DashboardModal title="테스트" onClose={() => setIsModalOpen(false)} />
+      )}
+      {isProfileModalOpen && (
+        <DashboardProfileModal onClose={() => setIsModalOpen(false)} />
+      )}
     </>
   );
 }

@@ -1,12 +1,18 @@
-import { useEffect } from "react";
+import { useEffect, type ReactNode } from "react";
 import xWhite from "@user/domains/dashboard/assets/xWhite.png";
 import xBlack from "@user/domains/dashboard/assets/xBlack.png";
 
 interface DashboardModalProps {
   onClose?: () => void;
+  children?: ReactNode;
+  title: string;
 }
 
-const DashboardModal = ({ onClose }: DashboardModalProps) => {
+export const DashboardModal = ({
+  onClose,
+  children,
+  title,
+}: DashboardModalProps) => {
   useEffect(() => {
     const prevOverflow = document.body.style.overflow;
 
@@ -28,7 +34,7 @@ const DashboardModal = ({ onClose }: DashboardModalProps) => {
       <div className="bg-ec-white border-ec-outline rounded-ec-10 z-110 flex h-165.5 w-168.5 flex-col border px-7.5 py-6.5">
         <div className="flex items-center justify-between">
           <div className="text-ec-black f w-xl justify-start text-base font-semibold">
-            멋쟁이사자처럼 강남대학교의 첫 번째 소식이에요
+            {title}
           </div>
           <button className="cursor-pointer" onClick={onClose} type="button">
             <img
@@ -43,16 +49,47 @@ const DashboardModal = ({ onClose }: DashboardModalProps) => {
             />
           </button>
         </div>
-        <div className="text-ec-sub w-full justify-start pt-2.5 pb-4.5 text-xs font-medium">
-          2026-02-12
-        </div>
-        <div className="outline-ec-outline h-0 w-full outline-1 outline-offset-[-0.50px]" />
-        <div className="text-ec-black w-full justify-start pt-2.5 text-sm leading-6 font-medium">
-          안녕하세요
-        </div>
+        {children}
       </div>
     </div>
   );
 };
 
-export default DashboardModal;
+interface DashboarProfileModalProps {
+  onClose?: () => void;
+}
+
+export const DashboardProfileModal = ({
+  onClose,
+}: DashboarProfileModalProps) => {
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
+  const DashboardProfileModalComponent = () => {
+    return (
+      <div className="flex flex-col gap-1.75">
+        <div className="text-ec-sub justify-start text-xs font-medium">
+          이름
+        </div>
+        <div className="bg-ec-box rounded-ec-10 flex h-11 w-153.5 items-center justify-center">
+          <div className="text-ec-black w-143 justify-start text-sm font-medium">
+            황형진
+          </div>
+        </div>
+      </div>
+    );
+  };
+  return (
+    <DashboardModal title="사용자 상세 정보" onClose={onClose}>
+      <div className="flex flex-col gap-5">
+        <DashboardProfileModalComponent />
+      </div>
+    </DashboardModal>
+  );
+};
