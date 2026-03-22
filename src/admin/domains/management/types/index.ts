@@ -3,13 +3,13 @@ export interface PagedResponse<T> {
   totalElements: number;
 }
 
-export type AdminSessionStatus = "활성화" | "비활성화";
+export type AdminSessionStatus = string;
 
 export interface AdminSessionRow {
-  id: number;
+  sessionId: number;
   name: string;
-  creator: string;
-  participantCount: number;
+  createdBy: string;
+  userCount: number;
   fileCount: number;
   assignmentCount: number;
   status: AdminSessionStatus;

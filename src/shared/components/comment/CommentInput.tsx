@@ -31,6 +31,12 @@ function CommentInput({ qid, setRefresh }: CommentInputProps) {
     setStep(null);
   };
 
+  const handleDone = () => {
+    setContent(""); // 인풋 초기화
+    setStep(null);
+    setRefresh?.((prev) => prev + 1); // 등록 성공 시 댓글 재조회
+  };
+
   // 댓글 등록
   const handleCreateComment = async () => {
     if (!content.trim()) return;
@@ -43,9 +49,7 @@ function CommentInput({ qid, setRefresh }: CommentInputProps) {
       });
 
       setErrors(null); // 에러 초기화
-      setContent(""); // 인풋 초기화
       setStep("DONE"); // 확인 모달
-      setRefresh?.((prev) => prev + 1); // 등록 성공 시 댓글 재조회
     } catch (error) {
       setStep(null); // 모달 비활성화
       setErrors(getCommonErrorState(error));
@@ -66,7 +70,9 @@ function CommentInput({ qid, setRefresh }: CommentInputProps) {
 
       {step && (
         <Modal>
-          <Modal.Header onClick={handleClose}>새 댓글 등록</Modal.Header>
+          <Modal.Header onClick={step === "CONFIRM" ? handleClose : handleDone}>
+            새 댓글 등록
+          </Modal.Header>
           <Modal.Description>
             {step === "CONFIRM"
               ? "이 질문 게시글에 댓글을 등록할게요."
@@ -77,12 +83,14 @@ function CommentInput({ qid, setRefresh }: CommentInputProps) {
               size="modal"
               variant="primary"
               isLoading={isSubmitting}
-              onClick={step === "CONFIRM" ? handleCreateComment : handleClose}
+              onClick={step === "CONFIRM" ? handleCreateComment : handleDone}
             >
               확인
             </Button>
             {step === "CONFIRM" && !isSubmitting && (
-              <Modal.Cancelled onClick={handleClose} />
+              <Modal.Cancelled
+                onClick={step === "CONFIRM" ? handleClose : handleDone}
+              />
             )}
           </Modal.ButtonLayout>
         </Modal>

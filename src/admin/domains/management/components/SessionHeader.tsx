@@ -1,16 +1,22 @@
 import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
+import { SESSIONS_TABLE_COLUMNS } from "../constants/sessionsTable";
 
 function SessionHeader() {
   return (
-    <>
-      <TableHeaderLabel className="ml-8">ID</TableHeaderLabel>
-      <TableHeaderLabel className="ml-8.5">세션 명</TableHeaderLabel>
-      <TableHeaderLabel className="ml-147">생성자</TableHeaderLabel>
-      <TableHeaderLabel className="ml-14">참여</TableHeaderLabel>
-      <TableHeaderLabel className="ml-13">자료</TableHeaderLabel>
-      <TableHeaderLabel className="ml-11">과제</TableHeaderLabel>
-      <TableHeaderLabel className="ml-12">상태</TableHeaderLabel>
-    </>
+    <div
+      className="grid w-full min-w-0 items-center gap-3 px-6"
+      style={{ gridTemplateColumns: SESSIONS_TABLE_COLUMNS }}
+    >
+      <TableHeaderLabel className="text-center">ID</TableHeaderLabel>
+      <TableHeaderLabel className="min-w-0 truncate whitespace-nowrap">
+        세션 명
+      </TableHeaderLabel>
+      <TableHeaderLabel className="text-center">생성자</TableHeaderLabel>
+      <TableHeaderLabel className="text-center">참여</TableHeaderLabel>
+      <TableHeaderLabel className="text-center">자료</TableHeaderLabel>
+      <TableHeaderLabel className="text-center">과제</TableHeaderLabel>
+      <TableHeaderLabel className="text-center">상태</TableHeaderLabel>
+    </div>
   );
 }
 
