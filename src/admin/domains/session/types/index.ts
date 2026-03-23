@@ -5,12 +5,12 @@ export interface PagedResponse<T> {
 
 export interface AdminDashboardMemberRow {
   id: number;
-  generation: number;
+  course: number;
   name: string;
   part: string;
   email: string;
-  addedAt: string;
-  inviter: string;
+  registeredAt: string;
+  invitedBy: string;
 }
 
 export interface SelectedUserChip {

@@ -1,5 +1,6 @@
 import TitleSection from "@/shared/components/TitleSection";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import SessionInfoOverview from "../components/dashboard/SessionInfoOverview";
 import type { SessionDashboardData } from "../components/dashboard/SessionInfoOverview";
 import SerachBar from "@/shared/components/SerachBar";
@@ -19,154 +20,42 @@ import {
 import SelectedUser from "../components/dashboard/SelectedUser";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import DashboardTableRows from "../components/dashboard/DashboardTableRows";
-import type {
-  AdminDashboardMemberRow,
-  PagedResponse,
-  SelectedUserChip,
-} from "../types";
+import type { AdminDashboardMemberRow, SelectedUserChip } from "../types";
+import { getSessionInfo, getSessionMember } from "../api/dashboard";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 
-const mockSessionDashboardData: SessionDashboardData = {
-  sessionId: 8,
-  name: "[14기] 아기사자 - 백엔드 파트",
-  createdAt: "2026-03-10T14:30:00",
-  createdBy: "김진영",
-  userCount: 86,
-  fileCount: 12,
-  assignmentCount: 12,
-  questionCount: 5,
-  status: "활성화",
+interface SessionMembersPageState {
+  content: AdminDashboardMemberRow[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
+const INITIAL_SESSION_DASHBOARD_STATE: SessionDashboardData = {
+  sessionId: 0,
+  name: "",
+  createdAt: "",
+  createdBy: "",
+  userCount: 0,
+  fileCount: 0,
+  assignmentCount: 0,
+  questionCount: 0,
+  status: "",
 };
 
-const mockSessionMembers: PagedResponse<AdminDashboardMemberRow> = {
-  content: [
-    {
-      id: 1,
-      generation: 14,
-      name: "황형진",
-      part: "프론트엔드",
-      email: "testtest1@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 2,
-      generation: 14,
-      name: "황형진",
-      part: "백엔드",
-      email: "testtest2@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 3,
-      generation: 14,
-      name: "황형진",
-      part: "프론트엔드",
-      email: "testtest3@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 4,
-      generation: 14,
-      name: "황형진",
-      part: "백엔드",
-      email: "testtest4@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 5,
-      generation: 14,
-      name: "황형진",
-      part: "프론트엔드",
-      email: "testtest5@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 6,
-      generation: 14,
-      name: "황형진",
-      part: "백엔드",
-      email: "testtest6@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 7,
-      generation: 14,
-      name: "황형진",
-      part: "프론트엔드",
-      email: "testtest7@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 8,
-      generation: 14,
-      name: "황형진",
-      part: "백엔드",
-      email: "testtest8@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 9,
-      generation: 14,
-      name: "황형진",
-      part: "프론트엔드",
-      email: "testtest9@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 10,
-      generation: 14,
-      name: "황형진",
-      part: "백엔드",
-      email: "testtest10@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 11,
-      generation: 14,
-      name: "황형진",
-      part: "프론트엔드",
-      email: "testtest11@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 12,
-      generation: 14,
-      name: "황형진",
-      part: "백엔드",
-      email: "testtest12@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 13,
-      generation: 14,
-      name: "황형진",
-      part: "프론트엔드",
-      email: "testtest13@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-    {
-      id: 14,
-      generation: 14,
-      name: "황형진",
-      part: "백엔드",
-      email: "testtest14@testtt.com",
-      addedAt: "2026년 2월 13일 오후 8시 20분",
-      inviter: "한종민",
-    },
-  ],
-  totalElements: 14,
+const INITIAL_SESSION_MEMBERS_PAGE_STATE: SessionMembersPageState = {
+  content: [],
+  page: 0,
+  size: 8,
+  totalElements: 0,
+  totalPages: 0,
+  hasNext: false,
 };
 
 const mockSelectedUsers: SelectedUserChip[] = [
@@ -178,23 +67,29 @@ const mockSelectedUsers: SelectedUserChip[] = [
 ];
 
 function AdminDashboardPage() {
-  const itemSumNum = 8;
-  const isLoading = false;
+  const { sessionId } = useParams();
+  const [sessionInfo, setSessionInfo] = useState<SessionDashboardData>(
+    INITIAL_SESSION_DASHBOARD_STATE,
+  );
+  const [membersPage, setMembersPage] = useState<SessionMembersPageState>(
+    INITIAL_SESSION_MEMBERS_PAGE_STATE,
+  );
+  const itemSumNum = membersPage.size;
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const [searchKeyword, setSearchKeyword] = useState("");
   const [selectedPart, setSelectedPart] = useState(
     ADMIN_DASHBOARD_PART_DEFAULT,
   );
-  const [members, setMembers] = useState<AdminDashboardMemberRow[]>(
-    mockSessionMembers.content,
-  );
+
   const [selectedUsers, setSelectedUsers] =
     useState<SelectedUserChip[]>(mockSelectedUsers);
 
   const filteredMembers = useMemo(() => {
     const keyword = searchKeyword.trim().toLowerCase();
 
-    return members.filter((member) => {
+    return membersPage.content.filter((member) => {
       const matchesPart =
         selectedPart === ADMIN_DASHBOARD_PART_DEFAULT ||
         selectedPart === "전체" ||
@@ -207,19 +102,59 @@ function AdminDashboardPage() {
 
       return matchesPart && matchesKeyword;
     });
-  }, [members, searchKeyword, selectedPart]);
+  }, [membersPage.content, searchKeyword, selectedPart]);
 
   const handleRemoveSelectedUser = useCallback((id: number) => {
     setSelectedUsers((prev) => prev.filter((item) => item.id !== id));
   }, []);
 
+  useEffect(() => {
+    const fetchInfo = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getSessionInfo({ sid: Number(sessionId) });
+
+        setSessionInfo(res.data.data);
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    const fetchMember = async () => {
+      setIsLoading(true);
+      try {
+        const res = await getSessionMember({ sid: Number(sessionId) });
+        const responseData = res.data?.data ?? res.data;
+
+        setMembersPage(responseData);
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchInfo();
+    fetchMember();
+  }, [sessionId]);
+
   const itemNum = filteredMembers.length;
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
+
       <TitleSection title="대시보드" />
 
-      <SessionInfoOverview data={mockSessionDashboardData} />
+      <SessionInfoOverview data={sessionInfo} />
 
       <section>
         <div className="text-title text-ec-black">이 세션에 등록된 사용자</div>
@@ -236,18 +171,7 @@ function AdminDashboardPage() {
             defaultValue={ADMIN_DASHBOARD_PART_DEFAULT}
             onChange={setSelectedPart}
           />
-          <Button
-            size="large"
-            variant="primary"
-            onClick={() =>
-              setMembers((prev) => ({
-                ...prev,
-                id: 9,
-                label: "황형진",
-                type: "user",
-              }))
-            }
-          >
+          <Button size="large" variant="primary" onClick={() => null}>
             사용자 등록
           </Button>
         </div>

@@ -32,9 +32,11 @@ function SessionMobileQuestionTableRows({
               />
               <MobileItem
                 label="상태"
-                value={question.status}
+                value={question.status === "COMPLETED" ? "완료" : "대기"}
                 valueClassName={
-                  question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
+                  question.status === "COMPLETED"
+                    ? "text-ec-blue"
+                    : "text-ec-sub"
                 }
               />
             </div>

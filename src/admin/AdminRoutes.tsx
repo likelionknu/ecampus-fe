@@ -54,7 +54,7 @@ const adminRoutes: RouteObject[] = [
       { path: "data/management", element: <DataManagementPage /> },
       { path: "task/management", element: <TaskManagementPage /> },
       { path: "notion", element: <AdminNotionPage /> },
-      { path: "dashboard", element: <AdminDashboardPage /> },
+      { path: "dashboard/:sessionId", element: <AdminDashboardPage /> },
       { path: "assignments", element: <AdminSessionAssignmentsView /> },
       { path: "assignments/upload", element: <AdminSessionAssignmentUpload /> },
       { path: "files/upload", element: <FilesUploadPage /> },
