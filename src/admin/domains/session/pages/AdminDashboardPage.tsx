@@ -163,13 +163,22 @@ function AdminDashboardPage() {
   // 사용자 추가
   const handleAdd = async () => {
     const userIds = selectedMembers.map((member) => member.userId);
+    const hasSelectedPart = selectedPart !== "ALL";
+
+    if (!hasSelectedPart && userIds.length === 0) return;
 
     try {
-      await addMembers({
-        sid: Number(sessionId),
-        userIds,
-        part: selectedPart === "ALL" ? "" : selectedPart,
-      });
+      await addMembers(
+        hasSelectedPart
+          ? {
+              sid: Number(sessionId),
+              part: selectedPart,
+            }
+          : {
+              sid: Number(sessionId),
+              userIds,
+            },
+      );
       setRefreshKey((prev) => prev + 1);
     } catch (error) {
       setErrors(getCommonErrorState(error));
@@ -204,6 +213,7 @@ function AdminDashboardPage() {
   useEffect(() => {
     let alive = true;
 
+    // 세셔 정보
     const fetchInfo = async () => {
       try {
         const res = await getSessionInfo({ sid: Number(sessionId) });
@@ -221,6 +231,7 @@ function AdminDashboardPage() {
       }
     };
 
+    // 사용자 정보
     const fetchMember = async () => {
       try {
         const res = await getSessionMember({ sid: Number(sessionId) });
@@ -377,6 +388,7 @@ function AdminDashboardPage() {
                       sessionId={Number(sessionId)}
                       isLoading={isLoading}
                       members={pagedMembers}
+                      onDeleteSuccess={() => setRefreshKey((prev) => prev + 1)}
                     />
                   )}
 

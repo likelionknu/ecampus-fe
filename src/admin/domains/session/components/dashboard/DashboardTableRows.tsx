@@ -14,6 +14,7 @@ interface DashboardTableRowsProps {
   sessionId: number;
   isLoading: boolean;
   members: AdminDashboardMemberRow[];
+  onDeleteSuccess?: () => void;
 }
 
 const PART_OPTIONS: Record<string, string> = {
@@ -28,6 +29,7 @@ function DashboardTableRows({
   sessionId,
   isLoading,
   members,
+  onDeleteSuccess,
 }: DashboardTableRowsProps) {
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
 
@@ -35,10 +37,12 @@ function DashboardTableRows({
   const handleDelete = async ({ userId }: { userId: number }) => {
     try {
       await deleteMember({ sid: sessionId, userId: userId });
+      onDeleteSuccess?.();
     } catch (error) {
       setErrors(getCommonErrorState(error));
     }
   };
+
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
       {errors && (
