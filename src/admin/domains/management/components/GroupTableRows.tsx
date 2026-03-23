@@ -1,7 +1,22 @@
+import { useState } from "react";
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import type { GroupActionType } from "./modal/GroupActionStepModal";
 import GroupIcon from "./GroupIcon";
 import type { AdminGroupRow } from "../types";
+import {
+  addMemo,
+  deleteAllMemos,
+  deleteMemo as deleteMemoApi,
+  getMemos,
+} from "../apis/group";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import MemoListModal from "./modal/group/MemoListModal";
+import MemoAddModal from "./modal/group/MemoAddModal";
+import type { GroupMemo, MemoModalTarget } from "./modal/group/memoModal.types";
 
 interface GroupTableRowsProps {
   isLoading: boolean;
@@ -9,8 +24,18 @@ interface GroupTableRowsProps {
   onOpenModal: (action: GroupActionType) => void;
 }
 
+interface GroupMemoApiRow {
+  id: number;
+  content: string;
+  createdAt: string;
+  grantedUser?: {
+    name?: string;
+  };
+}
+
 const GROUP_TABLE_COLUMNS =
   "grid-cols-[0.55fr_0.85fr_0.9fr_2.2fr_2.2fr_0.7fr_3.6fr]";
+const MEMO_MAX_LENGTH = 170;
 
 const truncateKoreanName = (name: string) => {
   const chars = [...name];
@@ -28,8 +53,146 @@ function GroupTableRows({
   members,
   onOpenModal,
 }: GroupTableRowsProps) {
+  const [memoModalStep, setMemoModalStep] = useState<"LIST" | "ADD">("LIST");
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [memoModalTarget, setMemoModalTarget] =
+    useState<MemoModalTarget | null>(null);
+  const [memos, setMemos] = useState<GroupMemo[]>([]);
+  const [memoInput, setMemoInput] = useState("");
+  const [isMemoLoading, setIsMemoLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetchMemos = async (uid: number) => {
+    setIsMemoLoading(true);
+
+    try {
+      const res = await getMemos({ uid });
+      const responseData: GroupMemoApiRow[] = Array.isArray(res.data?.data)
+        ? res.data.data
+        : [];
+      const mappedMemos: GroupMemo[] = responseData.map((memo) => ({
+        id: memo.id,
+        content: memo.content,
+        createdAt: memo.createdAt,
+        name: memo.grantedUser?.name ?? "",
+      }));
+
+      setMemos(mappedMemos);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsMemoLoading(false);
+    }
+  };
+
+  // 모달 비활성화
+  const handleCloseMemoModal = () => {
+    setMemoModalTarget(null);
+    setMemoModalStep("LIST");
+    setMemoInput("");
+    setMemos([]);
+  };
+
+  // 특정 메모 삭제
+  const handleDeleteMemo = async (mid: number) => {
+    if (!memoModalTarget) return;
+
+    setIsSubmitting(true);
+    try {
+      await deleteMemoApi({ uid: memoModalTarget.uid, mid });
+      setMemos((prev) => prev.filter((memo) => memo.id !== mid));
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 메모 초기화
+  const handleDeleteAllMemos = async () => {
+    if (!memoModalTarget) return;
+
+    setIsSubmitting(true);
+    try {
+      await deleteAllMemos({ uid: memoModalTarget.uid });
+      setMemos([]);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 메모 추가 단계 진입
+  const handleOpenAddModal = () => {
+    setMemoInput("");
+    setMemoModalStep("ADD");
+  };
+
+  // 메모 추가
+  const handleAddMemo = async () => {
+    if (!memoModalTarget) return;
+
+    const content = memoInput.trim();
+
+    if (content.length === 0 || content.length > MEMO_MAX_LENGTH) return;
+
+    setIsSubmitting(true);
+    try {
+      await addMemo({ uid: memoModalTarget.uid, content });
+      setMemoInput("");
+      setMemoModalStep("LIST");
+      await fetchMemos(memoModalTarget.uid);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 메모 모달 활성화
+  const handleOpenMemoModal = async (member: AdminGroupRow) => {
+    setMemoModalStep("LIST");
+    setMemoModalTarget({ uid: member.id, name: member.name });
+    setMemoInput("");
+    await fetchMemos(member.id);
+  };
+
   return (
     <div className="rounded-ec-10 w-full overflow-hidden">
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
+
+      {memoModalTarget && memoModalStep === "LIST" && (
+        <MemoListModal
+          target={memoModalTarget}
+          memos={memos}
+          isLoading={isMemoLoading}
+          isSubmitting={isSubmitting}
+          onClose={handleCloseMemoModal}
+          onOpenAdd={handleOpenAddModal}
+          onDeleteMemo={handleDeleteMemo}
+          onDeleteAllMemos={handleDeleteAllMemos}
+        />
+      )}
+
+      {memoModalTarget && memoModalStep === "ADD" && (
+        <MemoAddModal
+          value={memoInput}
+          maxLength={MEMO_MAX_LENGTH}
+          isSubmitting={isSubmitting}
+          onClose={handleCloseMemoModal}
+          onBack={() => setMemoModalStep("LIST")}
+          onChange={setMemoInput}
+          onSubmit={handleAddMemo}
+        />
+      )}
+
       {isLoading && (
         <div
           className={`grid w-full animate-pulse items-center gap-3 px-6 py-5 ${GROUP_TABLE_COLUMNS}`}
@@ -59,7 +222,7 @@ function GroupTableRows({
             {truncateKoreanName(member.name)}
           </span>
           <span
-            className="block min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+            className="block max-w-full min-w-0 overflow-hidden text-ellipsis whitespace-nowrap"
             title={member.email}
           >
             {member.email}
@@ -70,7 +233,7 @@ function GroupTableRows({
             <GroupIcon
               label="메모"
               type="memo"
-              onClick={() => onOpenModal("USER_MEMO_ADD")}
+              onClick={() => handleOpenMemoModal(member)}
             />
             <GroupIcon
               label="파트 변경"

@@ -25,13 +25,8 @@ import GroupTableRows from "../components/GroupTableRows";
 import GroupActionStepModal, {
   type GroupActionType,
 } from "../components/modal/GroupActionStepModal";
-import {
-  // getMemos,
-  getUsers,
-} from "../apis/group";
+import { getUsers } from "../apis/group";
 import type { AdminGroupRow, PagedResponse } from "../types";
-// import Modal from "@/shared/components/modal/Modal";
-// import MemoBox from "../components/modal/group/MemoBox";
 
 interface GroupUsersApiRow {
   id: number;
@@ -180,14 +175,6 @@ function AdminGroupPage() {
     fetchGroupUsers();
   }, [debouncedName, selectedPart, currentPage]);
 
-  // useEffect(() =>{
-  //   const fetchMemo = async() => {
-  //     try{
-  //       const res = await getMemos(u);
-  //     }
-  //   }
-  // },[])
-
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
       {errors && (
@@ -197,16 +184,6 @@ function AdminGroupPage() {
           onClick={() => setErrors(null)}
         />
       )}
-
-      {/* <Modal>
-        <Modal.Header>메모</Modal.Header>
-        <div className="mt-5 flex w-153.5 flex-col gap-2">
-          <MemoBox>메모 박스</MemoBox>
-          <MemoBox>메모 박스</MemoBox>
-          <MemoBox>메모 박스</MemoBox>
-          <MemoBox>메모 박스</MemoBox>
-        </div>
-      </Modal> */}
 
       {modalState && (
         <GroupActionStepModal

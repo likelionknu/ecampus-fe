@@ -68,7 +68,7 @@ export const deleteWhitelist = async ({ wid }: { wid: number }) => {
 
 // 메모 조회
 export const getMemos = async ({ uid }: { uid: number }) => {
-  const res = await api.get(`/v1/admin/users/${uid}/memos}`);
+  const res = await api.get(`/v1/admin/users/${uid}/memos`);
 
   return res;
 };

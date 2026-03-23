@@ -1,0 +1,89 @@
+import Button from "@/shared/components/Button";
+import Modal from "@/shared/components/modal/Modal";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import MemoBox from "./MemoBox";
+import type { GroupMemo, MemoModalTarget } from "./memoModal.types";
+
+interface MemoListModalProps {
+  target: MemoModalTarget;
+  memos: GroupMemo[];
+  isLoading: boolean;
+  isSubmitting: boolean;
+  onClose: () => void;
+  onOpenAdd: () => void;
+  onDeleteMemo: (mid: number) => void;
+  onDeleteAllMemos: () => void;
+}
+
+function MemoListModal({
+  target,
+  memos,
+  isLoading,
+  isSubmitting,
+  onClose,
+  onOpenAdd,
+  onDeleteMemo,
+  onDeleteAllMemos,
+}: MemoListModalProps) {
+  return (
+    <Modal>
+      <Modal.Header onClick={onClose}>{target.name} 메모</Modal.Header>
+      <div className="mt-5 flex w-153.5 flex-col gap-2">
+        {isLoading ? (
+          <MemoBox>메모를 불러오는 중...</MemoBox>
+        ) : memos.length === 0 ? (
+          <MemoBox>등록된 메모가 없어요.</MemoBox>
+        ) : (
+          memos.map((memo) => (
+            <MemoBox key={memo.id}>
+              <div className="flex flex-col gap-2">
+                <p className="text-body-2 mt-2 wrap-break-word">
+                  {memo.content}
+                </p>
+                <div className="flex items-end justify-between">
+                  <span className="text-caption text-ec-sub">
+                    {memo.createdAt
+                      ? formatKoreanDateTime12(memo.createdAt)
+                      : "-"}
+                    , {memo.name} 등록
+                  </span>
+                  <button
+                    type="button"
+                    className="text-ec-red text-caption cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={isSubmitting}
+                    onClick={() => onDeleteMemo(memo.id)}
+                  >
+                    삭제
+                  </button>
+                </div>
+              </div>
+            </MemoBox>
+          ))
+        )}
+      </div>
+      <Modal.ButtonLayout>
+        <div className="flex w-full justify-end gap-2">
+          <Button
+            size="large"
+            variant="danger"
+            isLoading={isSubmitting}
+            disabled={isSubmitting || memos.length === 0}
+            onClick={onDeleteAllMemos}
+          >
+            초기화
+          </Button>
+          <Button
+            size="large"
+            variant="primary"
+            disabled={isSubmitting}
+            onClick={onOpenAdd}
+          >
+            추가
+          </Button>
+        </div>
+      </Modal.ButtonLayout>
+    </Modal>
+  );
+}
+
+export default MemoListModal;
