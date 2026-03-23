@@ -1,7 +1,7 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import EraseIcon from "../../assets/erase.svg?react";
-import type { AdminDashboardMemberRow } from "../../types";
+import type { AdminDashboardMemberRow } from "../../types/dashboard";
 
 interface DashboardTableRowsProps {
   isLoading: boolean;
@@ -41,7 +41,7 @@ function DashboardTableRows({ isLoading, members }: DashboardTableRowsProps) {
           <span className="w-20 shrink-0">{member.course}기</span>
           <span className="w-24 shrink-0">
             <span
-              className="inline-block max-w-[3.2em] overflow-hidden text-ellipsis whitespace-nowrap align-bottom"
+              className="inline-block max-w-[3.2em] overflow-hidden align-bottom text-ellipsis whitespace-nowrap"
               title={member.name}
             >
               {member.name}

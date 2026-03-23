@@ -1,4 +1,4 @@
-import type { SelectedUserChip } from "../../types";
+import type { SelectedUserChip } from "../../types/dashboard";
 
 interface SelectedUserProps {
   item: SelectedUserChip;

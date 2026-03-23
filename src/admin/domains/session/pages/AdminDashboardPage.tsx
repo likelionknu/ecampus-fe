@@ -20,13 +20,24 @@ import {
 import SelectedUser from "../components/dashboard/SelectedUser";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import DashboardTableRows from "../components/dashboard/DashboardTableRows";
-import type { AdminDashboardMemberRow, SelectedUserChip } from "../types";
-import { getSessionInfo, getSessionMember } from "../api/dashboard";
+import SessionActivateButton from "../components/dashboard/SessionActivateButton";
+import SessionDeactivateButton from "../components/dashboard/SessionDeactivateButton";
+import type {
+  AdminDashboardMemberRow,
+  SelectedUserChip,
+} from "../types/dashboard";
+import {
+  editSessionInfo,
+  getSessionInfo,
+  getSessionMember,
+} from "../api/dashboard";
 import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils/questionError";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
+import Modal from "@/shared/components/modal/Modal";
+import Input from "@/shared/components/Input";
 
 interface SessionMembersPageState {
   content: AdminDashboardMemberRow[];
@@ -35,6 +46,11 @@ interface SessionMembersPageState {
   totalElements: number;
   totalPages: number;
   hasNext: boolean;
+}
+
+interface SessionEditState {
+  name: string;
+  useable: boolean;
 }
 
 const INITIAL_SESSION_DASHBOARD_STATE: SessionDashboardData = {
@@ -68,17 +84,25 @@ const mockSelectedUsers: SelectedUserChip[] = [
 
 function AdminDashboardPage() {
   const { sessionId } = useParams();
+  // 상단 데이터 상태
   const [sessionInfo, setSessionInfo] = useState<SessionDashboardData>(
     INITIAL_SESSION_DASHBOARD_STATE,
   );
+  // 사용자 데이터 상태
   const [membersPage, setMembersPage] = useState<SessionMembersPageState>(
     INITIAL_SESSION_MEMBERS_PAGE_STATE,
   );
   const itemSumNum = membersPage.size;
-  const [errors, setErrors] = useState<CommonErrorState | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const [editModal, setEditModal] = useState(false); // 정보 수정 모달 상태
   const isTablet = useMediaQuery({ maxWidth: 1023 });
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const [sessionEdit, setSessionEdit] = useState<SessionEditState>({
+    name: "",
+    useable: false,
+  }); // 세션 정보 데이터 상태
+  const [searchKeyword, setSearchKeyword] = useState(""); // 사용자 입력 상태
   const [selectedPart, setSelectedPart] = useState(
     ADMIN_DASHBOARD_PART_DEFAULT,
   );
@@ -108,13 +132,37 @@ function AdminDashboardPage() {
     setSelectedUsers((prev) => prev.filter((item) => item.id !== id));
   }, []);
 
+  const handleToggle = () => {
+    setSessionEdit((prev) => ({ ...prev, useable: !prev.useable }));
+  };
+
+  // 세션 정보 수정
+  const handleEdit = async () => {
+    try {
+      await editSessionInfo({
+        sid: Number(sessionId),
+        name: sessionEdit.name,
+        useable: sessionEdit.useable,
+      });
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setEditModal(false);
+    }
+  };
+
+  // 세션 정보/사용자 조회
   useEffect(() => {
     const fetchInfo = async () => {
       setIsLoading(true);
       try {
         const res = await getSessionInfo({ sid: Number(sessionId) });
+        const name = res.data.data.name;
+        const useable = res.data.data.status === "활성화" ? true : false;
 
         setSessionInfo(res.data.data);
+        setSessionEdit((prev) => ({ ...prev, name: name, useable: useable }));
       } catch (error) {
         setErrors(getCommonErrorState(error));
       } finally {
@@ -138,7 +186,7 @@ function AdminDashboardPage() {
 
     fetchInfo();
     fetchMember();
-  }, [sessionId]);
+  }, [sessionId, refreshKey]);
 
   const itemNum = filteredMembers.length;
 
@@ -152,9 +200,49 @@ function AdminDashboardPage() {
         />
       )}
 
+      {/* 세션 정보 수정 모달 */}
+      {editModal && (
+        <Modal>
+          <Modal.Header onClick={() => setEditModal(false)}>
+            정보 수정하기
+          </Modal.Header>
+          <div className="flex w-153 flex-col gap-2">
+            <Modal.Description>세션명</Modal.Description>
+            <Input
+              value={sessionEdit.name}
+              onChange={(e) =>
+                setSessionEdit((prev) => ({ ...prev, name: e.target.value }))
+              }
+            />
+          </div>
+          <Modal.Description>상태 설정</Modal.Description>
+          <div className="mt-2 flex w-153 gap-2.5">
+            <SessionActivateButton
+              selected={sessionEdit.useable}
+              onClick={handleToggle}
+            />
+            <SessionDeactivateButton
+              selected={!sessionEdit.useable}
+              onClick={handleToggle}
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <Modal.ButtonLayout>
+              <Button size="large" variant="primary" onClick={handleEdit}>
+                수정
+              </Button>
+            </Modal.ButtonLayout>
+          </div>
+        </Modal>
+      )}
+
       <TitleSection title="대시보드" />
 
-      <SessionInfoOverview data={sessionInfo} />
+      <SessionInfoOverview
+        data={sessionInfo}
+        onClick={() => setEditModal(true)}
+      />
 
       <section>
         <div className="text-title text-ec-black">이 세션에 등록된 사용자</div>

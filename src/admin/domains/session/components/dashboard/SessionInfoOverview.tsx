@@ -15,6 +15,7 @@ export interface SessionDashboardData {
 
 interface SessionInfoOverviewProps {
   data: SessionDashboardData;
+  onClick: () => void;
 }
 
 const formatKoreanDate = (isoDateTime: string) => {
@@ -23,12 +24,15 @@ const formatKoreanDate = (isoDateTime: string) => {
   return `${date.getFullYear()}년 ${date.getMonth() + 1}월 ${date.getDate()}일`;
 };
 
-function SessionInfoOverview({ data }: SessionInfoOverviewProps) {
+function SessionInfoOverview({ data, onClick }: SessionInfoOverviewProps) {
+  const statusColorClassName =
+    data.status === "비활성화" ? "text-ec-red" : "text-ec-blue";
+
   const infoItems = [
     { label: "세션 명", value: data.name },
     { label: "생성일", value: formatKoreanDate(data.createdAt) },
     { label: "생성자", value: data.createdBy },
-    { label: "상태", value: data.status, valueClassName: "text-ec-blue" },
+    { label: "상태", value: data.status, valueClassName: statusColorClassName },
   ];
 
   const overviewStats = [
@@ -40,7 +44,7 @@ function SessionInfoOverview({ data }: SessionInfoOverviewProps) {
 
   return (
     <section className="flex gap-7.5">
-      <SessionInfo items={infoItems} />
+      <SessionInfo items={infoItems} onClick={onClick} />
       <SessionOverview items={overviewStats} />
     </section>
   );
