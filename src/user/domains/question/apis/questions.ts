@@ -4,11 +4,18 @@ import type { QuestionRequestStatus } from "@/shared/types/QuestionRequestStatus
 interface GetQuestionsParams {
   title: string;
   status: QuestionRequestStatus;
+  page: number;
+  size?: number;
 }
 
-export const getQuestions = async ({ title, status }: GetQuestionsParams) => {
+export const getQuestions = async ({
+  title,
+  status,
+  page,
+  size = 8,
+}: GetQuestionsParams) => {
   const res = await api.get("/v1/questions", {
-    params: { title, status },
+    params: { title, status, page, size },
   });
 
   return res;

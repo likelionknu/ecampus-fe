@@ -4,17 +4,17 @@ export interface PagedResponse<T> {
 }
 
 export interface AdminDashboardMemberRow {
-  id: number;
-  generation: number;
+  userId: number;
+  course: number;
   name: string;
   part: string;
   email: string;
-  addedAt: string;
-  inviter: string;
+  registeredAt: string;
+  invitedBy: string;
 }
 
-export interface SelectedUserChip {
-  id: number;
-  label: string;
-  type: "user" | "part";
+export interface MemberState {
+  name: string;
+  profileUrl: string;
+  userId: number;
 }

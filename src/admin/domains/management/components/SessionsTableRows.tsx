@@ -1,5 +1,7 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import type { AdminSessionRow } from "../types";
+import { SESSIONS_TABLE_COLUMNS } from "../constants/sessionsTable";
+import { useNavigate } from "react-router-dom";
 
 interface SessionsTableRowsProps {
   isLoading: boolean;
@@ -7,60 +9,61 @@ interface SessionsTableRowsProps {
 }
 
 function SessionsTableRows({ isLoading, sessions }: SessionsTableRowsProps) {
+  const navigate = useNavigate();
+
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
-      {isLoading && (
-        <>
-          <div className="flex animate-pulse items-center px-6 py-5">
-            <SkeletonCell className="ml-0.5 h-4 w-6" />
-            <SkeletonCell className="ml-7 h-4 w-148" />
-            <SkeletonCell className="ml-3 h-4 w-16" />
-            <SkeletonCell className="ml-6.5 h-4 w-12" />
-            <SkeletonCell className="ml-6 h-4 w-12" />
-            <SkeletonCell className="ml-4 h-4 w-12" />
-            <SkeletonCell className="ml-4 h-4 w-14" />
+      {isLoading &&
+        [0, 1, 2].map((idx) => (
+          <div
+            key={`session-skeleton-${idx}`}
+            className="flex animate-pulse items-center px-6 py-4"
+          >
+            <div
+              className="grid w-full min-w-0 items-center gap-3"
+              style={{ gridTemplateColumns: SESSIONS_TABLE_COLUMNS }}
+            >
+              <SkeletonCell className="mx-auto h-4 w-6" />
+              <SkeletonCell className="h-4 w-full" />
+              <SkeletonCell className="mx-auto h-4 w-12" />
+              <SkeletonCell className="mx-auto h-4 w-10" />
+              <SkeletonCell className="mx-auto h-4 w-10" />
+              <SkeletonCell className="mx-auto h-4 w-10" />
+              <SkeletonCell className="mx-auto h-4 w-12" />
+            </div>
           </div>
-          <div className="flex animate-pulse items-center px-6 py-5">
-            <SkeletonCell className="ml-0.5 h-4 w-6" />
-            <SkeletonCell className="ml-7 h-4 w-148" />
-            <SkeletonCell className="ml-3 h-4 w-16" />
-            <SkeletonCell className="ml-6.5 h-4 w-12" />
-            <SkeletonCell className="ml-6 h-4 w-12" />
-            <SkeletonCell className="ml-4 h-4 w-12" />
-            <SkeletonCell className="ml-4 h-4 w-14" />
-          </div>
-          <div className="flex animate-pulse items-center px-6 py-5">
-            <SkeletonCell className="ml-0.5 h-4 w-6" />
-            <SkeletonCell className="ml-7 h-4 w-148" />
-            <SkeletonCell className="ml-3 h-4 w-16" />
-            <SkeletonCell className="ml-6.5 h-4 w-12" />
-            <SkeletonCell className="ml-6 h-4 w-12" />
-            <SkeletonCell className="ml-4 h-4 w-12" />
-            <SkeletonCell className="ml-4 h-4 w-14" />
-          </div>
-        </>
-      )}
+        ))}
 
       {sessions.map((session, index) => (
         <div
-          key={`${session.id}-${index}`}
-          className={`text-body-2 flex items-center px-8 py-5 ${
+          key={`${session.sessionId}-${index}`}
+          className={`text-body-2 flex cursor-pointer items-center px-6 py-4 ${
             index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
           }`}
+          onClick={() =>
+            navigate(`/admin/sessions/dashboard/${session.sessionId}`)
+          }
         >
-          <span className="w-12">{session.id}</span>
-          <span className="w-154 truncate">{session.name}</span>
-          <span className="w-21.5">{session.creator}</span>
-          <span className="w-18.5">{session.participantCount}명</span>
-          <span className="w-16.5">{session.fileCount}건</span>
-          <span className="w-14">{session.assignmentCount}개</span>
-          <span
-            className={`w-12 text-center ${
-              session.status === "활성화" ? "text-ec-blue" : "text-ec-sub"
-            }`}
+          <div
+            className="grid w-full min-w-0 items-center gap-3"
+            style={{ gridTemplateColumns: SESSIONS_TABLE_COLUMNS }}
           >
-            {session.status}
-          </span>
+            <span className="text-center">{session.sessionId}</span>
+            <span className="min-w-0 truncate">{session.name}</span>
+            <span className="min-w-0 truncate text-center whitespace-nowrap">
+              {session.createdBy}
+            </span>
+            <span className="text-center">{session.userCount}명</span>
+            <span className="text-center">{session.fileCount}건</span>
+            <span className="text-center">{session.assignmentCount}개</span>
+            <span
+              className={`text-center ${
+                session.status === "활성화" ? "text-ec-blue" : "text-ec-sub"
+              }`}
+            >
+              {session.status}
+            </span>
+          </div>
         </div>
       ))}
     </div>

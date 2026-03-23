@@ -41,10 +41,13 @@ const INITIAL_ASSIGNMENTS_PAGE_STATE: AssignmentsPageState = {
   hasNext: false,
 };
 
+const ASSIGNMENTS_PAGE_SIZE = 8;
+
 function UserSessionAssignments() {
   const [assignmentsPage, setAssignmentsPage] = useState<AssignmentsPageState>(
     INITIAL_ASSIGNMENTS_PAGE_STATE,
   );
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -52,7 +55,7 @@ function UserSessionAssignments() {
   const { sid } = useParams();
   const sidNumber = sid ? Number(sid) : null;
   const itemNum = assignmentsPage.totalElements;
-  const itemSumNum = 5;
+  const itemSumNum = ASSIGNMENTS_PAGE_SIZE;
 
   const openAssignmentDetail = (aid: number) => {
     navigate(`${aid}`);
@@ -84,7 +87,7 @@ function UserSessionAssignments() {
             ? responseData.content
             : [],
           page: responseData?.number ?? 0,
-          size: responseData?.size ?? INITIAL_ASSIGNMENTS_PAGE_STATE.size,
+          size: responseData?.size ?? itemSumNum,
           totalElements: responseData?.totalElements ?? 0,
           totalPages: responseData?.totalPages ?? 0,
           hasNext: !(responseData?.last ?? true),
@@ -106,11 +109,8 @@ function UserSessionAssignments() {
         subText="내게 부여된 과제를 확인하세요"
       />
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-        {({ currentItems, startIndex }) => {
-          const pageAssignments = assignmentsPage.assignments.slice(
-            startIndex,
-            startIndex + currentItems.length,
-          );
+        {() => {
+          const pageAssignments = assignmentsPage.assignments;
 
           return (
             <>
@@ -174,7 +174,7 @@ function UserSessionAssignments() {
                   })}
                 </div>
               )}
-              <PageNationButton />
+              <PageNationButton onPageChange={setCurrentPage} />
             </>
           );
         }}

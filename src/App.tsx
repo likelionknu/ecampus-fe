@@ -56,9 +56,9 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: (
-      // <RequireAuth allowedRoles={["USER"]}>
+      //  <RequireAuth allowedRoles={["USER"]}>
       <BaseLayout />
-      // </RequireAuth>
+      //  </RequireAuth>
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },

@@ -2,8 +2,21 @@ import { api } from "@/shared/apis";
 import type { CreateQuestion } from "../types/CreateQuestion";
 
 // 세션 질문 조회
-export const getSessionQuestions = async ({ sid }: { sid: number }) => {
-  const res = await api.get(`/v1/questions/sessions/${sid}`);
+export const getSessionQuestions = async ({
+  sid,
+  page,
+  size = 8,
+}: {
+  sid: number;
+  page: number;
+  size?: number;
+}) => {
+  const res = await api.get(`/v1/questions/sessions/${sid}`, {
+    params: {
+      page,
+      size,
+    },
+  });
 
   return res;
 };

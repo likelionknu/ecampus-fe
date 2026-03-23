@@ -7,8 +7,6 @@ import {
   type ReactNode,
 } from "react";
 
-import SkeletonCell from "./skeleton/SkeletonCell";
-
 interface PageNationContextValue {
   currentPage: number;
   setCurrentPage: (page: number) => void;
@@ -127,7 +125,11 @@ export const PageNationItem = ({
 
 /* ====================== 아이템 종료 ====================== */
 /* ====================== 버튼 시작 ====================== */
-export const PageNationButton = () => {
+interface PageNationButtonProps {
+  onPageChange?: (page: number) => void;
+}
+
+export const PageNationButton = ({ onPageChange }: PageNationButtonProps) => {
   const { totalPages, currentPage, setCurrentPage } = usePageNationContext();
 
   return (
@@ -144,7 +146,10 @@ export const PageNationButton = () => {
                 ? "bg-ec-table-topic text-ec-white"
                 : "bg-ec-table-header text-ec-table-topic"
             }`}
-            onClick={() => setCurrentPage(page)}
+            onClick={() => {
+              setCurrentPage(page);
+              onPageChange?.(page);
+            }}
             type="button"
           >
             {page}
