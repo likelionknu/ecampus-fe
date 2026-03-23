@@ -67,7 +67,10 @@ function UserSessionFilesPage() {
 
   return (
     <div className="mx-auto flex w-full max-w-251 flex-col gap-5 px-4 pt-7 md:px-8">
-      <TitleSection title="자료" subText="이 세션에 추가된 자료예요" />
+      <TitleSection
+        title={`자료(${itemNum})`}
+        subText="이 세션에 추가된 자료예요"
+      />
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
