@@ -39,10 +39,12 @@ interface FilterState {
   status: string;
 }
 
+const QUESTION_PAGE_SIZE = 8;
+
 const INITIAL_QUESTIONS_PAGE_STATE: QuestionsPageState = {
   questions: [],
   page: 0,
-  size: 8,
+  size: QUESTION_PAGE_SIZE,
   totalElements: 0,
   totalPages: 0,
   hasNext: false,
@@ -59,8 +61,9 @@ function UserQuestionsPage() {
     status: QUESTION_STATUS_DEFAULT_OPTION,
   });
   const [debouncedTitle, setDebouncedTitle] = useState(filter.title); // api 요청 타이틀 상태
+  const [currentPage, setCurrentPage] = useState(1);
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
-  const itemSumNum = questionsPage.size;
+  const itemSumNum = QUESTION_PAGE_SIZE;
   const itemNum = questionsPage.totalElements;
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isTablet = useMediaQuery({ maxWidth: 1023 });
@@ -81,7 +84,11 @@ function UserQuestionsPage() {
       try {
         const status =
           QUESTION_STATUS_OPTION_TO_REQUEST_STATUS[filter.status] ?? "ALL";
-        const res = await getQuestions({ title: debouncedTitle, status });
+        const res = await getQuestions({
+          title: debouncedTitle,
+          status,
+          page: currentPage - 1, // 서버 0-based
+        });
         const responseData = res.data?.data ?? res.data;
 
         setErrors(null);
@@ -90,7 +97,7 @@ function UserQuestionsPage() {
             ? responseData.content
             : [],
           page: responseData?.number ?? 0,
-          size: responseData?.size ?? INITIAL_QUESTIONS_PAGE_STATE.size,
+          size: QUESTION_PAGE_SIZE,
           totalElements: responseData?.totalElements ?? 0,
           totalPages: responseData?.totalPages ?? 0,
           hasNext: !(responseData?.last ?? true),
@@ -103,7 +110,7 @@ function UserQuestionsPage() {
     };
 
     fetchQuestions();
-  }, [debouncedTitle, filter.status]);
+  }, [debouncedTitle, filter.status, currentPage]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280">
@@ -124,27 +131,26 @@ function UserQuestionsPage() {
         <div className="xl:w-108">
           <SerachBar
             value={filter.title}
-            onChange={(e) =>
-              setFilter((prev) => ({ ...prev, title: e.target.value }))
-            }
+            onChange={(e) => {
+              setCurrentPage(1);
+              setFilter((prev) => ({ ...prev, title: e.target.value }));
+            }}
             placeholder="질문 제목으로 검색"
           />
         </div>
         <SelectBox
           options={QUESTION_STATUS_OPTIONS}
           defaultValue={QUESTION_STATUS_DEFAULT_OPTION}
-          onChange={(value) =>
-            setFilter((prev) => ({ ...prev, status: value }))
-          }
+          onChange={(value) => {
+            setCurrentPage(1);
+            setFilter((prev) => ({ ...prev, status: value }));
+          }}
         />
       </div>
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-        {({ currentItems, startIndex }) => {
-          const pagedQuestions = questionsPage.questions.slice(
-            startIndex,
-            startIndex + currentItems.length,
-          );
+        {() => {
+          const pagedQuestions = questionsPage.questions;
 
           const isEmpty = pagedQuestions.length === 0;
 
@@ -165,7 +171,7 @@ function UserQuestionsPage() {
                   questions={pagedQuestions}
                 />
               )}
-              <PageNationButton />
+              <PageNationButton onPageChange={setCurrentPage} />
             </>
           );
         }}

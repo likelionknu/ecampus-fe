@@ -1,14 +1,19 @@
 import { api } from "@/shared/apis";
-// import type { PaginationParams } from "@/shared/types/Pagination";
 
-// export const getNotification = async (params: PaginationParams) => {
-//   const res = await api.get("/v1/notification", { params });
-
-//   return res;
-// };
 // 알림 조회
-export const getNotification = async () => {
-  const res = await api.get("/v1/notifications", {});
+export const getNotification = async ({
+  page,
+  size = 8,
+}: {
+  page: number;
+  size?: number;
+}) => {
+  const res = await api.get("/v1/notifications", {
+    params: {
+      page,
+      size,
+    },
+  });
 
   return res;
 };

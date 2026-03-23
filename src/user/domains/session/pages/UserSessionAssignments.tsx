@@ -40,15 +40,18 @@ const INITIAL_ASSIGNMENTS_PAGE_STATE: AssignmentsPageState = {
   hasNext: false,
 };
 
+const ASSIGNMENTS_PAGE_SIZE = 8;
+
 function UserSessionAssignments() {
   const [assignmentsPage, setAssignmentsPage] = useState<AssignmentsPageState>(
     INITIAL_ASSIGNMENTS_PAGE_STATE,
   );
+  const [currentPage, setCurrentPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
   const itemNum = assignmentsPage.totalElements;
-  const itemSumNum = 5;
+  const itemSumNum = ASSIGNMENTS_PAGE_SIZE;
 
   const ASSIGNMENT_STATUS_MAP: Record<string, string> = {
     NOT_SUBMITTED: "미제출",
@@ -64,7 +67,11 @@ function UserSessionAssignments() {
       setIsLoading(true);
 
       try {
-        const res = await getAssignments({ sid: 1 });
+        const res = await getAssignments({
+          sid: 1,
+          page: currentPage - 1, // 서버 0-based
+          size: itemSumNum,
+        });
         const responseData = res.data?.data ?? res.data;
 
         setAssignmentsPage({
@@ -72,7 +79,7 @@ function UserSessionAssignments() {
             ? responseData.content
             : [],
           page: responseData?.number ?? 0,
-          size: responseData?.size ?? INITIAL_ASSIGNMENTS_PAGE_STATE.size,
+          size: responseData?.size ?? itemSumNum,
           totalElements: responseData?.totalElements ?? 0,
           totalPages: responseData?.totalPages ?? 0,
           hasNext: !(responseData?.last ?? true),
@@ -85,7 +92,7 @@ function UserSessionAssignments() {
     };
 
     fetchAssignments();
-  }, []);
+  }, [currentPage, itemSumNum]);
 
   return (
     <div className="mx-auto flex w-full max-w-251 flex-col gap-5 pt-7">
@@ -94,11 +101,8 @@ function UserSessionAssignments() {
         subText="내게 부여된 과제를 확인하세요"
       />
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-        {({ currentItems, startIndex }) => {
-          const pageAssignments = assignmentsPage.assignments.slice(
-            startIndex,
-            startIndex + currentItems.length,
-          );
+        {() => {
+          const pageAssignments = assignmentsPage.assignments;
 
           return (
             <>
@@ -158,7 +162,7 @@ function UserSessionAssignments() {
                   })}
                 </div>
               )}
-              <PageNationButton />
+              <PageNationButton onPageChange={setCurrentPage} />
             </>
           );
         }}
