@@ -5,7 +5,7 @@ import {
   USER_SESSION_TAG_ITEMS,
 } from "@/shared/constants/tabItems";
 import type { ComponentProps } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 
 interface SessionTabLayoutProps {
   tabType: "userSession" | "adminManagement" | "adminDashboard";
@@ -18,7 +18,15 @@ const TAB_ITEMS_MAP = {
 } as const;
 
 function SessionTabLayout({ tabType }: SessionTabLayoutProps) {
-  const items: ComponentProps<typeof TabBar>["items"] = TAB_ITEMS_MAP[tabType];
+  const { sid } = useParams();
+  const baseItems = TAB_ITEMS_MAP[tabType];
+  const items: ComponentProps<typeof TabBar>["items"] =
+    tabType === "userSession" && sid
+      ? baseItems.map((item) => ({
+          ...item,
+          path: `/user/sessions/${sid}/${item.path}`,
+        }))
+      : baseItems;
 
   return (
     <>

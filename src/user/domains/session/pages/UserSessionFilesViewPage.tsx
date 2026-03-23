@@ -1,12 +1,13 @@
 import { markdownComponents } from "@/admin/domains/session/components/markdown/MarkdownComponents";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getSpecificFile } from "../apis/sessionFile";
 
 function UserSessionFilesViewPage() {
-  const [searchParams] = useSearchParams();
-  const fileId = Number(searchParams.get("fileId"));
+  const { fileId: fileIdParam } = useParams();
+  const fileId = fileIdParam ? Number(fileIdParam) : null;
+  const isValidFileId = fileId !== null && !Number.isNaN(fileId) && fileId > 0;
 
   const [name, setName] = useState("");
   const [content, setContent] = useState("");
@@ -14,8 +15,15 @@ function UserSessionFilesViewPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isValidFileId || fileId === null) {
+      setError("유효하지 않은 세션 자료입니다.");
+      setIsLoading(false);
+      return;
+    }
+
     const fetchData = async () => {
       setIsLoading(true);
+      setError(null);
       try {
         const data = await getSpecificFile({ fileId });
         setName(data.name);
@@ -27,9 +35,8 @@ function UserSessionFilesViewPage() {
         setIsLoading(false);
       }
     };
-
     fetchData();
-  }, [fileId]);
+  }, [fileId, isValidFileId]);
 
   if (isLoading) {
     return <div className="px-4 py-8">로딩 중...</div>;
@@ -40,7 +47,7 @@ function UserSessionFilesViewPage() {
   }
 
   return (
-    <div className="prose bg-ec-white mt-20 w-full max-w-251.5 px-12 py-12 md:mt-0">
+    <div className="prose bg-ec-white mt-30 w-full max-w-251.5 px-12 py-12 md:pt-7 xl:mt-0">
       <div className="text-ec-black text-title font-semibold md:text-3xl">
         {name}
       </div>

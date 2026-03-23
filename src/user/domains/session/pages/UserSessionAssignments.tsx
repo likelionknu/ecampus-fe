@@ -13,6 +13,7 @@ import ListBoxMobile from "../components/application/ListBoxMobile";
 import { AssignmentInfo } from "../components/application/AssignmentInfo";
 import { useEffect, useState } from "react";
 import { getAssignments } from "../apis/assignment";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface AssignmentRow {
   id: number;
@@ -47,8 +48,15 @@ function UserSessionAssignments() {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
+  const navigate = useNavigate();
+  const { sid } = useParams();
+  const sidNumber = sid ? Number(sid) : null;
   const itemNum = assignmentsPage.totalElements;
   const itemSumNum = 5;
+
+  const openAssignmentDetail = (aid: number) => {
+    navigate(`${aid}`);
+  };
 
   const ASSIGNMENT_STATUS_MAP: Record<string, string> = {
     NOT_SUBMITTED: "미제출",
@@ -60,11 +68,15 @@ function UserSessionAssignments() {
   };
 
   useEffect(() => {
+    if (sidNumber === null || Number.isNaN(sidNumber)) {
+      return;
+    }
+
     const fetchAssignments = async () => {
       setIsLoading(true);
 
       try {
-        const res = await getAssignments({ sid: 1 });
+        const res = await getAssignments({ sid: sidNumber });
         const responseData = res.data?.data ?? res.data;
 
         setAssignmentsPage({
@@ -85,10 +97,10 @@ function UserSessionAssignments() {
     };
 
     fetchAssignments();
-  }, []);
+  }, [sidNumber]);
 
   return (
-    <div className="mx-auto flex w-full max-w-251 flex-col gap-5 pt-7">
+    <div className="mx-auto mt-30 flex w-full max-w-251 flex-col gap-5 md:pt-7 xl:mt-0">
       <TitleSection
         title={`과제(${assignmentsPage.totalElements})`}
         subText="내게 부여된 과제를 확인하세요"
@@ -113,6 +125,9 @@ function UserSessionAssignments() {
                 <AssignmentsTableRow
                   isLoading={isLoading}
                   assignments={pageAssignments}
+                  onRowClick={(assignment) =>
+                    openAssignmentDetail(assignment.id)
+                  }
                 />
               ) : (
                 <div
@@ -142,6 +157,7 @@ function UserSessionAssignments() {
                         key={assignment.id}
                         title={assignment.name}
                         subText={`${formatDateTime(assignment.endAt)} · 제출 종료`}
+                        onClick={() => openAssignmentDetail(assignment.id)}
                       >
                         <AssignmentInfo
                           label="제출 상태"

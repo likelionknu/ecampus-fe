@@ -2,83 +2,88 @@ import { useMediaQuery } from "react-responsive";
 import Button from "@/shared/components/Button";
 import TextBox from "@/shared/components/TextBox";
 import TitleSection from "@/shared/components/TitleSection";
-import { formatDateTime } from "@/shared/utils/date";
-import {
-  formatAssignmentStatus,
-  formatEvaluateStatus,
-} from "@/user/utils/assignment";
 import AssignmentMetaRow from "../components/AssignmentsMetaRow";
 import QuestionContentSection from "../components/question/QuestionContentSection";
-
-interface AssignmentDetail {
-  startAt: string;
-  endAt: string;
-  submittedAt: string;
-  evaluatedAt: string;
-  assignmentStatus: "SUBMITTED" | "NOT_SUBMITTED";
-  evaluate: "PASS" | "FAIL" | "";
-  description: string;
-  submissionContent: string;
-}
-
-const mockAssignment: AssignmentDetail = {
-  startAt: "2026-03-01T00:00:00",
-  endAt: "2026-03-10T23:59:59",
-  submittedAt: "2026-03-05T21:10:00",
-  evaluatedAt: "",
-  assignmentStatus: "SUBMITTED",
-  evaluate: "",
-  description: "REST API 설계 과제를 제출하세요.",
-  submissionContent: "과제 제출 내용입니다.",
-} as const;
-
-const questionMetaRows = [
-  { label: "시작일", value: formatDateTime(mockAssignment.startAt) },
-  { label: "종료일", value: formatDateTime(mockAssignment.endAt) },
-  { label: "제출일", value: formatDateTime(mockAssignment.submittedAt) },
-  { label: "평가일", value: formatDateTime(mockAssignment.evaluatedAt) },
-  {
-    label: "상태",
-    value: (
-      <span
-        className={
-          mockAssignment.assignmentStatus === "SUBMITTED"
-            ? "text-ec-blue"
-            : "text-ec-red"
-        }
-      >
-        {formatAssignmentStatus(mockAssignment.assignmentStatus)}
-      </span>
-    ),
-  },
-  {
-    label: "평가",
-    value: (
-      <span
-        className={
-          mockAssignment.evaluate === "PASS"
-            ? "text-ec-blue"
-            : mockAssignment.evaluate === "FAIL"
-              ? "text-ec-red"
-              : "text-ec-sub"
-        }
-      >
-        {formatEvaluateStatus(mockAssignment.evaluate)}
-      </span>
-    ),
-  },
-] as const;
+import { useEffect, useState } from "react";
+import { postAssignmentSubmission } from "../apis/assignment";
+import { useParams } from "react-router-dom";
+import AssignmentContentSection from "../components/AssignmentContentSection";
+import Modal from "@/shared/components/modal/Modal";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import useAssignmentDetail from "../hooks/useAssignmentDetail";
+import { createAssignmentMetaRows } from "../utils/assignmentMeta";
 
 function UserSessionAssignmentsView() {
   const isTablet = useMediaQuery({ maxWidth: 1024 });
 
-  return (
-    <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
-      <TitleSection title={mockAssignment.description} />
+  const [modalType, setModalType] = useState<
+    "assignmentConfirm" | "assignmentSuccess" | null
+  >(null);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
 
+  const { sid, assignmentId: assignmentIdParam } = useParams();
+  const sidNumber = sid ? Number(sid) : null;
+  const assignmentId = assignmentIdParam ? Number(assignmentIdParam) : null;
+
+  const isValidAssignmentParams =
+    sidNumber !== null &&
+    assignmentId !== null &&
+    !Number.isNaN(sidNumber) &&
+    !Number.isNaN(assignmentId) &&
+    sidNumber > 0 &&
+    assignmentId > 0;
+
+  const {
+    assignment,
+    assignmentName,
+    content,
+    setContent,
+    isLoading,
+    error,
+    fetchData,
+  } = useAssignmentDetail(sidNumber, assignmentId);
+
+  useEffect(() => {
+    if (!isValidAssignmentParams) {
+      return;
+    }
+    fetchData();
+  }, [fetchData, isValidAssignmentParams]);
+
+  const handleSubmit = async () => {
+    if (!sidNumber || !assignmentId) return;
+    if (!content.trim()) {
+      alert("내용을 입력하세요");
+      return;
+    }
+    try {
+      await postAssignmentSubmission({
+        sid: sidNumber,
+        assignmentId,
+        payload: { content },
+      });
+      await fetchData();
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    }
+  };
+
+  if (isLoading) return <div className="px-4 py-8">로딩 중...</div>;
+  if (error) return <div className="px-4 py-8 text-red-500">{error}</div>;
+  if (!assignment)
+    return <div className="px-4 py-8">과제 정보를 찾을 수 없습니다.</div>;
+
+  const assignmentMetaRows = createAssignmentMetaRows(assignment);
+  return (
+    <div className="mt-30 flex w-full max-w-251 flex-col gap-5 px-8 md:pt-7 xl:mt-0">
+      <TitleSection title={assignmentName || "과제 상세"} />
       <TextBox>
         <div className="flex flex-col">
-          {questionMetaRows.map((row, index) => (
+          {assignmentMetaRows.map((row, index) => (
             <AssignmentMetaRow
               key={row.label}
               label={row.label}
@@ -90,15 +95,66 @@ function UserSessionAssignmentsView() {
           ))}
         </div>
       </TextBox>
-
-      <QuestionContentSection label="설명" content={mockAssignment.description} />
-      <QuestionContentSection label="제출" content={mockAssignment.submissionContent} />
-      <Button
-        size="primary"
-        className="rounded-ec-10 bg-ec-blue text-ec-white w-20 cursor-pointer self-end px-3.5 py-2 text-sm font-medium"
-      >
-        과제 제출
-      </Button>
+      <QuestionContentSection label="설명" content={assignment.description} />
+      <AssignmentContentSection
+        label="제출"
+        content={content}
+        onChange={setContent}
+      />
+      {assignment.assignmentStatus === "NOT_SUBMITTED" && (
+        <Button
+          onClick={() => setModalType("assignmentConfirm")}
+          disabled={!content.trim()}
+          size="primary"
+          className="rounded-ec-10 bg-ec-blue text-ec-white w-20 self-end px-3.5 py-2 text-sm font-medium"
+        >
+          과제 제출
+        </Button>
+      )}
+      {modalType === "assignmentConfirm" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            과제 제출
+          </Modal.Header>
+          <Modal.Description>
+            이 과제를 제출할까요? <br />
+            과제를 제출하면 더 이상 제출한 과제에 대해 수정할 수 없어요
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              variant="primary"
+              onClick={async () => {
+                await handleSubmit();
+                setModalType("assignmentSuccess");
+              }}
+            >
+              확인
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "assignmentSuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            과제 제출
+          </Modal.Header>
+          <Modal.Description>과제를 성공적으로 제출했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={() => setModalType(null)}>
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
     </div>
   );
 }

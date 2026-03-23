@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import TitleSection from "@/shared/components/TitleSection";
 import {
@@ -25,28 +25,31 @@ function UserSessionFilesPage() {
   const navigate = useNavigate();
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 764 });
+  // const searchParams = useParams();
 
   const [files, setFiles] = useState<SessionFile[]>([]);
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const size = 8;
-  const sid = 1; // 임시 sid값
+  // const sid = 1; // 임시 sid값
   // const sidParam = searchParams.get("sid");
   // const sid = sidParam ? Number(sidParam) : null;
+  const { sid } = useParams();
+  const sidNumber = sid ? Number(sid) : null;
 
-  const openFileDetail = (fileId: number) => {
-    navigate(`detail?sid=${sid}&fileId=${fileId}`);
+  const openFileDetail = (id: number) => {
+    navigate(`${id}`);
   };
 
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
 
   useEffect(() => {
-    // if (!sid) return;
+    if (sidNumber === null || isNaN(sidNumber)) return;
     const fetchFiles = async () => {
       setIsLoading(true);
       try {
-        const res = await getSessionFiles({ sid, page: 0, size });
+        const res = await getSessionFiles({ sid: sidNumber, page: 0, size });
         const responseData = res.data;
 
         setFiles(
@@ -60,13 +63,13 @@ function UserSessionFilesPage() {
       }
     };
     fetchFiles();
-  }, []);
+  }, [sid]);
 
   const itemNum = totalElements;
   const itemSumNum = 8;
 
   return (
-    <div className="mx-auto flex w-full max-w-251 flex-col gap-5 px-4 pt-7 md:px-8">
+    <div className="mx-auto mt-30 flex w-full max-w-251 flex-col gap-5 px-4 md:pt-7 xl:mt-0">
       <TitleSection
         title={`자료(${itemNum})`}
         subText="이 세션에 추가된 자료예요"

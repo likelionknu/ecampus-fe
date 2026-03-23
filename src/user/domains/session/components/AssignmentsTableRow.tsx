@@ -13,14 +13,19 @@ interface AssignmentRow {
 interface AssignmentsTableRowProps {
   assignments: readonly AssignmentRow[];
   isLoading: boolean;
+  onRowClick?: (assignment: AssignmentRow) => void;
 }
 
-const ASSIGNMENT_STATUS_MAP: Record<AssignmentRow["assignmentStatus"], string> = {
-  NOT_SUBMITTED: "미제출",
-  SUBMITTED: "제출",
-};
+const ASSIGNMENT_STATUS_MAP: Record<AssignmentRow["assignmentStatus"], string> =
+  {
+    NOT_SUBMITTED: "미제출",
+    SUBMITTED: "제출",
+  };
 
-const ASSIGNMENT_EVALUATE_MAP: Record<Exclude<AssignmentRow["evaluate"], null>, string> = {
+const ASSIGNMENT_EVALUATE_MAP: Record<
+  Exclude<AssignmentRow["evaluate"], null>,
+  string
+> = {
   PASS: "성공",
   FAIL: "-",
 };
@@ -28,6 +33,7 @@ const ASSIGNMENT_EVALUATE_MAP: Record<Exclude<AssignmentRow["evaluate"], null>, 
 function AssignmentsTableRow({
   assignments,
   isLoading,
+  onRowClick,
 }: AssignmentsTableRowProps) {
   return (
     <div className="flex w-full flex-col">
@@ -53,6 +59,7 @@ function AssignmentsTableRow({
       {assignments.map((assignment, index) => (
         <div
           key={assignment.id}
+          onClick={() => onRowClick?.(assignment)}
           className={`flex items-center px-4 py-4 ${
             index % 2 === 1 ? "bg-ec-table-header" : ""
           }`}

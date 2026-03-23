@@ -18,8 +18,8 @@ export const ADMIN_MANAGEMENT_TAG_ITEMS: TabItemConfig[] = [
 ];
 
 export const USER_SESSION_TAG_ITEMS: TabItemConfig[] = [
-  { label: "자료", path: "/user/sessions/files" },
-  { label: "과제", path: "/user/sessions/assignments" },
-  { label: "사용자 및 그룹", path: "/user/sessions/groups" },
-  { label: "질문 및 답변", path: "/user/sessions/questions" },
+  { label: "자료", path: "files" },
+  { label: "과제", path: "assignments" },
+  { label: "사용자 및 그룹", path: "groups" },
+  { label: "질문 및 답변", path: "questions" },
 ];
