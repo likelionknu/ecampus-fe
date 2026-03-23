@@ -30,7 +30,7 @@ function GroupIcon({ label, type, onClick }: GroupIconProps) {
 
   return (
     <span
-      className={`${textColorClass} inline-flex cursor-pointer items-center gap-1.5`}
+      className={`${textColorClass} inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap`}
       onClick={onClick}
     >
       <Icon className="h-3.5 w-3.5 fill-current" aria-hidden="true" />

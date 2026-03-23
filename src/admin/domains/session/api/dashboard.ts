@@ -41,19 +41,36 @@ export const serachUser = async ({ keyword }: { keyword: string }) => {
 };
 
 // 사용자 추가
+type AddMembersPayload =
+  | {
+      sid: number;
+      part: string;
+      userIds?: never;
+    }
+  | {
+      sid: number;
+      userIds: number[];
+      part?: never;
+    };
+
+const VALID_SESSION_PARTS = new Set([
+  "OPERATOR",
+  "PLANNING",
+  "BACKEND",
+  "FRONTEND",
+  "DESIGN",
+]);
+
 export const addMembers = async ({
   sid,
   userIds,
   part,
-}: {
-  sid: number;
-  userIds: number[];
-  part: string;
-}) => {
-  const res = await api.post(`/v1/admin/sessions/${sid}/users`, {
-    userIds,
-    part,
-  });
+}: AddMembersPayload) => {
+  const normalizedPart = typeof part === "string" ? part.trim() : "";
+  const requestBody = VALID_SESSION_PARTS.has(normalizedPart)
+    ? { part: normalizedPart }
+    : { userIds };
+  const res = await api.post(`/v1/admin/sessions/${sid}/users`, requestBody);
 
   return res;
 };

@@ -1,4 +1,4 @@
-﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import type { GroupActionType } from "./modal/GroupActionStepModal";
 import GroupIcon from "./GroupIcon";
 import type { AdminGroupRow } from "../types";
@@ -9,39 +9,64 @@ interface GroupTableRowsProps {
   onOpenModal: (action: GroupActionType) => void;
 }
 
+const GROUP_TABLE_COLUMNS =
+  "grid-cols-[0.55fr_0.85fr_0.9fr_2.2fr_2.2fr_0.7fr_3.6fr]";
+
+const truncateKoreanName = (name: string) => {
+  const chars = [...name];
+  const isKoreanOnly = /^[가-힣]+$/.test(name);
+
+  if (!isKoreanOnly || chars.length <= 3) {
+    return name;
+  }
+
+  return `${chars.slice(0, 3).join("")}...`;
+};
+
 function GroupTableRows({
   isLoading,
   members,
   onOpenModal,
 }: GroupTableRowsProps) {
   return (
-    <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
+    <div className="rounded-ec-10 w-full overflow-hidden">
       {isLoading && (
-        <div className="flex animate-pulse items-center px-5 py-5">
-          <SkeletonCell className="ml-2 h-4 w-8" />
-          <SkeletonCell className="ml-2 h-4 w-17" />
-          <SkeletonCell className="ml-2 h-4 w-11" />
-          <SkeletonCell className="ml-5 h-4 w-46" />
-          <SkeletonCell className="ml-4 h-4 w-50" />
-          <SkeletonCell className="ml-3 h-4 w-8" />
-          <SkeletonCell className="ml-4 h-4 flex-1" />
+        <div
+          className={`grid w-full animate-pulse items-center gap-3 px-6 py-5 ${GROUP_TABLE_COLUMNS}`}
+        >
+          <SkeletonCell className="h-4 w-8" />
+          <SkeletonCell className="h-4 w-16" />
+          <SkeletonCell className="h-4 w-12" />
+          <SkeletonCell className="h-4 w-46" />
+          <SkeletonCell className="h-4 w-46" />
+          <SkeletonCell className="h-4 w-8 justify-self-center" />
+          <SkeletonCell className="h-4 w-full" />
         </div>
       )}
 
       {members.map((member, index) => (
         <div
           key={`${member.id}-${member.email}`}
-          className={`text-body-2 flex items-center px-8 py-5 ${
+          className={`text-body-2 grid w-full items-center gap-3 px-6 py-5 ${GROUP_TABLE_COLUMNS} ${
             index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
           }`}
         >
-          <span className="w-10 shrink-0">{member.generation}기</span>
-          <span className="w-18 shrink-0">{member.part}</span>
-          <span className="w-18 shrink-0">{member.name}</span>
-          <span className="w-50 shrink-0 truncate">{member.email}</span>
-          <span className="w-52 shrink-0">{member.joinedAt}</span>
-          <span className="w-14 shrink-0">{member.penaltyPoint}점</span>
-          <div className="flex flex-1 justify-between">
+          <span className="min-w-0">{member.generation}기</span>
+          <span className="min-w-0 truncate" title={member.part}>
+            {member.part}
+          </span>
+          <span className="min-w-0 truncate" title={member.name}>
+            {truncateKoreanName(member.name)}
+          </span>
+          <span
+            className="block min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap"
+            title={member.email}
+          >
+            {member.email}
+          </span>
+          <span className="min-w-0 truncate">{member.joinedAt}</span>
+          <span className="min-w-0 text-center">{member.penaltyPoint}점</span>
+          <div className="flex w-full min-w-0 flex-nowrap items-center justify-center gap-3">
             <GroupIcon
               label="메모"
               type="memo"

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface SelectBoxProps {
   options: string[];
@@ -15,6 +15,10 @@ const SelectBox: React.FC<SelectBoxProps> = ({
 }) => {
   const [selected, setSelected] = useState<string>(defaultValue || options[0]);
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setSelected(defaultValue || options[0]);
+  }, [defaultValue, options]);
 
   const handleSelect = (option: string) => {
     setSelected(option);
