@@ -75,13 +75,14 @@ function UserNotificationPage() {
   // api 응답(데이터, 페이지네이션)
   const [notificationPage, setNotificationPage] =
     useState<NotificationPageState>(INITIAL_NOTIFICATION_PAGE_STATE);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // 모달 활성화
   const [modalState, setModalState] = useState<ModalState>(null);
   // 로딩
   const [isLoading, setIsLoading] = useState(false);
   const itemNum = notificationPage.totalElements;
-  const itemSumNum = notificationPage.size;
+  const itemSumNum = INITIAL_NOTIFICATION_PAGE_STATE.size;
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   const titleActions = useMemo(
@@ -196,7 +197,9 @@ function UserNotificationPage() {
       setIsLoading(true);
 
       try {
-        const res = await getNotification();
+        const res = await getNotification({
+          page: currentPage - 1,
+        });
         const responseData = res.data?.data;
 
         setNotificationPage({
@@ -204,7 +207,7 @@ function UserNotificationPage() {
             ? responseData.notifications
             : [],
           page: responseData?.page ?? 0,
-          size: responseData?.size ?? INITIAL_NOTIFICATION_PAGE_STATE.size,
+          size: responseData?.size ?? itemSumNum,
           totalElements: responseData?.totalElements ?? 0,
           totalPages: responseData?.totalPages ?? 0,
           hasNext: responseData?.hasNext ?? false,
@@ -217,7 +220,7 @@ function UserNotificationPage() {
     };
 
     fetchNotifications();
-  }, []);
+  }, [currentPage, itemSumNum]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-280">
@@ -230,11 +233,8 @@ function UserNotificationPage() {
       />
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-        {({ currentItems, startIndex }) => {
-          const pagedNotifications = notificationPage.notifications.slice(
-            startIndex,
-            startIndex + currentItems.length,
-          );
+        {() => {
+          const pagedNotifications = notificationPage.notifications;
           const isEmpty = pagedNotifications.length === 0;
 
           return (
@@ -257,7 +257,7 @@ function UserNotificationPage() {
                   notifications={pagedNotifications}
                 />
               )}
-              <PageNationButton />
+              <PageNationButton onPageChange={setCurrentPage} />
             </>
           );
         }}

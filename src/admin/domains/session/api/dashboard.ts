@@ -47,16 +47,12 @@ export const addMembers = async ({
   part,
 }: {
   sid: number;
-  userIds?: number[];
-  part?: string;
+  userIds: number[];
+  part: string;
 }) => {
-  const payload = {
-    ...(userIds && userIds.length > 0 ? { userIds } : {}),
-    ...(part ? { part } : {}),
-  };
-
   const res = await api.post(`/v1/admin/sessions/${sid}/users`, {
-    ...payload,
+    userIds,
+    part,
   });
 
   return res;
