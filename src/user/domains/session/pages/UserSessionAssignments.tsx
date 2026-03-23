@@ -71,23 +71,23 @@ function UserSessionAssignments() {
   };
 
   useEffect(() => {
-    if (sidNumber === null || Number.isNaN(sidNumber)) {
-      return;
-    }
+    if (sidNumber === null || Number.isNaN(sidNumber)) return;
 
     const fetchAssignments = async () => {
       setIsLoading(true);
 
       try {
-        const res = await getAssignments({ sid: sidNumber });
+        const res = await getAssignments({
+          sid: sidNumber,
+          page: currentPage - 1,
+          size: ASSIGNMENTS_PAGE_SIZE,
+        });
         const responseData = res.data?.data ?? res.data;
 
         setAssignmentsPage({
-          assignments: Array.isArray(responseData?.content)
-            ? responseData.content
-            : [],
+          assignments: responseData?.content ?? [],
           page: responseData?.number ?? 0,
-          size: responseData?.size ?? itemSumNum,
+          size: responseData?.size ?? ASSIGNMENTS_PAGE_SIZE,
           totalElements: responseData?.totalElements ?? 0,
           totalPages: responseData?.totalPages ?? 0,
           hasNext: !(responseData?.last ?? true),
@@ -100,8 +100,7 @@ function UserSessionAssignments() {
     };
 
     fetchAssignments();
-  }, [sidNumber]);
-
+  }, [sidNumber, currentPage]);
   return (
     <div className="mx-auto mt-30 flex w-full max-w-251 flex-col gap-5 md:pt-7 xl:mt-0">
       <TitleSection
@@ -111,7 +110,6 @@ function UserSessionAssignments() {
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {() => {
           const pageAssignments = assignmentsPage.assignments;
-
           return (
             <>
               {!isTablet && (
@@ -174,7 +172,7 @@ function UserSessionAssignments() {
                   })}
                 </div>
               )}
-              <PageNationButton onPageChange={setCurrentPage} />
+              <PageNationButton onPageChange={(page) => setCurrentPage(page)} />
             </>
           );
         }}

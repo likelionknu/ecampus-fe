@@ -25,16 +25,12 @@ function UserSessionFilesPage() {
   const navigate = useNavigate();
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 764 });
-  // const searchParams = useParams();
 
   const [files, setFiles] = useState<SessionFile[]>([]);
   const [totalElements, setTotalElements] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
   const size = 8;
-  // const sid = 1; // 임시 sid값
-  // const sidParam = searchParams.get("sid");
-  // const sid = sidParam ? Number(sidParam) : null;
   const { sid } = useParams();
   const sidNumber = sid ? Number(sid) : null;
 
@@ -44,29 +40,30 @@ function UserSessionFilesPage() {
 
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
 
-  useEffect(() => {
-    if (sidNumber === null || isNaN(sidNumber)) return;
-    const fetchFiles = async () => {
-      setIsLoading(true);
-      try {
-        const res = await getSessionFiles({ sid: sidNumber, page: 0, size });
-        const responseData = res.data;
+  const fetchFiles = async (page = 0) => {
+    if (!sidNumber) return;
 
-        setFiles(
-          Array.isArray(responseData?.content) ? responseData.content : [],
-        );
-        setTotalElements(responseData?.totalElements ?? 0);
-      } catch (error) {
-        setErrors(getCommonErrorState(error));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchFiles();
-  }, [sid]);
+    setIsLoading(true);
+    try {
+      const res = await getSessionFiles({ sid: sidNumber, page, size });
+      const responseData = res.data;
+      setFiles(
+        Array.isArray(responseData?.content) ? responseData.content : [],
+      );
+      setTotalElements(responseData?.totalElements ?? 0);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  useEffect(() => {
+    if (!sidNumber) return;
+    fetchFiles(0);
+  }, [sidNumber]);
 
   const itemNum = totalElements;
-  const itemSumNum = 8;
+  // const itemSumNum = 8;
 
   return (
     <div className="mx-auto mt-30 flex w-full max-w-251 flex-col gap-5 px-4 md:pt-7 xl:mt-0">
@@ -75,14 +72,8 @@ function UserSessionFilesPage() {
         subText="이 세션에 추가된 자료예요"
       />
 
-      <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-        {({ currentItems, startIndex }) => {
-          const pageFiles = files.slice(
-            startIndex,
-            startIndex + currentItems.length,
-          );
-          console.log("page", pageFiles);
-
+      <PageNationFrame itemNum={totalElements} itemSumNum={size}>
+        {() => {
           return (
             <>
               {!isTablet && (
@@ -91,11 +82,11 @@ function UserSessionFilesPage() {
                 </PageNationMenu>
               )}
 
-              {pageFiles.length === 0 && !isLoading ? (
+              {files.length === 0 && !isLoading ? (
                 <TableEmptyState label="등록된 세션 자료가 없어요" />
               ) : !isTablet ? (
                 <FilesTableRow
-                  files={pageFiles}
+                  files={files}
                   isLoading={isLoading}
                   onRowClick={(file) => openFileDetail(file.id)}
                 />
@@ -105,7 +96,7 @@ function UserSessionFilesPage() {
                     isMobile ? "grid-cols-1" : "grid-cols-2"
                   }`}
                 >
-                  {pageFiles.map((file) => (
+                  {files.map((file) => (
                     <ListBoxMobile
                       key={file.id}
                       title={file.name}
@@ -120,7 +111,8 @@ function UserSessionFilesPage() {
                   ))}
                 </div>
               )}
-              <PageNationButton />
+
+              <PageNationButton onPageChange={(page) => fetchFiles(page - 1)} />
             </>
           );
         }}

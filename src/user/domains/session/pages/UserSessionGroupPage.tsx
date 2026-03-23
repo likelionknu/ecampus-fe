@@ -95,11 +95,15 @@ function UserSessionGroupPage() {
         />
       </div>
 
-      <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-        {({ currentItems, startIndex }) => {
+      <PageNationFrame
+        key={normalizedSearch}
+        itemNum={itemNum}
+        itemSumNum={itemSumNum}
+      >
+        {({ startIndex }) => {
           const pagedGroups = filteredGroups.slice(
             startIndex,
-            startIndex + currentItems.length,
+            startIndex + itemSumNum,
           );
 
           return (
