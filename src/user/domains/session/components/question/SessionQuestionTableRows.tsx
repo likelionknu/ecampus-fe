@@ -63,15 +63,15 @@ function SessionQuestionTableRows({
             <span className="text-body-2 text-ec-black">
               {formatKoreanDateTime12(question.createdAt)}
             </span>
-            <span className="text-body-2 text-ec-black">
+            <span className="text-body-2 text-ec-black w-12 truncate">
               {question.createdUserName ?? "없음"}
             </span>
             <span
               className={`text-body-2 ${
-                question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
+                question.status === "COMPLETED" ? "text-ec-blue" : "text-ec-sub"
               }`}
             >
-              {question.status}
+              {question.status === "COMPLETED" ? "완료" : "대기"}
             </span>
           </div>
         </div>

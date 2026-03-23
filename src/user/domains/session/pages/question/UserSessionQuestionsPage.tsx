@@ -54,14 +54,17 @@ function UserSessionQuestionsPage() {
 
       try {
         const res = await getSessionQuestions({ sid: Number(1) });
+        const responseData = res.data?.data ?? res.data;
 
         setQuestionsPage({
-          questions: Array.isArray(res.data?.content) ? res.data.content : [],
-          page: res.data?.number ?? 0,
-          size: res.data?.size ?? INITIAL_QUESTIONS_PAGE_STATE.size,
-          totalElements: res.data?.totalElements ?? 0,
-          totalPages: res.data?.totalPages ?? 0,
-          hasNext: !(res.data?.last ?? true),
+          questions: Array.isArray(responseData?.content)
+            ? responseData.content
+            : [],
+          page: responseData?.number ?? 0,
+          size: responseData?.size ?? INITIAL_QUESTIONS_PAGE_STATE.size,
+          totalElements: responseData?.totalElements ?? 0,
+          totalPages: responseData?.totalPages ?? 0,
+          hasNext: !(responseData?.last ?? true),
         });
       } catch (error) {
         setErrors(getCommonErrorState(error));

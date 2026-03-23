@@ -1,6 +1,12 @@
-﻿export interface NotificationRow {
+export interface NotificationRow {
   id: number;
+  type: string | null;
   content: string;
-  status: "읽음" | "안 읽음";
-  receivedAt: string;
+  createdAt: string;
+  read: boolean;
+  assignmentId: number | null;
+  fileId: number | null;
+  noticeId: number | null;
+  questionId: number | null;
+  sessionId: number | null;
 }
