@@ -4,7 +4,7 @@ export interface PagedResponse<T> {
 }
 
 export interface AdminDashboardMemberRow {
-  id: number;
+  userId: number;
   course: number;
   name: string;
   part: string;
@@ -13,8 +13,8 @@ export interface AdminDashboardMemberRow {
   invitedBy: string;
 }
 
-export interface SelectedUserChip {
-  id: number;
-  label: string;
-  type: "user" | "part";
+export interface MemberState {
+  name: string;
+  profileUrl: string;
+  userId: number;
 }

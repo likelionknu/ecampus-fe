@@ -2,8 +2,16 @@ import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import EraseIcon from "../../assets/erase.svg?react";
 import type { AdminDashboardMemberRow } from "../../types/dashboard";
+import { deleteMember } from "../../api/dashboard";
+import { useState } from "react";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 
 interface DashboardTableRowsProps {
+  sessionId: number;
   isLoading: boolean;
   members: AdminDashboardMemberRow[];
 }
@@ -16,9 +24,33 @@ const PART_OPTIONS: Record<string, string> = {
   OPERATOR: "운영진",
 };
 
-function DashboardTableRows({ isLoading, members }: DashboardTableRowsProps) {
+function DashboardTableRows({
+  sessionId,
+  isLoading,
+  members,
+}: DashboardTableRowsProps) {
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+
+  // 사용자 삭제
+  const handleDelete = async ({ userId }: { userId: number }) => {
+    try {
+      await deleteMember({ sid: sessionId, userId: userId });
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    }
+  };
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => {
+            setErrors(null);
+          }}
+        />
+      )}
+
       {isLoading && (
         <div className="flex animate-pulse items-center px-8 py-5">
           <SkeletonCell className="h-4 w-20 shrink-0" />
@@ -33,7 +65,7 @@ function DashboardTableRows({ isLoading, members }: DashboardTableRowsProps) {
 
       {members.map((member, index) => (
         <div
-          key={`${member.id}-${member.email}`}
+          key={`${member.userId}-${member.email}`}
           className={`text-body-2 flex items-center px-8 py-5 ${
             index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
           }`}
@@ -61,6 +93,7 @@ function DashboardTableRows({ isLoading, members }: DashboardTableRowsProps) {
             <button
               className="text-ec-red inline-flex cursor-pointer items-center gap-1.5"
               type="button"
+              onClick={() => handleDelete({ userId: member.userId })}
             >
               <EraseIcon
                 className="h-3.5 w-3.5 fill-current"

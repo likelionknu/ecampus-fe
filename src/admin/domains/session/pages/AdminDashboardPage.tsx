@@ -1,5 +1,5 @@
 import TitleSection from "@/shared/components/TitleSection";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import SessionInfoOverview from "../components/dashboard/SessionInfoOverview";
 import type { SessionDashboardData } from "../components/dashboard/SessionInfoOverview";
@@ -22,14 +22,13 @@ import DashboardHeader from "../components/dashboard/DashboardHeader";
 import DashboardTableRows from "../components/dashboard/DashboardTableRows";
 import SessionActivateButton from "../components/dashboard/SessionActivateButton";
 import SessionDeactivateButton from "../components/dashboard/SessionDeactivateButton";
-import type {
-  AdminDashboardMemberRow,
-  SelectedUserChip,
-} from "../types/dashboard";
+import type { AdminDashboardMemberRow, MemberState } from "../types/dashboard";
 import {
+  addMembers,
   editSessionInfo,
   getSessionInfo,
   getSessionMember,
+  serachUser,
 } from "../api/dashboard";
 import {
   getCommonErrorState,
@@ -53,6 +52,15 @@ interface SessionEditState {
   useable: boolean;
 }
 
+const PART_LABEL_TO_REQUEST: Record<string, string> = {
+  전체: "ALL",
+  운영진: "OPERATOR",
+  기획: "PLANNING",
+  백엔드: "BACKEND",
+  프론트엔드: "FRONTEND",
+  디자인: "DESIGN",
+};
+
 const INITIAL_SESSION_DASHBOARD_STATE: SessionDashboardData = {
   sessionId: 0,
   name: "",
@@ -74,13 +82,10 @@ const INITIAL_SESSION_MEMBERS_PAGE_STATE: SessionMembersPageState = {
   hasNext: false,
 };
 
-const mockSelectedUsers: SelectedUserChip[] = [
-  { id: 1, label: "황형진", type: "user" },
-  { id: 2, label: "황진형", type: "user" },
-  { id: 3, label: "진항형", type: "user" },
-  { id: 4, label: "형향진", type: "user" },
-  { id: 5, label: "프론트엔드", type: "part" },
-];
+const INITIAL_SESSION_EDIT_STATE: SessionEditState = {
+  name: "",
+  useable: false,
+};
 
 function AdminDashboardPage() {
   const { sessionId } = useParams();
@@ -93,48 +98,23 @@ function AdminDashboardPage() {
     INITIAL_SESSION_MEMBERS_PAGE_STATE,
   );
   const itemSumNum = membersPage.size;
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0); // 재조회 키
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [editModal, setEditModal] = useState(false); // 정보 수정 모달 상태
   const isTablet = useMediaQuery({ maxWidth: 1023 });
-  const [sessionEdit, setSessionEdit] = useState<SessionEditState>({
-    name: "",
-    useable: false,
-  }); // 세션 정보 데이터 상태
+  // 세션 정보 수정 상태
+  const [sessionEdit, setSessionEdit] = useState<SessionEditState>(
+    INITIAL_SESSION_EDIT_STATE,
+  ); // 세션 정보 데이터 상태
   const [searchKeyword, setSearchKeyword] = useState(""); // 사용자 입력 상태
-  const [selectedPart, setSelectedPart] = useState(
+  const [deboundedKeyword, setDeboundedKeyword] = useState(searchKeyword); // 과도한 요청 방지
+  const [members, setMembers] = useState<MemberState[]>([]); // 검색 응답 데이터 상태
+  const [selectedMembers, setSelectedMembers] = useState<MemberState[]>([]); // 선택된 사용자
+  const [selectedPartLabel, setSelectedPartLabel] = useState(
     ADMIN_DASHBOARD_PART_DEFAULT,
   );
-
-  const [selectedUsers, setSelectedUsers] =
-    useState<SelectedUserChip[]>(mockSelectedUsers);
-
-  const filteredMembers = useMemo(() => {
-    const keyword = searchKeyword.trim().toLowerCase();
-
-    return membersPage.content.filter((member) => {
-      const matchesPart =
-        selectedPart === ADMIN_DASHBOARD_PART_DEFAULT ||
-        selectedPart === "전체" ||
-        member.part === selectedPart;
-
-      const matchesKeyword =
-        !keyword ||
-        member.name.toLowerCase().includes(keyword) ||
-        member.email.toLowerCase().includes(keyword);
-
-      return matchesPart && matchesKeyword;
-    });
-  }, [membersPage.content, searchKeyword, selectedPart]);
-
-  const handleRemoveSelectedUser = useCallback((id: number) => {
-    setSelectedUsers((prev) => prev.filter((item) => item.id !== id));
-  }, []);
-
-  const handleToggle = () => {
-    setSessionEdit((prev) => ({ ...prev, useable: !prev.useable }));
-  };
+  const [selectedPart, setSelectedPart] = useState("ALL"); // 요청 보낼 파트 상태
 
   // 세션 정보 수정
   const handleEdit = async () => {
@@ -152,43 +132,122 @@ function AdminDashboardPage() {
     }
   };
 
+  // 세션 활성/비활성화 토글
+  const handleToggle = () => {
+    setSessionEdit((prev) => ({ ...prev, useable: !prev.useable }));
+  };
+
+  // 검색된 사용자 리스트 추가
+  const handleSelectMember = (member: MemberState) => {
+    setSelectedMembers((prev) =>
+      prev.some((selected) => selected.userId === member.userId)
+        ? prev
+        : [...prev, member],
+    );
+    setSearchKeyword("");
+  };
+
+  // 선택된 사용자 삭제
+  const handleRemoveMember = (userId: number) => {
+    setSelectedMembers((prev) =>
+      prev.filter((member) => member.userId !== userId),
+    );
+  };
+
+  // 파트 셀렉트 선택
+  const handlePartChange = (partLabel: string) => {
+    setSelectedPartLabel(partLabel);
+    setSelectedPart(PART_LABEL_TO_REQUEST[partLabel] ?? "ALL");
+  };
+
+  // 사용자 추가
+  const handleAdd = async () => {
+    const userIds = selectedMembers.map((member) => member.userId);
+
+    try {
+      await addMembers({
+        sid: Number(sessionId),
+        userIds,
+        part: selectedPart === "ALL" ? "" : selectedPart,
+      });
+      setRefreshKey((prev) => prev + 1);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    }
+  };
+  // 키워드 지연 반영
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDeboundedKeyword(searchKeyword);
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [searchKeyword]);
+
+  // 사용자 검색
+  useEffect(() => {
+    const getMembers = async () => {
+      try {
+        const res = await serachUser({ keyword: deboundedKeyword });
+        const responseData = res.data?.data ?? res.data;
+
+        setMembers(Array.isArray(responseData) ? responseData : []);
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      }
+    };
+
+    getMembers();
+  }, [deboundedKeyword, selectedPart]);
+
   // 세션 정보/사용자 조회
   useEffect(() => {
+    let alive = true;
+
     const fetchInfo = async () => {
-      setIsLoading(true);
       try {
         const res = await getSessionInfo({ sid: Number(sessionId) });
+        const responseData = res.data?.data ?? res.data;
         const name = res.data.data.name;
         const useable = res.data.data.status === "활성화" ? true : false;
 
-        setSessionInfo(res.data.data);
+        if (!alive) return;
+
+        setSessionInfo(responseData);
         setSessionEdit((prev) => ({ ...prev, name: name, useable: useable }));
       } catch (error) {
+        if (!alive) return;
         setErrors(getCommonErrorState(error));
-      } finally {
-        setIsLoading(false);
       }
     };
 
     const fetchMember = async () => {
-      setIsLoading(true);
       try {
         const res = await getSessionMember({ sid: Number(sessionId) });
         const responseData = res.data?.data ?? res.data;
 
+        if (!alive) return;
+
         setMembersPage(responseData);
       } catch (error) {
+        if (!alive) return;
         setErrors(getCommonErrorState(error));
-      } finally {
-        setIsLoading(false);
       }
     };
 
-    fetchInfo();
-    fetchMember();
-  }, [sessionId, refreshKey]);
+    const fetchAll = async () => {
+      setIsLoading(true);
+      await Promise.all([fetchInfo(), fetchMember()]);
+      if (!alive) return;
+      setIsLoading(false);
+    };
 
-  const itemNum = filteredMembers.length;
+    fetchAll();
+
+    return () => {
+      alive = false;
+    };
+  }, [sessionId, refreshKey]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
@@ -247,19 +306,36 @@ function AdminDashboardPage() {
       <section>
         <div className="text-title text-ec-black">이 세션에 등록된 사용자</div>
         <div className="mt-2 flex gap-5">
-          <div className="w-110">
+          <div className="relative w-110">
             <SerachBar
               placeholder="추가하려는 사용자 이름 입력"
               value={searchKeyword}
               onChange={(e) => setSearchKeyword(e.target.value)}
             />
+            {members.length > 0 && (
+              <div className="bg-ec-box rounded-ec-10 absolute mt-1 w-full px-7 py-2">
+                {members.map((member: MemberState) => (
+                  <div
+                    key={member.userId}
+                    className="border-ec-outline-dark flex cursor-pointer items-center gap-2 border-b py-2 last:border-b-0"
+                    onClick={() => handleSelectMember(member)}
+                  >
+                    <img
+                      src={member.profileUrl}
+                      className="h-5 w-5 rounded-[50%]"
+                    />
+                    {member.name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           <SelectBox
             options={SESSION_PART_OPTIONS}
-            defaultValue={ADMIN_DASHBOARD_PART_DEFAULT}
-            onChange={setSelectedPart}
+            defaultValue={selectedPartLabel}
+            onChange={handlePartChange}
           />
-          <Button size="large" variant="primary" onClick={() => null}>
+          <Button size="large" variant="primary" onClick={handleAdd}>
             사용자 등록
           </Button>
         </div>
@@ -268,20 +344,20 @@ function AdminDashboardPage() {
             추가될 사용자(클릭하여 삭제)
           </span>
           <div className="flex flex-wrap items-center gap-2">
-            {selectedUsers.map((item) => (
+            {selectedMembers.map((member) => (
               <SelectedUser
-                key={item.id}
-                item={item}
-                onRemove={handleRemoveSelectedUser}
+                key={member.userId}
+                item={member}
+                onRemove={handleRemoveMember}
               />
             ))}
           </div>
         </div>
 
         <div className="mt-5">
-          <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
+          <PageNationFrame itemNum={membersPage.size} itemSumNum={itemSumNum}>
             {({ currentItems, startIndex }) => {
-              const pagedMembers = filteredMembers.slice(
+              const pagedMembers = membersPage.content.slice(
                 startIndex,
                 startIndex + currentItems.length,
               );
@@ -298,6 +374,7 @@ function AdminDashboardPage() {
                     <TableEmptyState label="등록된 사용자가 없어요." />
                   ) : (
                     <DashboardTableRows
+                      sessionId={Number(sessionId)}
                       isLoading={isLoading}
                       members={pagedMembers}
                     />
