@@ -11,7 +11,7 @@ import SessionQuestionTableRows from "../../components/question/SessionQuestionT
 import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
 import { useMediaQuery } from "react-responsive";
 import SessionMobileQuestionTableRows from "../../components/question/SessionMobileQuestionTableRows";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { getSessionQuestions } from "../../apis/sessionQuestion";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
 import {
@@ -49,7 +49,15 @@ function UserSessionQuestionsPage() {
   const itemSumNum = SESSION_QUESTION_PAGE_SIZE;
   const itemNum = questionsPage.totalElements;
   const [isLoading, setIsLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+
+  const handleCreateQuestion = useCallback(() => {
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
+    navigate("new");
+  }, [isSubmitting, navigate]);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -99,7 +107,8 @@ function UserSessionQuestionsPage() {
           {
             label: "새 질문 등록",
             buttonType: "primary",
-            onClick: () => navigate("new"),
+            onClick: handleCreateQuestion,
+            isSubmitting,
           },
         ]}
       />
