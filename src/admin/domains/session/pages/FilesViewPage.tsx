@@ -2,8 +2,19 @@ import Button from "@/shared/components/Button";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import ReactMarkdown from "react-markdown";
 import { markdownComponents } from "../components/markdown/MarkdownComponents";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "@/shared/components/modal/Modal";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  deleteSessionFile,
+  getSessionFile,
+  toggleSessionFileStatus,
+} from "../api/files";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
 
 interface FileData {
   fileId: number;
@@ -14,41 +25,69 @@ interface FileData {
   isPublic: boolean;
 }
 
-const file: FileData = {
-  fileId: 1,
-  name: "4주차, 매핑 및 구조 설계",
-  content: `
-> 작성 중인 문서입니다.
-
-## 4주차, 매핑 및 구조 설계
-
-데이터 하나하나가 독립적으로 저장되고, 사용된다면 서비스는 작동하기 어려울거에요. 쇼핑몰 페이지를 예를 들면, 사용자가 상점을 만들고, 상점에 상품을 등록하는 이 모든 흐름은 모두 연결되어 있어요.
-
-## Mapping(매핑) 이란?
-
-데이터베이스 관점에서의 매핑은, “자바 객체와 데이터베이스 테이블 간 연결”하는 것을 의미해요.
-
-![연관 관계 매핑 미사용 #1](/markdown-test.png)
-
-1. 상품을 판매하려는 사용자 A
-2. 사용자 A가 등록한 상점
-3. 사용자 A가 상점에 등록한 상품 A, B, C
-`,
-  createdAt: "2026-03-15T17:31:03.680478",
-  writer: "우승연",
-  isPublic: false,
-};
-
 type ModalType =
   | "toggleConfirm"
   | "toggleSuccess"
   | "deleteConfirm"
   | "deleteSuccess"
   | null;
-
 function FilesViewPage() {
+  const navigate = useNavigate();
   const [modalType, setModalType] = useState<ModalType>(null);
-  const [isPublic, setIsPublic] = useState(file.isPublic);
+  const [file, setFile] = useState<FileData | null>(null);
+  const [isPublic, setIsPublic] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const { sid, fid } = useParams();
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+
+  useEffect(() => {
+    const fetchFile = async () => {
+      try {
+        setLoading(true);
+        const res = await getSessionFile(Number(sid), Number(fid));
+        const data = res.data.data;
+        setFile(data);
+        setIsPublic(data.isPublic);
+      } catch (error) {
+        console.error(error);
+        setErrors(getCommonErrorState(error));
+        throw error;
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (sid && fid) fetchFile();
+  }, [sid, fid]);
+
+  const handleToggleStatus = async () => {
+    if (!file) return;
+    try {
+      const nextState = !isPublic;
+      await toggleSessionFileStatus(Number(sid), file.fileId, nextState);
+      setIsPublic(nextState);
+      setModalType("toggleSuccess");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      throw error;
+    }
+  };
+  const handleDeleteFile = async () => {
+    if (!sid || !fid) return;
+
+    try {
+      await deleteSessionFile(Number(sid), Number(fid));
+
+      setModalType("deleteSuccess");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      throw error;
+    }
+  };
+
+  if (loading) return <div>로딩중...</div>;
+  if (!file) return <div>데이터 없음</div>;
   return (
     <div className="prose bg-ec-white w-full max-w-251.5 px-12 py-12">
       <h1 className="text-ec-black mb-2 text-3xl font-semibold">{file.name}</h1>
@@ -71,7 +110,21 @@ function FilesViewPage() {
         </div>
       </div>
       <div className="mb-6 flex gap-2">
-        <Button size="primary" variant="primary">
+        <Button
+          size="primary"
+          variant="primary"
+          onClick={() =>
+            navigate(`/admin/sessions/${sid}/files/${fid}/modify`, {
+              state: {
+                file: {
+                  fileId: file.fileId,
+                  name: file.name,
+                  content: file.content,
+                },
+              },
+            })
+          }
+        >
           수정
         </Button>
         <Button
@@ -104,13 +157,7 @@ function FilesViewPage() {
               : "이 세션 자료의 공개 상태를 비공개로 변경할까요? \n비공개로 변경하면, 세션 참여자들은 더 이상 이 자료를 열람할 수 없어요"}
           </Modal.Description>
           <Modal.ButtonLayout>
-            <Button
-              size="primary"
-              onClick={() => {
-                setIsPublic((prev) => !prev);
-                setModalType("toggleSuccess");
-              }}
-            >
+            <Button size="primary" onClick={handleToggleStatus}>
               확인
             </Button>
             <Modal.Cancelled onClick={() => setModalType(null)} />
@@ -143,13 +190,7 @@ function FilesViewPage() {
             이 세션 자료를 삭제할까요? <br />이 작업은 되돌릴 수 없어요
           </Modal.Description>
           <Modal.ButtonLayout>
-            <Button
-              size="primary"
-              variant="danger"
-              onClick={() => {
-                setModalType("deleteSuccess");
-              }}
-            >
+            <Button size="primary" variant="danger" onClick={handleDeleteFile}>
               삭제
             </Button>
             <Modal.Cancelled onClick={() => setModalType(null)} />
@@ -163,11 +204,24 @@ function FilesViewPage() {
           </Modal.Header>
           <Modal.Description>세션 자료를 삭제했어요</Modal.Description>
           <Modal.ButtonLayout>
-            <Button size="primary" onClick={() => setModalType(null)}>
+            <Button
+              size="primary"
+              onClick={() => {
+                setModalType(null);
+                navigate("/admin/sessions/data/management");
+              }}
+            >
               확인
             </Button>
           </Modal.ButtonLayout>
         </Modal>
+      )}
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
       )}
     </div>
   );

@@ -1,16 +1,23 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { useScrollSync } from "../../hooks/useScrollSync";
 import Button from "@/shared/components/Button";
 import MarkdownEditor from "./MarkdownEditor";
 import MarkdownPreview from "./MarkdownPreview";
 import Input from "@/shared/components/Input";
 import Modal from "@/shared/components/modal/Modal";
+import { createSessionFile, getPresignedUrl } from "../../api/files";
+import { useNavigate, useParams } from "react-router-dom";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
 
 interface Props {
   title: string;
   content: string;
   setTitle: (v: string) => void;
-  setContent: (v: string) => void;
+  setContent: Dispatch<SetStateAction<string>>;
 }
 
 export default function FilesUploadLayout({
@@ -19,15 +26,71 @@ export default function FilesUploadLayout({
   setTitle,
   setContent,
 }: Props) {
+  const navigate = useNavigate();
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
   useScrollSync(editorRef, previewRef);
+
   const [modalType, setModalType] = useState<
     "confirm" | "success" | "guide" | null
   >(null);
 
+  const { sid } = useParams();
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const res = await getPresignedUrl({
+        fileName: file.name,
+        contentType: file.type,
+      });
+      const { uploadUrl, fileUrl } = res.data.data;
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+      if (!uploadResponse.ok) {
+        throw new Error("Presigned URL upload failed");
+      }
+      setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!title.trim()) {
+      setModalType("guide");
+      return;
+    }
+
+    if (title.length > 80) {
+      setModalType("guide");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      await createSessionFile(Number(sid), title, content);
+
+      setModalType("success");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="px-5 pt-5">
+    <div className="mt-30 px-5 pt-5 md:pt-7 xl:mt-0">
       <div className="mb-8 flex items-center justify-between">
         <div className="w-228.5">
           <Input
@@ -36,8 +99,13 @@ export default function FilesUploadLayout({
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="primary" onClick={() => setModalType("confirm")}>
-          등록
+        <Button
+          size="primary"
+          variant="primary"
+          onClick={() => setModalType("confirm")}
+          disabled={loading}
+        >
+          {loading ? "등록 중..." : "등록"}
         </Button>
       </div>
       <div className="flex gap-1">
@@ -46,6 +114,7 @@ export default function FilesUploadLayout({
             ref={editorRef}
             content={content}
             onChange={setContent}
+            onImageUpload={handleImageUpload}
           />
         </div>
         <div className="w-125.25">
@@ -65,12 +134,8 @@ export default function FilesUploadLayout({
           <Modal.ButtonLayout>
             <Button
               size="primary"
-              onClick={() => {
-                if (title.length > 80) {
-                  setModalType("guide");
-                  return;
-                }
-                setModalType("success");
+              onClick={async () => {
+                await handleSubmit();
               }}
             >
               확인
@@ -86,7 +151,13 @@ export default function FilesUploadLayout({
           </Modal.Header>
           <Modal.Description>세션 자료를 등록했어요</Modal.Description>
           <Modal.ButtonLayout>
-            <Button size="primary" onClick={() => setModalType(null)}>
+            <Button
+              size="primary"
+              onClick={() => {
+                setModalType(null);
+                navigate("/admin/sessions/data/management");
+              }}
+            >
               확인
             </Button>
           </Modal.ButtonLayout>
@@ -106,6 +177,13 @@ export default function FilesUploadLayout({
             </Button>
           </Modal.ButtonLayout>
         </Modal>
+      )}
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
       )}
     </div>
   );
