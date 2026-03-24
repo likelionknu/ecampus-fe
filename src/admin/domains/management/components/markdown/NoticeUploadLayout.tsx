@@ -1,16 +1,24 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/shared/components/Button";
 import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync";
 import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor";
 import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview";
 import Input from "@/shared/components/Input";
 import Modal from "@/shared/components/modal/Modal";
+import { useNavigate } from "react-router-dom";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import { getPresignedUrl } from "@/admin/domains/session/api/files";
+import { uploadNotice } from "../../apis/notice";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 
 interface Props {
   title: string;
   content: string;
   setTitle: (v: string) => void;
-  setContent: (v: string) => void;
+  setContent: Dispatch<SetStateAction<string>>;
 }
 
 export default function EditorLayout({
@@ -19,6 +27,7 @@ export default function EditorLayout({
   setTitle,
   setContent,
 }: Props) {
+  const navigate = useNavigate();
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
   useScrollSync(editorRef, previewRef);
@@ -31,8 +40,60 @@ export default function EditorLayout({
     | null
   >(null);
 
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const res = await getPresignedUrl({
+        fileName: file.name,
+        contentType: file.type,
+      });
+      const { uploadUrl, fileUrl } = res.data.data;
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+      if (!uploadResponse.ok) {
+        throw new Error("Presigned URL upload failed");
+      }
+      setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      setModalType("uploadError");
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle || trimmedTitle.length > 80) {
+      setModalType("inputGuide");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setErrors(null);
+
+      await uploadNotice(trimmedTitle, content);
+
+      setModalType("noticeSuccess");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      setModalType("uploadError");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <div className="px-5 pt-5">
+    <div className="mt-30 px-5 pt-5 md:pt-7 xl:mt-0">
       <div className="mb-8 flex items-center justify-between">
         <div className="w-228.5">
           <Input
@@ -41,8 +102,12 @@ export default function EditorLayout({
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="primary" onClick={() => setModalType("noticeConfirm")}>
-          추가
+        <Button
+          size="primary"
+          onClick={() => setModalType("noticeConfirm")}
+          disabled={loading}
+        >
+          {loading ? "추가 중..." : "추가"}
         </Button>
       </div>
 
@@ -52,6 +117,7 @@ export default function EditorLayout({
             ref={editorRef}
             content={content}
             onChange={setContent}
+            onImageUpload={handleImageUpload}
           />
         </div>
         <div className="w-125.25">
@@ -61,23 +127,14 @@ export default function EditorLayout({
       {modalType === "noticeConfirm" && (
         <Modal>
           <Modal.Header onClick={() => setModalType(null)}>
-            세션 자료 등록
+            새로운 공지사항 등록
           </Modal.Header>
           <Modal.Description>
-            세션 자료를 등록할까요? 세션 자료가 등록되었다는 알림이 <br />
-            세션에 등록된 참여자들에게 발송돼요
+            해당 내용을 공지사항으로 업로드할까요? <br />
+            모든 사용자에게 알림이 발송돼요
           </Modal.Description>
           <Modal.ButtonLayout>
-            <Button
-              size="primary"
-              onClick={() => {
-                if (title.length > 80) {
-                  setModalType("inputGuide");
-                  return;
-                }
-                setModalType("noticeSuccess");
-              }}
-            >
+            <Button size="primary" onClick={handleSubmit} disabled={loading}>
               확인
             </Button>
             <Modal.Cancelled onClick={() => setModalType(null)} />
@@ -87,11 +144,17 @@ export default function EditorLayout({
       {modalType === "noticeSuccess" && (
         <Modal>
           <Modal.Header onClick={() => setModalType(null)}>
-            세션 자료 등록
+            새로운 공지사항 등록
           </Modal.Header>
-          <Modal.Description>세션 자료를 등록했어요</Modal.Description>
+          <Modal.Description>공지사항을 업로드했어요</Modal.Description>
           <Modal.ButtonLayout>
-            <Button size="primary" onClick={() => setModalType(null)}>
+            <Button
+              size="primary"
+              onClick={() => {
+                setModalType(null);
+                navigate("/admin/notices");
+              }}
+            >
               확인
             </Button>
           </Modal.ButtonLayout>
@@ -112,33 +175,15 @@ export default function EditorLayout({
           </Modal.ButtonLayout>
         </Modal>
       )}
-      {modalType === "fileGuide" && (
-        <Modal>
-          <Modal.Header onClick={() => setModalType(null)}>
-            파일 형식 안내
-          </Modal.Header>
-          <Modal.Description>사진 파일만 업로드할 수 있어요</Modal.Description>
-          <Modal.ButtonLayout>
-            <Button size="primary" onClick={() => setModalType(null)}>
-              확인
-            </Button>
-          </Modal.ButtonLayout>
-        </Modal>
-      )}
-      {modalType === "uploadError" && (
-        <Modal>
-          <Modal.Header onClick={() => setModalType(null)}>
-            파일 업로드
-          </Modal.Header>
-          <Modal.Description>
-            일시적으로 파일을 업로드할 수 없어요
-          </Modal.Description>
-          <Modal.ButtonLayout>
-            <Button size="primary" onClick={() => setModalType(null)}>
-              확인
-            </Button>
-          </Modal.ButtonLayout>
-        </Modal>
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => {
+            setErrors(null);
+            setModalType(null);
+          }}
+        />
       )}
     </div>
   );

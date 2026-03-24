@@ -42,8 +42,8 @@ const adminRoutes: RouteObject[] = [
         handle: { title: "공지사항" },
       },
       { path: "notices/upload", element: <NoticeUploadPage /> },
-      { path: "notices/view", element: <NoticeViewPage /> },
-      { path: "notices/modify", element: <NoticeModifyPage /> },
+      { path: "notices/:nid", element: <NoticeViewPage /> },
+      { path: "notices/:nid/modify", element: <NoticeModifyPage /> },
     ],
   },
   {

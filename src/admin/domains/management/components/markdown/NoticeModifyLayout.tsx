@@ -1,45 +1,25 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import Button from "@/shared/components/Button";
 import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync";
 import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor";
 import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview";
 import Input from "@/shared/components/Input";
 import Modal from "@/shared/components/modal/Modal";
+import { useNavigate, useParams } from "react-router-dom";
+import { getPresignedUrl } from "@/admin/domains/session/api/files";
+import { modifyNotice } from "../../apis/notice";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
 
 interface Props {
   title: string;
   content: string;
   setTitle: (v: string) => void;
-  setContent: (v: string) => void;
+  setContent: Dispatch<SetStateAction<string>>;
 }
-
-interface FileData {
-  fileId: number;
-  name: string;
-  content: string;
-}
-
-const mockFile: FileData = {
-  fileId: 1,
-  name: "4주차, 매핑 및 구조 설계",
-  content: `
-> 작성 중인 문서입니다.
-
-## 4주차, 매핑 및 구조 설계
-
-데이터 하나하나가 독립적으로 저장되고, 사용된다면 서비스는 작동하기 어려울거에요.
-
-## Mapping(매핑) 이란?
-
-데이터베이스 관점에서의 매핑은, “자바 객체와 데이터베이스 테이블 간 연결”하는 것을 의미해요.
-
-![연관 관계 매핑 미사용 #1](/markdown-test.png)
-
-1. 상품을 판매하려는 사용자 A
-2. 사용자 A가 등록한 상점
-3. 사용자 A가 상점에 등록한 상품 A, B, C
-`,
-};
 
 export default function ModifyLayout({
   title,
@@ -49,15 +29,70 @@ export default function ModifyLayout({
 }: Props) {
   const editorRef = useRef<HTMLTextAreaElement | null>(null);
   const previewRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
+  const { nid } = useParams<{ nid: string }>();
   const [modalType, setModalType] = useState<
     "noticeModify" | "noticeModifySuccess" | null
   >(null);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useScrollSync(editorRef, previewRef);
-  useEffect(() => {
-    setTitle(mockFile.name);
-    setContent(mockFile.content);
-  }, [setContent, setTitle]);
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const res = await getPresignedUrl({
+        fileName: file.name,
+        contentType: file.type,
+      });
+      const { uploadUrl, fileUrl } = res.data.data;
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Presigned URL upload failed");
+      }
+
+      setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      throw error;
+    }
+  };
+
+  const handleModify = async () => {
+    if (!nid) return;
+
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle || trimmedTitle.length > 80) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setErrors(null);
+
+      await modifyNotice(Number(nid), {
+        title: trimmedTitle,
+        content,
+      });
+
+      setModalType("noticeModifySuccess");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      setModalType(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="px-5 pt-5">
@@ -69,7 +104,11 @@ export default function ModifyLayout({
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="large" onClick={() => setModalType("noticeModify")}>
+        <Button
+          size="large"
+          onClick={() => setModalType("noticeModify")}
+          disabled={loading}
+        >
           수정
         </Button>
       </div>
@@ -79,6 +118,7 @@ export default function ModifyLayout({
             ref={editorRef}
             content={content}
             onChange={setContent}
+            onImageUpload={handleImageUpload}
           />
         </div>
         <div className="w-125.25">
@@ -98,11 +138,10 @@ export default function ModifyLayout({
             <Button
               size="primary"
               variant="primary"
-              onClick={() => {
-                setModalType("noticeModifySuccess");
-              }}
+              onClick={handleModify}
+              disabled={loading}
             >
-              확인
+              {loading ? "수정 중..." : "확인"}
             </Button>
             <Modal.Cancelled onClick={() => setModalType(null)} />
           </Modal.ButtonLayout>
@@ -115,11 +154,24 @@ export default function ModifyLayout({
           </Modal.Header>
           <Modal.Description>공지 사항을 수정했어요</Modal.Description>
           <Modal.ButtonLayout>
-            <Button size="primary" onClick={() => setModalType(null)}>
+            <Button
+              size="primary"
+              onClick={() => {
+                setModalType(null);
+                navigate(`/admin/notices/${nid}`);
+              }}
+            >
               확인
             </Button>
           </Modal.ButtonLayout>
         </Modal>
+      )}
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
       )}
     </div>
   );
