@@ -5,14 +5,89 @@ import {
   PageNationItem,
   PageNationMenu,
 } from "@/shared/components/PageNation";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
 const AdminNotionPage = () => {
-  const itemSumNum = 8;
-  const itemNum = 18;
+  const authData = JSON.parse(
+    localStorage.getItem("ecampus.auth.session") || "null",
+  );
+  const token = authData?.state?.session?.accessToken;
+
+  // --------------------------------------공지사항 api 부분 시작--------------------------------------
+
+  interface NotionDataItem {
+    id: number;
+    title: string;
+    pinned: boolean;
+    createdAt: string;
+    authorName: string;
+  }
+
+  interface NotionDataType {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    hasNext: boolean;
+    notices: NotionDataItem[];
+  }
+
+  const [NotionData, setNotionData] = useState<NotionDataType | null>(null);
+
+  const [NotionDataPage, setNotionDataPage] = useState(1);
+
+  //api요청 주소에 1대신 setNotionDataPage의 값을 받아서 넣으면 됨
+
+  const NotionDataItemNum = NotionData?.totalElements ?? 0;
+
+  const NotionDataSumNum = 8;
+
+  useEffect(() => {
+    const fetchNotionData = async () => {
+      try {
+        const NotionDataResponse = await axios.get(
+          `${import.meta.env.VITE_BASE_API_URL}/v1/admin/notices`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              page: NotionDataPage - 1,
+              size: NotionDataSumNum,
+            },
+          },
+        );
+
+        const NotionDataResult = NotionDataResponse.data;
+
+        if (NotionDataResult.data) {
+          setNotionData(NotionDataResult.data);
+          console.log("공지사항 페이지 데이터:", NotionDataResult.data);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(
+            "서버 응답 에러:",
+            error.response?.status,
+            error.response?.data,
+          );
+        } else {
+          console.error("네트워크 통신 오류:", error);
+        }
+      }
+    };
+
+    fetchNotionData();
+  }, [NotionDataSumNum, NotionDataPage]);
+
+  // --------------------------------------공지사항 api 부분 끝--------------------------------------
+
   interface AdminNotionComponentProps {
-    NotionId: string;
+    NotionId: number;
     NotionTitle: string;
-    NotionFix: string;
+    NotionFix: boolean;
     NotionDate: string;
     NotionRegistrant: string;
 
@@ -31,17 +106,22 @@ const AdminNotionPage = () => {
         <div className="text-ec-black ml-5 w-12.25 justify-start text-center text-sm font-medium">
           {NotionId}
         </div>
-        <div className="text-ec-black ml-2.5 line-clamp-1 w-132.75 justify-start text-sm font-medium">
+        <div className="text-ec-black ml-2.5 line-clamp-1 w-lg justify-start text-sm font-medium">
           {NotionTitle}
-        </div>
-        <div className="text-ec-black ml-7.5 w-7 justify-start text-center text-sm font-medium">
-          {NotionFix}
         </div>
         <div className="text-ec-black ml-9 w-50 justify-start text-center text-sm font-medium">
           {NotionDate}
         </div>
-        <div className="text-ec-black ml-9 w-11 justify-start text-center text-sm font-medium">
+
+        <div className="text-ec-black ml-8.5 w-11 justify-start text-center text-sm font-medium">
           {NotionRegistrant}
+        </div>
+        <div
+          className={`text-ec-black ml-8.5 w-7 justify-start text-center text-sm font-medium ${
+            NotionFix ? "text-ec-red" : "text-ec-sub"
+          }`}
+        >
+          {NotionFix ? "고정" : "-"}
         </div>
       </div>
     );
@@ -58,8 +138,11 @@ const AdminNotionPage = () => {
           </div>
         </div>
         <div className="mt-5">
-          <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-            {({ currentItems, startIndex }) => (
+          <PageNationFrame
+            itemNum={NotionDataItemNum}
+            itemSumNum={NotionDataSumNum}
+          >
+            {({ startIndex }) => (
               <>
                 <div className="flex h-112 w-251.5 flex-col">
                   <PageNationMenu>
@@ -67,34 +150,34 @@ const AdminNotionPage = () => {
                       ID
                     </div>
                     <div className="text-ec-table-topic ml-7.25 justify-start text-center text-xs font-medium">
-                      제목
+                      자료 명
                     </div>
-                    <div className="text-ec-table-topic ml-136 justify-start text-center text-xs font-medium">
-                      고정
+                    <div className="text-ec-table-topic ml-151 justify-start text-center text-xs font-medium">
+                      등록일
                     </div>
-                    <div className="text-ec-table-topic ml-31 justify-start text-center text-xs font-medium">
-                      생성일
+                    <div className="text-ec-table-topic ml-29.5 justify-start text-center text-xs font-medium">
+                      등록자
                     </div>
-                    <div className="text-ec-table-topic ml-31.75 justify-start text-center text-xs font-medium">
-                      생성자
+                    <div className="text-ec-table-topic ml-8.25 justify-start text-center text-xs font-medium">
+                      공개 여부
                     </div>
                   </PageNationMenu>
-                  {currentItems.map((item, index) => (
+                  {(NotionData?.notices ?? []).map((data, index) => (
                     <PageNationItem
-                      key={startIndex + index}
+                      key={data.id}
                       absoluteIndex={startIndex + index}
                     >
                       <AdminNotionComponent
-                        NotionId={String(startIndex + index + 1)}
-                        NotionTitle={`공지사항 ${item}`}
-                        NotionFix="고정"
-                        NotionDate="2026년 2월 14일 오전 12시 38분"
-                        NotionRegistrant="김찬주"
+                        NotionId={data.id}
+                        NotionTitle={data.title}
+                        NotionFix={data.pinned}
+                        NotionDate={formatKoreanDateTime12(data.createdAt)}
+                        NotionRegistrant={data.authorName}
                       />
                     </PageNationItem>
                   ))}
                 </div>
-                <PageNationButton />
+                <PageNationButton onPageChange={setNotionDataPage} />
               </>
             )}
           </PageNationFrame>
