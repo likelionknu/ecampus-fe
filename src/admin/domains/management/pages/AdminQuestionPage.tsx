@@ -9,6 +9,7 @@ import SerachBar from "@/shared/components/SerachBar";
 import SelectBox from "@/shared/components/SelectBox";
 import { QUESTION_STATUS_OPTIONS } from "@/shared/constants/selectOptions";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
@@ -19,6 +20,7 @@ const QUESTION_STATUS_TO_API_VALUE: Record<string, string> = {
 };
 
 const AdminQuestionPage = () => {
+  const navigate = useNavigate();
   const authData = JSON.parse(
     localStorage.getItem("ecampus.auth.session") || "null",
   );
@@ -29,6 +31,8 @@ const AdminQuestionPage = () => {
 
   interface QuestionItem {
     id: number;
+    sessionId?: number;
+    sid?: number;
     sessionName: string;
     title: string;
     createdAt: string;
@@ -93,7 +97,7 @@ const AdminQuestionPage = () => {
     };
 
     fetchQuestionData();
-  }, [QuestionDataSumNum, QuestionDataPage, search, selectedStatus]);
+  }, [QuestionDataSumNum, QuestionDataPage, search, selectedStatus, token]);
 
   interface AdminQuestionComponentProps {
     QuestionId: number;
@@ -217,6 +221,9 @@ const AdminQuestionPage = () => {
                       QuestionCreate={data.createdUserName}
                       QuestionAnwser={data.answeredUserName}
                       QuestionState={data.status}
+                      onClick={() => {
+                        navigate(`/admin/questions/manage?qid=${data.id}`);
+                      }}
                     />
                   </PageNationItem>
                 ))}

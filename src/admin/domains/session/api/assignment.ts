@@ -1,5 +1,12 @@
 import axios from "axios";
 import { api } from "@/shared/apis";
+import type {
+  AdminAssignmentDetail,
+  AdminAssignmentDetailResponse,
+  AdminAssignmentParticipant,
+  AdminAssignmentParticipantsPage,
+  AdminAssignmentSubmitsPageResponse,
+} from "../types/assignment";
 
 interface SessionApiErrorPayload {
   code: string | null;
@@ -19,25 +26,81 @@ export interface CreateSessionAssignmentRequest {
   content: string;
 }
 
-const CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE: Record<string, string> = {
+export interface UpdateAdminAssignmentRequest {
+  aid: number;
+  endAt: string;
+  name: string;
+  description: string;
+}
+
+function mapAdminAssignmentDetail(
+  data: AdminAssignmentDetailResponse,
+): AdminAssignmentDetail {
+  return {
+    assignmentId: data.assignmentId,
+    title: data.name,
+    description: data.description,
+    startAt: data.startAt,
+    endAt: data.endAt,
+    createdBy: data.createdBy,
+    participantCount: data.targetCount,
+    submittedCount: data.submittedCount,
+    notSubmittedCount: data.unsubmittedCount,
+    participants: [],
+  };
+}
+
+function mapAdminAssignmentParticipant(
+  data: AdminAssignmentSubmitsPageResponse["content"][number],
+): AdminAssignmentParticipant {
+  return {
+    submitId: data.submitId,
+    course: data.course,
+    part: data.part,
+    name: data.name,
+    assignedAt: data.startAt,
+    submittedAt: data.submittedAt,
+    evaluatedAt: data.evaluatedAt,
+    assignmentStatus: data.submitted ? "SUBMITTED" : "NOT_SUBMITTED",
+    evaluate: data.evaluate,
+  };
+}
+
+function mapAdminAssignmentParticipantsPage(
+  data: AdminAssignmentSubmitsPageResponse,
+): AdminAssignmentParticipantsPage {
+  return {
+    content: data.content.map(mapAdminAssignmentParticipant),
+    empty: data.empty,
+    first: data.first,
+    last: data.last,
+    number: data.number,
+    size: data.size,
+    totalElements: data.totalElements,
+    totalPages: data.totalPages,
+  };
+}
+
+const SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE: Record<string, string> = {
   C404: "정보를 찾을 수 없습니다.",
   C403: "정보 조회를 위한 권한이 부족합니다.",
   C401: "인증되지 않은 사용자입니다.",
   C500: "서버 내부 오류가 발생하였습니다.",
 };
 
-const CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_STATUS: Record<
-  number,
-  string
-> = {
-  404: CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C404,
-  403: CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C403,
-  401: CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C401,
-  500: CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C500,
+const SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_STATUS: Record<number, string> = {
+  404: SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C404,
+  403: SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C403,
+  401: SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C401,
+  500: SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE.C500,
 };
 
 const DEFAULT_CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE =
   "과제 등록 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
+const DEFAULT_UPDATE_ADMIN_ASSIGNMENT_ERROR_MESSAGE =
+  "과제 수정 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
+const DEFAULT_DELETE_ADMIN_ASSIGNMENT_ERROR_MESSAGE =
+  "과제 삭제 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
 
 export async function createSessionAssignment({
   sid,
@@ -51,22 +114,70 @@ export async function createSessionAssignment({
   return response.data;
 }
 
-export function getCreateSessionAssignmentErrorMessage(error: unknown) {
+export async function updateAdminAssignment({
+  aid,
+  ...payload
+}: UpdateAdminAssignmentRequest) {
+  const response = await api.put<
+    SessionApiResponse<AdminAssignmentDetailResponse>
+  >(`/v1/admin/assignments/${aid}`, payload);
+
+  return response.data.data
+    ? mapAdminAssignmentDetail(response.data.data)
+    : null;
+}
+
+export async function deleteAdminAssignment({ aid }: { aid: number }) {
+  await api.delete<SessionApiResponse<null>>(`/v1/admin/assignments/${aid}`);
+}
+
+export async function getAdminAssignmentDetail({ aid }: { aid: number }) {
+  const response = await api.get<
+    SessionApiResponse<AdminAssignmentDetailResponse>
+  >(`/v1/admin/assignments/${aid}`);
+
+  return response.data.data
+    ? mapAdminAssignmentDetail(response.data.data)
+    : null;
+}
+
+export async function getAdminAssignmentSubmits({
+  aid,
+  page,
+}: {
+  aid: number;
+  page: number;
+}) {
+  const response = await api.get<
+    SessionApiResponse<AdminAssignmentSubmitsPageResponse>
+  >(`/v1/admin/assignments/${aid}/submits`, {
+    params: {
+      page,
+    },
+  });
+
+  return response.data.data
+    ? mapAdminAssignmentParticipantsPage(response.data.data)
+    : null;
+}
+
+function getSessionAssignmentErrorMessage(
+  error: unknown,
+  defaultMessage: string,
+) {
   if (axios.isAxiosError<SessionApiResponse<null>>(error)) {
     const backendError = error.response?.data?.error;
 
     return (
       backendError?.message?.trim() ||
       (backendError?.code
-        ? CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE[backendError.code]
+        ? SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_CODE[backendError.code]
         : undefined) ||
       (error.response?.status
-        ? CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_STATUS[
-            error.response.status
-          ]
+        ? SESSION_ASSIGNMENT_ERROR_MESSAGE_BY_STATUS[error.response.status]
         : undefined) ||
       error.message ||
-      DEFAULT_CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE
+      defaultMessage
     );
   }
 
@@ -74,5 +185,26 @@ export function getCreateSessionAssignmentErrorMessage(error: unknown) {
     return error.message;
   }
 
-  return DEFAULT_CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE;
+  return defaultMessage;
+}
+
+export function getCreateSessionAssignmentErrorMessage(error: unknown) {
+  return getSessionAssignmentErrorMessage(
+    error,
+    DEFAULT_CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE,
+  );
+}
+
+export function getUpdateAdminAssignmentErrorMessage(error: unknown) {
+  return getSessionAssignmentErrorMessage(
+    error,
+    DEFAULT_UPDATE_ADMIN_ASSIGNMENT_ERROR_MESSAGE,
+  );
+}
+
+export function getDeleteAdminAssignmentErrorMessage(error: unknown) {
+  return getSessionAssignmentErrorMessage(
+    error,
+    DEFAULT_DELETE_ADMIN_ASSIGNMENT_ERROR_MESSAGE,
+  );
 }
