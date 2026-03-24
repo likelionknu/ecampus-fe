@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import GroupActionStepModal, {
   type GroupActionType,
@@ -6,11 +6,15 @@ import GroupActionStepModal, {
 import GroupIcon from "./GroupIcon";
 import type { AdminGroupRow } from "../../types";
 import {
+  addDemerit,
   addMemo,
   changePart,
   changeGeneration,
+  deleteAllDemerits,
   deleteAllMemos,
+  deleteDemerit,
   deleteMemo,
+  getDemerits,
   getMemos,
 } from "../../apis/group";
 import { SESSION_PART_OPTIONS } from "@/shared/constants/selectOptions";
@@ -22,16 +26,18 @@ import ErrorModal from "@/shared/components/modal/ErrorModal";
 import MemoModal from "../modal/group/MemoModal";
 import GenerationModal from "../modal/group/GenerationModal";
 import PartModal from "../modal/group/PartModal";
+import DemeritModal from "../modal/group/DemeritModal";
 import type {
   GroupMemo,
   MemoModalTarget,
 } from "../modal/types/memoModal.types";
+import type { GroupDemerit } from "../modal/types/demeritModal.types";
 import useActionStepModal from "./useActionStepModal";
 
 interface GroupTableRowsProps {
   isLoading: boolean;
   members: AdminGroupRow[];
-  onOpenModal: (action: GroupActionType) => void;
+  onOpenModal: (action: GroupActionType, uid?: number) => void;
   onRefresh: () => void;
 }
 
@@ -51,6 +57,24 @@ interface SelectOption<TValue extends string> {
 
 interface SelectedMemberTarget extends MemoModalTarget {
   part: string;
+  penaltyPoint: number;
+}
+
+interface GroupDemeritApiRow {
+  id?: number | string;
+  did?: number | string;
+  demeritId?: number | string;
+  demeritHistoryId?: number | string;
+  reason?: DemeritReasonCode | string;
+  demerit?: number;
+  score?: number;
+  createdAt?: string;
+  grantedAt?: string;
+  grantedUser?:
+    | {
+        name?: string;
+      }
+    | string;
 }
 
 const GROUP_TABLE_COLUMNS =
@@ -58,6 +82,12 @@ const GROUP_TABLE_COLUMNS =
 const MEMO_MAX_LENGTH = 170;
 
 type GenerationValue = "11" | "12" | "13" | "14";
+type DemeritReasonCode =
+  | "LATE"
+  | "ABSENT"
+  | "ASSIGNMENT_NOT_SUBMITTED"
+  | "ASSIGNMENT_COPY"
+  | "ETC";
 
 type PartCode = "OPERATOR" | "PLANNING" | "BACKEND" | "FRONTEND" | "DESIGN";
 
@@ -104,15 +134,75 @@ const PART_LABEL_BY_VALUE = new Map<PartCode, string>(
   PART_OPTIONS.map((option) => [option.value, option.label]),
 );
 
+const DEMERIT_REASON_PLACEHOLDER = "사유 선택하세요";
+const DEMERIT_SCORE_PLACEHOLDER = "점수 선택";
+const DEMERIT_REASON_ENTRIES: ReadonlyArray<{
+  label: string;
+  value: DemeritReasonCode;
+}> = [
+  { label: "지각", value: "LATE" },
+  { label: "결석", value: "ABSENT" },
+  {
+    label: "과제 미제출",
+    value: "ASSIGNMENT_NOT_SUBMITTED",
+  },
+  {
+    label: "과제 카피 제출",
+    value: "ASSIGNMENT_COPY",
+  },
+  { label: "기타", value: "ETC" },
+];
+const DEMERIT_REASON_OPTIONS = [
+  DEMERIT_REASON_PLACEHOLDER,
+  ...DEMERIT_REASON_ENTRIES.map((entry) => entry.label),
+];
+const DEMERIT_REASON_CODE_BY_LABEL = new Map<string, DemeritReasonCode>(
+  DEMERIT_REASON_ENTRIES.map((entry) => [entry.label, entry.value]),
+);
+const DEMERIT_REASON_LABEL_BY_CODE = new Map<string, string>(
+  DEMERIT_REASON_ENTRIES.map((entry) => [entry.value, entry.label]),
+);
+const DEMERIT_SCORE_OPTIONS = [DEMERIT_SCORE_PLACEHOLDER, "1점", "2점", "3점"];
+const DEMERIT_SCORE_VALUE_BY_LABEL = new Map<string, number>([
+  ["1점", 1],
+  ["2점", 2],
+  ["3점", 3],
+]);
+
+const getDemeritId = (...values: Array<number | string | undefined | null>) => {
+  for (const value of values) {
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === "string" && value.trim().length > 0) {
+      const parsed = Number.parseInt(value, 10);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+  }
+
+  return null;
+};
+
 type MemoActionType = Extract<
   GroupActionType,
   "USER_MEMO_ADD" | "USER_MEMO_DELETE" | "USER_MEMO_RESET"
+>;
+type DemeritActionType = Extract<
+  GroupActionType,
+  "USER_DEMERIT_ASSIGN" | "USER_DEMERIT_RESET" | "USER_DEMERIT_REVOKE"
 >;
 
 type MemoActionPayload =
   | { type: "USER_MEMO_ADD"; content: string }
   | { type: "USER_MEMO_DELETE"; mid: number }
   | { type: "USER_MEMO_RESET" };
+type DemeritActionPayload =
+  | { type: "USER_DEMERIT_ASSIGN"; reason: DemeritReasonCode; demerit: number }
+  | { type: "USER_DEMERIT_RESET" }
+  | { type: "USER_DEMERIT_REVOKE"; did: number };
 
 const truncateKoreanName = (name: string) => {
   const chars = [...name];
@@ -155,8 +245,23 @@ function GroupTableRows({
     null,
   );
   const partActionModal = useActionStepModal<"USER_PART_CHANGE">();
+  const [demeritModalStep, setDemeritModalStep] = useState<"MAIN" | "LIST">(
+    "MAIN",
+  );
+  const [isDemeritModalOpen, setIsDemeritModalOpen] = useState(false);
+  const [demerits, setDemerits] = useState<GroupDemerit[]>([]);
+  const [isDemeritLoading, setIsDemeritLoading] = useState(false);
+  const demeritActionModal = useActionStepModal<DemeritActionType>();
+  const [demeritActionPayload, setDemeritActionPayload] =
+    useState<DemeritActionPayload | null>(null);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedDemeritReason, setSelectedDemeritReason] = useState(
+    DEMERIT_REASON_PLACEHOLDER,
+  );
+  const [selectedDemeritScore, setSelectedDemeritScore] = useState(
+    DEMERIT_SCORE_PLACEHOLDER,
+  );
 
   const fetchMemos = async (uid: number) => {
     setIsMemoLoading(true);
@@ -178,6 +283,59 @@ function GroupTableRows({
       setErrors(getCommonErrorState(error));
     } finally {
       setIsMemoLoading(false);
+    }
+  };
+
+  const fetchDemerits = async (uid: number) => {
+    setIsDemeritLoading(true);
+
+    try {
+      const res = await getDemerits({ uid });
+      const responseData: GroupDemeritApiRow[] = Array.isArray(res.data?.data)
+        ? res.data.data
+        : [];
+      const mappedDemerits: GroupDemerit[] = responseData.map((demerit) => {
+        const parsedScore = Number(
+          demerit.demerit ?? demerit.score ?? Number.NaN,
+        );
+        const reasonCode = String(demerit.reason ?? "");
+        const parsedId = getDemeritId(
+          demerit.did,
+          demerit.id,
+          demerit.demeritId,
+          demerit.demeritHistoryId,
+        );
+        const grantedUserName =
+          typeof demerit.grantedUser === "string"
+            ? demerit.grantedUser
+            : (demerit.grantedUser?.name ?? "");
+
+        return {
+          id: parsedId,
+          reason:
+            DEMERIT_REASON_LABEL_BY_CODE.get(reasonCode) || reasonCode || "-",
+          demerit: Number.isFinite(parsedScore) ? parsedScore : 0,
+          createdAt: demerit.createdAt ?? demerit.grantedAt ?? "",
+          name: grantedUserName,
+        };
+      });
+
+      setDemerits(mappedDemerits);
+      setSelectedMember((prev) => {
+        if (!prev || prev.uid !== uid) return prev;
+
+        return {
+          ...prev,
+          penaltyPoint: mappedDemerits.reduce(
+            (sum, demerit) => sum + demerit.demerit,
+            0,
+          ),
+        };
+      });
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsDemeritLoading(false);
     }
   };
 
@@ -283,18 +441,172 @@ function GroupTableRows({
     });
   };
 
+  const handleCloseDemeritActionModal = () => {
+    demeritActionModal.close();
+    setDemeritActionPayload(null);
+  };
+
+  const handleCloseDemeritModal = () => {
+    handleCloseDemeritActionModal();
+    setIsDemeritModalOpen(false);
+    setDemeritModalStep("MAIN");
+    setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+    setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+    setDemerits([]);
+    setSelectedMember(null);
+  };
+
+  const openDemeritActionModal = (
+    action: DemeritActionType,
+    payload: DemeritActionPayload,
+  ) => {
+    setDemeritActionPayload(payload);
+    demeritActionModal.openConfirm(action);
+  };
+
+  const handleOpenDemeritModal = (member: AdminGroupRow) => {
+    setSelectedMember({
+      uid: member.id,
+      name: member.name,
+      generation: member.generation,
+      part: member.part,
+      penaltyPoint: member.penaltyPoint,
+    });
+    handleCloseDemeritActionModal();
+    setMemoModalStep("LIST");
+    setIsMemoModalOpen(false);
+    setIsGenerationModalOpen(false);
+    setIsPartModalOpen(false);
+    setSelectedGeneration("");
+    setSelectedPartCode(null);
+    setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+    setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+    setDemeritModalStep("MAIN");
+    setDemerits([]);
+    setIsDemeritModalOpen(true);
+  };
+
+  const handleOpenDemeritHistory = async () => {
+    if (!selectedMember || isSubmitting) return;
+
+    setDemeritModalStep("LIST");
+    await fetchDemerits(selectedMember.uid);
+  };
+
+  const handleAssignDemerit = () => {
+    if (
+      !selectedMember ||
+      selectedDemeritReason === DEMERIT_REASON_PLACEHOLDER ||
+      selectedDemeritScore === DEMERIT_SCORE_PLACEHOLDER ||
+      isSubmitting
+    ) {
+      return;
+    }
+
+    const reason = DEMERIT_REASON_CODE_BY_LABEL.get(selectedDemeritReason);
+    const demerit = DEMERIT_SCORE_VALUE_BY_LABEL.get(selectedDemeritScore);
+    if (!reason || demerit === undefined) return;
+
+    openDemeritActionModal("USER_DEMERIT_ASSIGN", {
+      type: "USER_DEMERIT_ASSIGN",
+      reason,
+      demerit,
+    });
+  };
+
+  const handleResetDemerits = () => {
+    if (!selectedMember || isSubmitting) return;
+
+    openDemeritActionModal("USER_DEMERIT_RESET", {
+      type: "USER_DEMERIT_RESET",
+    });
+  };
+
+  const handleDeleteDemerit = (did: number) => {
+    if (!selectedMember || isSubmitting) return;
+    if (!Number.isFinite(did) || did <= 0) {
+      setErrors({
+        status: "500",
+        message: "벌점 항목 ID를 찾을 수 없어요. 목록을 다시 열어주세요.",
+      });
+      return;
+    }
+
+    openDemeritActionModal("USER_DEMERIT_REVOKE", {
+      type: "USER_DEMERIT_REVOKE",
+      did: Number(did),
+    });
+  };
+
+  const executeDemeritAction = async (payload: DemeritActionPayload) => {
+    if (!selectedMember) return;
+
+    switch (payload.type) {
+      case "USER_DEMERIT_ASSIGN":
+        await addDemerit({
+          uid: selectedMember.uid,
+          reason: payload.reason,
+          demerit: payload.demerit,
+        });
+        break;
+      case "USER_DEMERIT_RESET":
+        await deleteAllDemerits({ uid: selectedMember.uid });
+        break;
+      case "USER_DEMERIT_REVOKE":
+        await deleteDemerit({ uid: selectedMember.uid, did: Number(payload.did) });
+        break;
+      default:
+        break;
+    }
+
+    await fetchDemerits(selectedMember.uid);
+    onRefresh();
+  };
+
+  const handleConfirmDemeritAction = async () => {
+    if (
+      !selectedMember ||
+      !demeritActionPayload ||
+      demeritActionModal.state?.phase !== "CONFIRM" ||
+      isSubmitting
+    ) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await executeDemeritAction(demeritActionPayload);
+      if (demeritActionPayload.type === "USER_DEMERIT_ASSIGN") {
+        setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+        setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+      }
+      demeritActionModal.openDone(demeritActionPayload.type);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+      handleCloseDemeritActionModal();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleOpenMemoModal = async (member: AdminGroupRow) => {
     setSelectedMember({
       uid: member.id,
       name: member.name,
       generation: member.generation,
       part: member.part,
+      penaltyPoint: member.penaltyPoint,
     });
     memoActionModal.close();
     setMemoModalStep("LIST");
     setIsMemoModalOpen(true);
     setIsGenerationModalOpen(false);
     setIsPartModalOpen(false);
+    setIsDemeritModalOpen(false);
+    setDemeritModalStep("MAIN");
+    setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+    setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+    handleCloseDemeritActionModal();
     setMemoInput("");
     setSelectedGeneration("");
     setSelectedPartCode(null);
@@ -307,11 +619,17 @@ function GroupTableRows({
       name: member.name,
       generation: member.generation,
       part: member.part,
+      penaltyPoint: member.penaltyPoint,
     });
     generationActionModal.close();
     setSelectedGeneration("");
     setIsMemoModalOpen(false);
     setIsPartModalOpen(false);
+    setIsDemeritModalOpen(false);
+    setDemeritModalStep("MAIN");
+    setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+    setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+    handleCloseDemeritActionModal();
     setIsGenerationModalOpen(true);
   };
 
@@ -320,6 +638,11 @@ function GroupTableRows({
     setIsGenerationModalOpen(false);
     setSelectedMember(null);
     setSelectedGeneration("");
+    setIsDemeritModalOpen(false);
+    setDemeritModalStep("MAIN");
+    setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+    setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+    handleCloseDemeritActionModal();
   };
 
   const handleOpenGenerationActionModal = () => {
@@ -374,11 +697,17 @@ function GroupTableRows({
       name: member.name,
       generation: member.generation,
       part: member.part,
+      penaltyPoint: member.penaltyPoint,
     });
     partActionModal.close();
     setSelectedPartCode(null);
     setIsMemoModalOpen(false);
     setIsGenerationModalOpen(false);
+    setIsDemeritModalOpen(false);
+    setDemeritModalStep("MAIN");
+    setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+    setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+    handleCloseDemeritActionModal();
     setIsPartModalOpen(true);
   };
 
@@ -387,6 +716,11 @@ function GroupTableRows({
     setIsPartModalOpen(false);
     setSelectedMember(null);
     setSelectedPartCode(null);
+    setIsDemeritModalOpen(false);
+    setDemeritModalStep("MAIN");
+    setSelectedDemeritReason(DEMERIT_REASON_PLACEHOLDER);
+    setSelectedDemeritScore(DEMERIT_SCORE_PLACEHOLDER);
+    handleCloseDemeritActionModal();
   };
 
   const handleSelectPart = (value: string) => {
@@ -445,6 +779,32 @@ function GroupTableRows({
 
   return (
     <div className="rounded-ec-10 w-full overflow-hidden">
+      {isDemeritModalOpen && selectedMember && (
+        <DemeritModal
+          step={demeritModalStep}
+          currentPoint={selectedMember.penaltyPoint}
+          demerits={demerits}
+          reasonOptions={DEMERIT_REASON_OPTIONS}
+          scoreOptions={DEMERIT_SCORE_OPTIONS}
+          selectedReason={selectedDemeritReason}
+          selectedScore={selectedDemeritScore}
+          canAssign={
+            selectedDemeritReason !== DEMERIT_REASON_PLACEHOLDER &&
+            selectedDemeritScore !== DEMERIT_SCORE_PLACEHOLDER
+          }
+          isLoading={isDemeritLoading}
+          isSubmitting={isSubmitting}
+          onClose={handleCloseDemeritModal}
+          onBack={() => setDemeritModalStep("MAIN")}
+          onOpenHistory={handleOpenDemeritHistory}
+          onReset={handleResetDemerits}
+          onAssign={handleAssignDemerit}
+          onDeleteDemerit={handleDeleteDemerit}
+          onSelectReason={setSelectedDemeritReason}
+          onSelectScore={setSelectedDemeritScore}
+        />
+      )}
+
       {isMemoModalOpen && selectedMember && (
         <MemoModal
           target={selectedMember}
@@ -514,6 +874,14 @@ function GroupTableRows({
         />
       )}
 
+      {demeritActionModal.state && (
+        <GroupActionStepModal
+          modalState={demeritActionModal.state}
+          onClose={handleCloseDemeritActionModal}
+          onNext={handleConfirmDemeritAction}
+        />
+      )}
+
       {errors && (
         <ErrorModal
           status={errors.status}
@@ -577,19 +945,19 @@ function GroupTableRows({
             <GroupIcon
               label="벌점"
               type="demerit"
-              onClick={() => onOpenModal("USER_DEMERIT_ASSIGN")}
+              onClick={() => handleOpenDemeritModal(member)}
             />
             {member.useable ? (
               <GroupIcon
                 label="정지"
                 type="stop"
-                onClick={() => onOpenModal("USER_SUSPEND")}
+                onClick={() => onOpenModal("USER_SUSPEND", member.id)}
               />
             ) : (
               <GroupIcon
                 label="복구"
                 type="restore"
-                onClick={() => onOpenModal("USER_REACTIVE")}
+                onClick={() => onOpenModal("USER_REACTIVE", member.id)}
               />
             )}
           </div>

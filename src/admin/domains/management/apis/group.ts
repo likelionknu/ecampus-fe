@@ -1,4 +1,5 @@
 import { api } from "@/shared/apis";
+import type { whitelistState } from "../types/whitelist";
 
 interface GetUsersParams {
   name: string;
@@ -8,12 +9,7 @@ interface GetUsersParams {
 }
 
 // 사용자 조회
-export const getUsers = async ({
-  name,
-  part,
-  page,
-  size = 8,
-}: GetUsersParams) => {
+export const getUsers = async ({ name, part, page, size = 8 }: GetUsersParams) => {
   const res = await api.get("/v1/admin/users", {
     params: {
       name,
@@ -27,7 +23,7 @@ export const getUsers = async ({
 };
 
 // 사용자 정지/재개
-export const terminateUser = async ({ uid }: { uid: string }) => {
+export const terminateUser = async ({ uid }: { uid: number | string }) => {
   const res = await api.patch(`/v1/admin/users/${uid}/terminates`);
 
   return res;
@@ -41,15 +37,7 @@ export const getWHiteList = async () => {
 };
 
 // 화이트리스트 유저 추가
-export const addWhiteList = async ({
-  email,
-  part,
-  generation,
-}: {
-  email: string;
-  part: string;
-  generation: string;
-}) => {
+export const addWhiteList = async ({ email, part, generation }: whitelistState) => {
   const res = await api.post("/v1/admin/whitelist", {
     email,
     part,
@@ -145,15 +133,15 @@ export const getDemerits = async ({ uid }: { uid: number }) => {
 export const addDemerit = async ({
   uid,
   demerit,
-  reasn,
+  reason,
 }: {
   uid: number;
   demerit: number;
-  reasn: string;
+  reason: string;
 }) => {
   const res = await api.post(`/v1/admin/users/${uid}/demerits`, {
     demerit,
-    reasn,
+    reason,
   });
 
   return res;
@@ -174,7 +162,7 @@ export const deleteDemerit = async ({
 
 // 모든 벌점 삭제
 export const deleteAllDemerits = async ({ uid }: { uid: number }) => {
-  const res = await api.delete(`/v1/admin/user/${uid}/demerits`);
+  const res = await api.delete(`/v1/admin/users/${uid}/demerits`);
 
   return res;
 };

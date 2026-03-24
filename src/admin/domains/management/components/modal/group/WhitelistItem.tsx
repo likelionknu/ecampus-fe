@@ -1,52 +1,91 @@
 import { useState } from "react";
-import { deleteWhitelist } from "../../../apis/group";
-import StopIcon from "../../../assets/stop.svg?react";
-import type { ListState } from "../../../pages/AdminGroupPage";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
+import { deleteWhitelist } from "../../../apis/group";
+import StopIcon from "../../../assets/stop.svg?react";
+import type { ListState } from "../../../pages/AdminGroupPage";
+import GroupActionStepModal, {
+  type GroupActionModalState,
+} from "../GroupActionStepModal";
+
 interface WhitelistItemProps {
   item: ListState;
+  onDeleted?: () => void;
 }
 
-function WhitelistItem({ item }: WhitelistItemProps) {
+function WhitelistItem({ item, onDeleted }: WhitelistItemProps) {
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [modalState, setModalState] = useState<GroupActionModalState>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 화이트 리스트 삭제
-  const handleDelete = async () => {
+  const handleOpenDeleteModal = () => {
+    setModalState({ action: "WHITELIST_DELETE", phase: "CONFIRM" });
+  };
+
+  const handleCloseModal = () => {
+    if (modalState?.phase === "DONE") {
+      onDeleted?.();
+    }
+
+    setModalState(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (modalState?.phase !== "CONFIRM" || isSubmitting) return;
+
+    setIsSubmitting(true);
+
     try {
       await deleteWhitelist({ wid: item.id });
+      setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
     } catch (error) {
       setErrors(getCommonErrorState(error));
+      setModalState(null);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="border-ec-outline flex w-full items-center justify-between border-b py-2">
-      {errors && (
-        <ErrorModal
-          status={errors.status}
-          message={errors.message}
-          onClick={() => setErrors(null)}
+    <>
+      {modalState && (
+        <GroupActionStepModal
+          modalState={modalState}
+          onClose={handleCloseModal}
+          onNext={handleConfirmDelete}
         />
       )}
 
-      <div className="flex flex-col gap-1">
-        <span className="text-caption to-ec-black">{item.email}</span>
-        <span className="text-caption text-ec-sub">
-          {item.registerName} (이)가 추가함
-        </span>
+      <div className="border-ec-outline flex w-full items-center justify-between border-b py-2">
+        {errors && (
+          <ErrorModal
+            status={errors.status}
+            message={errors.message}
+            onClick={() => setErrors(null)}
+          />
+        )}
+
+        <div className="flex flex-col gap-1">
+          <span className="text-caption text-ec-black">{item.email}</span>
+          <span className="text-caption text-ec-sub">
+            {item.registerName}님이 추가
+          </span>
+        </div>
+
+        <button
+          type="button"
+          className="text-caption text-ec-red flex cursor-pointer items-center gap-1"
+          onClick={handleOpenDeleteModal}
+          disabled={isSubmitting}
+        >
+          <StopIcon className="fill-ec-red w-3" />
+          제거
+        </button>
       </div>
-      <div
-        className="text-caption text-ec-red flex cursor-pointer gap-1"
-        onClick={handleDelete}
-      >
-        <StopIcon className="fill-ec-red w-3" />
-        제거
-      </div>
-    </div>
+    </>
   );
 }
 

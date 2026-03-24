@@ -86,10 +86,10 @@ function NotificationTableRows({
           <div className="flex items-center gap-7">
             <span
               className={`text-body-2 w-10 text-center ${
-                notification.read ? "text-ec-red" : "text-ec-blue"
+                notification.read ? "text-ec-blue" : "text-ec-red"
               }`}
             >
-              {notification.read ? "안 읽음" : "읽음"}
+              {notification.read ? "읽음" : "안 읽음"}
             </span>
             <span className="text-body-2 text-ec-black w-12 text-right">
               {formatDaysAgo(notification.createdAt)}
