@@ -4,7 +4,6 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import AdminRoutes from "@admin/AdminRoutes";
-// import RequireAuth from "@auth/components/RequireAuth";
 import GoogleCallback from "@auth/api/GoogleCallback";
 import LoginErrorPage from "@auth/pages/LoginErrorPage";
 import LoginPage from "@auth/pages/LoginPage";
@@ -16,6 +15,7 @@ import PrivacyPolicyPage from "@shared/pages/PrivacyPolicyPage";
 import ScreenSizeErrorPage from "@shared/pages/ScreenSizeErrorPage";
 import UserRoutes from "@user/UserRoutes";
 import TestPage from "./shared/pages/TestPage";
+import RequireAuth from "./auth/components/RequireAuth";
 
 const router = createBrowserRouter([
   { path: "/", element: <GoogleCallback /> },
@@ -55,11 +55,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
-    element: (
-      //  <RequireAuth allowedRoles={["USER"]}>
-      <BaseLayout />
-      //  </RequireAuth>
-    ),
+    element: <BaseLayout />,
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
       ...UserRoutes,
@@ -68,9 +64,9 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      // <RequireAuth allowedRoles={["ADMIN"]}>
-      <BaseLayout />
-      // </RequireAuth>
+      <RequireAuth>
+        <BaseLayout />
+      </RequireAuth>
     ),
     children: [
       { index: true, element: <Navigate to="sessions" replace /> },

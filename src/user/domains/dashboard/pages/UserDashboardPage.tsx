@@ -77,7 +77,6 @@ function UserDashBoardPage() {
 
         if (result.data) {
           setDashboardData(result.data);
-          console.log("대시보드 데이터:", result.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -145,7 +144,6 @@ function UserDashBoardPage() {
 
         if (noticesResult.data) {
           setNoticesData(noticesResult.data);
-          console.log("공지사항 데이터:", noticesResult.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {

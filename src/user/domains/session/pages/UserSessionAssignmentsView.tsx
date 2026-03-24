@@ -106,7 +106,7 @@ function UserSessionAssignmentsView() {
           onClick={() => setModalType("assignmentConfirm")}
           disabled={!content.trim()}
           size="primary"
-          className="rounded-ec-10 bg-ec-blue text-ec-white w-20 self-end px-3.5 py-2 text-sm font-medium"
+          className="rounded-ec-10 bg-ec-blue text-ec-white w-20 cursor-pointer self-end px-3.5 py-2 text-sm font-medium"
         >
           과제 제출
         </Button>

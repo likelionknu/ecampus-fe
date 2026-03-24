@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthSessionStore } from "@auth/utils/authStore";
+import { useAuthSessionStore } from "@auth/stores/authStore";
 import NavLogo from "@shared/assets/NavLogo.png";
 import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";
@@ -58,14 +58,15 @@ const NavBar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const role = useAuthSessionStore((state) => state.session?.role);
+  const userName = useAuthSessionStore((state) => state.session?.name);
+  const profileUrl = useAuthSessionStore((state) => state.session?.profileUrl);
   const pathSegments = pathname.split("/").filter(Boolean);
-  const currentSection = pathSegments[1] ?? "";
   const isAdmin = role?.toUpperCase() === "ADMIN";
 
-  const isSessionSelected = currentSection === "sessions";
-  const isGroupSelected = currentSection === "list";
-  const isNotificationSelected = currentSection === "notification";
-  const isQuestionSelected = currentSection === "questions";
+  const isSessionSelected = pathname.startsWith("/user/sessions");
+  const isGroupSelected = pathname.startsWith("/user/list");
+  const isNotificationSelected = pathname.startsWith("/user/notification");
+  const isQuestionSelected = pathname.startsWith("/user/questions");
   const isAdminSelected = pathSegments[0] === "admin";
 
   return (
@@ -120,14 +121,19 @@ const NavBar = () => {
             )}
           </div>
         </div>
-        <div className="flex h-17 w-17 flex-col items-center gap-1.25">
+        <div
+          className="flex h-17 w-17 cursor-pointer flex-col items-center gap-1.25"
+          onClick={() => {
+            navigate("/user/dashboard");
+          }}
+        >
           <img
             className="border-ec-outline h-7 w-7 rounded-full border"
             alt="NavUserProfileImg"
-            src={UserProfileImg}
+            src={profileUrl || UserProfileImg}
           />
           <div className="text-ec-gnb-white cursor-alias justify-start text-center text-xs font-medium">
-            황형진
+            {userName}
           </div>
         </div>
       </div>
