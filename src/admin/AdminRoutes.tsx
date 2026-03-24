@@ -62,6 +62,7 @@ const adminRoutes: RouteObject[] = [
     element: <SessionTabLayout tabType="adminDashboard" />,
     handle: { title: "세션 관리 / [14기] 아기사자 - 백엔드 파트" },
     children: [
+      { path: "dashboard", element: <AdminDashboardPage /> },
       { path: "assignments", element: <AdminSessionAssignmentsView /> },
       { path: "assignments/upload", element: <AdminSessionAssignmentUpload /> },
       { path: "files/upload", element: <FilesUploadPage /> },

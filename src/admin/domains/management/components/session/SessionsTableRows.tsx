@@ -41,7 +41,7 @@ function SessionsTableRows({ isLoading, sessions }: SessionsTableRowsProps) {
             index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
           }`}
           onClick={() =>
-            navigate(`/admin/sessions/dashboard/${session.sessionId}`)
+            navigate(`/admin/sessions/${session.sessionId}/dashboard`)
           }
         >
           <div

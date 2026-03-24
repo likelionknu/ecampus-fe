@@ -88,7 +88,7 @@ const INITIAL_SESSION_EDIT_STATE: SessionEditState = {
 };
 
 function AdminDashboardPage() {
-  const { sessionId } = useParams();
+  const { sid } = useParams();
   // 상단 데이터 상태
   const [sessionInfo, setSessionInfo] = useState<SessionDashboardData>(
     INITIAL_SESSION_DASHBOARD_STATE,
@@ -120,7 +120,7 @@ function AdminDashboardPage() {
   const handleEdit = async () => {
     try {
       await editSessionInfo({
-        sid: Number(sessionId),
+        sid: Number(sid),
         name: sessionEdit.name,
         useable: sessionEdit.useable,
       });
@@ -171,11 +171,11 @@ function AdminDashboardPage() {
       await addMembers(
         hasSelectedPart
           ? {
-              sid: Number(sessionId),
+              sid: Number(sid),
               part: selectedPart,
             }
           : {
-              sid: Number(sessionId),
+              sid: Number(sid),
               userIds,
             },
       );
@@ -220,7 +220,7 @@ function AdminDashboardPage() {
     // 세셔 정보
     const fetchInfo = async () => {
       try {
-        const res = await getSessionInfo({ sid: Number(sessionId) });
+        const res = await getSessionInfo({ sid: Number(sid) });
         const responseData = res.data?.data ?? res.data;
         const name = res.data.data.name;
         const useable = res.data.data.status === "활성화" ? true : false;
@@ -238,7 +238,7 @@ function AdminDashboardPage() {
     // 사용자 정보
     const fetchMember = async () => {
       try {
-        const res = await getSessionMember({ sid: Number(sessionId) });
+        const res = await getSessionMember({ sid: Number(sid) });
         const responseData = res.data?.data ?? res.data;
 
         if (!alive) return;
@@ -262,7 +262,7 @@ function AdminDashboardPage() {
     return () => {
       alive = false;
     };
-  }, [sessionId, refreshKey]);
+  }, [sid, refreshKey]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
@@ -389,7 +389,7 @@ function AdminDashboardPage() {
                     <TableEmptyState label="등록된 사용자가 없어요." />
                   ) : (
                     <DashboardTableRows
-                      sessionId={Number(sessionId)}
+                      sessionId={Number(sid)}
                       isLoading={isLoading}
                       members={pagedMembers}
                       onDeleteSuccess={() => setRefreshKey((prev) => prev + 1)}

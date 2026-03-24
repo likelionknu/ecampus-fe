@@ -9,7 +9,12 @@ interface GetUsersParams {
 }
 
 // 사용자 조회
-export const getUsers = async ({ name, part, page, size = 8 }: GetUsersParams) => {
+export const getUsers = async ({
+  name,
+  part,
+  page,
+  size = 8,
+}: GetUsersParams) => {
   const res = await api.get("/v1/admin/users", {
     params: {
       name,
@@ -37,7 +42,11 @@ export const getWHiteList = async () => {
 };
 
 // 화이트리스트 유저 추가
-export const addWhiteList = async ({ email, part, generation }: whitelistState) => {
+export const addWhiteList = async ({
+  email,
+  part,
+  generation,
+}: whitelistState) => {
   const res = await api.post("/v1/admin/whitelist", {
     email,
     part,
@@ -82,7 +91,7 @@ export const deleteMemo = async ({
   uid: number;
   mid: number;
 }) => {
-  const res = await api.delete(`/v1/admin/users/${uid}/menos/${mid}`);
+  const res = await api.delete(`/v1/admin/users/${uid}/memos/${mid}`);
 
   return res;
 };
