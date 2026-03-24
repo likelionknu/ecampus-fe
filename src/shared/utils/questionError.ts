@@ -16,6 +16,7 @@ export interface CommonErrorState {
 }
 
 const QUESTION_ERROR_MESSAGE_BY_STATUS: Record<number, string> = {
+  400: "잘못된 요청입니다.",
   401: "인증되지 않은 사용자입니다.",
   403: "정보 조회를 위한 권한이 부족합니다.",
   404: "정보를 찾을 수 없습니다.",
@@ -23,6 +24,7 @@ const QUESTION_ERROR_MESSAGE_BY_STATUS: Record<number, string> = {
 };
 
 const QUESTION_STATUS_BY_CODE: Record<string, number> = {
+  C400: 400,
   C404: 404,
   C403: 403,
   C401: 401,

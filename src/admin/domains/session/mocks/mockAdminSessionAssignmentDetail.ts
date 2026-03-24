@@ -1,6 +1,7 @@
 import type { AdminAssignmentDetail } from "../types/assignment";
 
 export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
+  assignmentId: 18,
   title: "기본 CRUD 예제를 안정적인 API로 개선하기",
   startAt: "2026-02-10T11:30:00",
   endAt: "2026-02-28T11:30:00",
@@ -17,8 +18,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
 데이터의 보존과 무결성 측면에서는 트랜잭션 관리와 논리 삭제(Soft Delete) 개념을 도입합니다. 여러 단계의 데이터 수정이 일어날 때 하나라도 실패하면 전체를 취소하여 데이터가 꼬이는 것을 방지하고, 실수로 데이터를 지웠을 때 복구할 수 있도록 DB에서`,
   participants: [
     {
-      id: 1,
-      generation: 14,
+      submitId: 1,
+      course: 14,
       part: "프론트엔드",
       name: "황형진",
       assignedAt: "2026-02-14T19:38:00",
@@ -28,8 +29,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
       evaluate: "PASS",
     },
     {
-      id: 2,
-      generation: 14,
+      submitId: 2,
+      course: 14,
       part: "백엔드",
       name: "유민우",
       assignedAt: "2026-02-14T19:38:00",
@@ -39,8 +40,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
       evaluate: null,
     },
     {
-      id: 3,
-      generation: 14,
+      submitId: 3,
+      course: 14,
       part: "프론트엔드",
       name: "황형진",
       assignedAt: "2026-02-14T19:38:00",
@@ -50,8 +51,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
       evaluate: "PASS",
     },
     {
-      id: 4,
-      generation: 14,
+      submitId: 4,
+      course: 14,
       part: "백엔드",
       name: "유민우",
       assignedAt: "2026-02-14T19:38:00",
@@ -61,8 +62,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
       evaluate: null,
     },
     {
-      id: 5,
-      generation: 14,
+      submitId: 5,
+      course: 14,
       part: "프론트엔드",
       name: "황형진",
       assignedAt: "2026-02-14T19:38:00",
@@ -72,8 +73,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
       evaluate: "PASS",
     },
     {
-      id: 6,
-      generation: 14,
+      submitId: 6,
+      course: 14,
       part: "백엔드",
       name: "유민우",
       assignedAt: "2026-02-14T19:38:00",
@@ -83,8 +84,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
       evaluate: null,
     },
     {
-      id: 7,
-      generation: 14,
+      submitId: 7,
+      course: 14,
       part: "프론트엔드",
       name: "황형진",
       assignedAt: "2026-02-14T19:38:00",
@@ -94,8 +95,8 @@ export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
       evaluate: "PASS",
     },
     {
-      id: 8,
-      generation: 14,
+      submitId: 8,
+      course: 14,
       part: "백엔드",
       name: "유민우",
       assignedAt: "2026-02-14T19:38:00",

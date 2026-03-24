@@ -7,6 +7,7 @@ import type { AdminAssignmentDetail } from "../../types/assignment";
 interface AssignmentMetaCardProps {
   assignment: Pick<
     AdminAssignmentDetail,
+    | "assignmentId"
     | "startAt"
     | "endAt"
     | "createdBy"
@@ -20,6 +21,7 @@ function AssignmentMetaCard({ assignment }: AssignmentMetaCardProps) {
   const isTablet = useMediaQuery({ maxWidth: 1024 });
 
   const assignmentMetaRows = [
+    { label: "과제 ID", value: assignment.assignmentId },
     { label: "시작일", value: formatKoreanDateTime24(assignment.startAt) },
     { label: "종료일", value: formatKoreanDateTime24(assignment.endAt) },
     { label: "등록자", value: assignment.createdBy },
