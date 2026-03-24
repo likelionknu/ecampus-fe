@@ -51,16 +51,6 @@ const userRoutes: RouteObject[] = [
   },
 
   {
-    path: "sessions",
-    element: <SessionTabLayout tabType="userSession" />,
-    handle: { title: "세션" },
-    children: [
-      { path: "questions", element: <UserSessionQuestionsPage /> },
-      { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
-      { path: "list", element: <UserSessionGroupPage /> },
-    ],
-  },
-  {
     path: "sessions/:sid",
     element: <SessionTabLayout tabType="userSession" />,
     handle: { title: "세션" },
@@ -73,6 +63,8 @@ const userRoutes: RouteObject[] = [
         element: <UserSessionAssignmentsView />,
       },
       { path: "groups", element: <UserSessionGroupPage /> },
+      { path: "questions", element: <UserSessionQuestionsPage /> },
+      { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
     ],
   },
 ];

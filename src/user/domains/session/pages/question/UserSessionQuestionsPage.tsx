@@ -1,4 +1,4 @@
-﻿import { useNavigate } from "react-router-dom";
+﻿import { useNavigate, useParams } from "react-router-dom";
 import TableEmptyState from "@/shared/components/table/TableEmptyState";
 import {
   PageNationButton,
@@ -40,6 +40,7 @@ const INITIAL_QUESTIONS_PAGE_STATE: QuestionsPageState = {
 const SESSION_QUESTION_PAGE_SIZE = 8;
 
 function UserSessionQuestionsPage() {
+  const { sid } = useParams();
   const navigate = useNavigate();
   const [questionsPage, setQuestionsPage] = useState<QuestionsPageState>(
     INITIAL_QUESTIONS_PAGE_STATE,
@@ -65,7 +66,7 @@ function UserSessionQuestionsPage() {
 
       try {
         const res = await getSessionQuestions({
-          sid: Number(1),
+          sid: Number(sid),
           page: currentPage - 1, // 서버 0-based
         });
         const responseData = res.data?.data ?? res.data;
@@ -88,7 +89,7 @@ function UserSessionQuestionsPage() {
     };
 
     fetchQuestions();
-  }, [currentPage]);
+  }, [currentPage, sid]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 md:max-w-187.5 xl:max-w-251 xl:px-0">

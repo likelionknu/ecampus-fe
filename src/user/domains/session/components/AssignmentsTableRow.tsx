@@ -60,7 +60,7 @@ function AssignmentsTableRow({
         <div
           key={assignment.id}
           onClick={() => onRowClick?.(assignment)}
-          className={`flex items-center px-4 py-4 ${
+          className={`flex cursor-pointer items-center px-4 py-4 ${
             index % 2 === 1 ? "bg-ec-table-header" : ""
           }`}
         >
