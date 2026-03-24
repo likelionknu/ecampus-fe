@@ -18,6 +18,22 @@ interface DashboardModalProps {
   title: string;
 }
 
+const USER_PART_LABELS: Record<string, string> = {
+  FRONTEND: "프론트엔드",
+  BACKEND: "백엔드",
+  DESIGN: "디자인",
+  OPERATOR: "운영진",
+  PLANNING: "기획",
+};
+
+const DEMERIT_REASON_LABELS: Record<string, string> = {
+  LATE: "지각",
+  ABSENT: "결석",
+  ASSIGNMENT_NOT_SUBMITTED: "과제 미제출",
+  ASSIGNMENT_COPY: "과제 복사",
+  ETC: "기타",
+};
+
 export const DashboardModal = ({
   onClose,
   children,
@@ -160,15 +176,19 @@ export const DashboardProfileModal = ({
         />
         <DashboarProfileModalItem
           label="파트(역할)"
-          value={UserProfileData?.part}
+          value={
+            UserProfileData?.part
+              ? USER_PART_LABELS[UserProfileData.part] ?? UserProfileData.part
+              : ""
+          }
         />
       </div>
     </DashboardModal>
   );
 };
 
-// -------------------------------- 사용자 상세 정보 컴포넌트 끝--------------------------------
-// -------------------------------- 벌점 컴포넌트 시작--------------------------------
+// -------------------------------- 사용자 상세 정보 컴포넌트 끝 --------------------------------
+// -------------------------------- 벌점 컴포넌트 시작 --------------------------------
 
 interface DashboardDemeritsModalProps {
   onClose?: () => void;
@@ -252,7 +272,7 @@ export const DashboardDemeritsModal = ({
         {DemeritsModalData.map((item, index) => (
           <DashboardDemeritsModalComponent
             key={`${item.reason}-${item.createdAt}-${index}`}
-            reason={item.reason}
+            reason={DEMERIT_REASON_LABELS[item.reason] ?? item.reason}
             grantedAt={formatKoreanDateTime12(item.createdAt)}
             demerit={item.demerit}
           />
