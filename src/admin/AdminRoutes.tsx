@@ -42,8 +42,8 @@ const adminRoutes: RouteObject[] = [
         handle: { title: "공지사항" },
       },
       { path: "notices/upload", element: <NoticeUploadPage /> },
-      { path: "notices/view", element: <NoticeViewPage /> },
-      { path: "notices/modify", element: <NoticeModifyPage /> },
+      { path: "notices/:nid", element: <NoticeViewPage /> },
+      { path: "notices/:nid/modify", element: <NoticeModifyPage /> },
     ],
   },
   {
@@ -55,11 +55,18 @@ const adminRoutes: RouteObject[] = [
       { path: "task/management", element: <TaskManagementPage /> },
       { path: "notion", element: <AdminNotionPage /> },
       { path: "dashboard/:sessionId", element: <AdminDashboardPage /> },
+    ],
+  },
+  {
+    path: "sessions/:sid",
+    element: <SessionTabLayout tabType="adminDashboard" />,
+    handle: { title: "세션 관리 / [14기] 아기사자 - 백엔드 파트" },
+    children: [
       { path: "assignments", element: <AdminSessionAssignmentsView /> },
       { path: "assignments/upload", element: <AdminSessionAssignmentUpload /> },
       { path: "files/upload", element: <FilesUploadPage /> },
-      { path: "files/view", element: <FilesViewPage /> },
-      { path: "files/modify", element: <FilesModifyPage /> },
+      { path: "files/:fid", element: <FilesViewPage /> },
+      { path: "files/:fid/modify", element: <FilesModifyPage /> },
     ],
   },
 ];
