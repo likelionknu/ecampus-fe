@@ -1,8 +1,8 @@
 import Button from "@/shared/components/Button";
 import Modal from "@/shared/components/modal/Modal";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import MemoBox from "./MemoBox";
 import type { GroupMemo, MemoModalTarget } from "./memoModal.types";
+import MemoItem from "./MemoItem";
 
 interface MemoListModalProps {
   target: MemoModalTarget;
@@ -36,27 +36,11 @@ function MemoListModal({
         ) : (
           memos.map((memo) => (
             <MemoBox key={memo.id}>
-              <div className="flex flex-col gap-2">
-                <p className="text-body-2 mt-2 wrap-break-word">
-                  {memo.content}
-                </p>
-                <div className="flex items-end justify-between">
-                  <span className="text-caption text-ec-sub">
-                    {memo.createdAt
-                      ? formatKoreanDateTime12(memo.createdAt)
-                      : "-"}
-                    , {memo.name} 등록
-                  </span>
-                  <button
-                    type="button"
-                    className="text-ec-red text-caption cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
-                    disabled={isSubmitting}
-                    onClick={() => onDeleteMemo(memo.id)}
-                  >
-                    삭제
-                  </button>
-                </div>
-              </div>
+              <MemoItem
+                item={memo}
+                isSubmitting={isSubmitting}
+                onClick={onDeleteMemo}
+              />
             </MemoBox>
           ))
         )}

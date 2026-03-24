@@ -127,10 +127,9 @@ export const changeGeneration = async ({
   uid: number;
   generation: string;
 }) => {
-  const res = await api.patch(
-    `/v1/admin/users/${uid}/profile/generation`,
+  const res = await api.patch(`/v1/admin/users/${uid}/profile/generation`, {
     generation,
-  );
+  });
 
   return res;
 };

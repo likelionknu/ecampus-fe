@@ -1,6 +1,6 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import type { AdminSessionRow } from "../types";
-import { SESSIONS_TABLE_COLUMNS } from "../constants/sessionsTable";
+import type { AdminSessionRow } from "../../types";
+import { SESSIONS_TABLE_COLUMNS } from "../../constants/sessionsTable";
 import { useNavigate } from "react-router-dom";
 
 interface SessionsTableRowsProps {

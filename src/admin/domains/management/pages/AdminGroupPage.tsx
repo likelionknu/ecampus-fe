@@ -14,15 +14,15 @@ import {
   SESSION_PART_OPTIONS,
 } from "@/shared/constants/selectOptions";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
-import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
 import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils/questionError";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import GroupHeader from "../components/GroupHeader";
-import GroupTableRows from "../components/GroupTableRows";
+import GroupHeader from "../components/group/GroupHeader";
+import GroupTableRows from "../components/group/GroupTableRows";
 import GroupActionStepModal, {
+  type GroupActionModalState,
   type GroupActionType,
 } from "../components/modal/GroupActionStepModal";
 import { getUsers } from "../apis/group";
@@ -44,10 +44,7 @@ interface GroupUsersApiResponse {
   totalElements: number;
 }
 
-export type ModalState = {
-  action: GroupActionType;
-  phase: ConfirmDoneModalPhase;
-} | null;
+export type ModalState = GroupActionModalState;
 
 const GROUP_PAGE_SIZE = 8;
 const PART_REQUEST_CODES = [
@@ -89,6 +86,7 @@ function AdminGroupPage() {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const [modalState, setModalState] = useState<ModalState>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const itemNum = membersPage.totalElements;
   const itemSumNum = GROUP_PAGE_SIZE;
@@ -108,6 +106,10 @@ function AdminGroupPage() {
 
     setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
   };
+
+  const handleRefresh = useCallback(() => {
+    setRefreshKey((prev) => prev + 1);
+  }, []);
 
   // 파트 변경
   const handlePartChange = (partLabel: string) => {
@@ -173,23 +175,23 @@ function AdminGroupPage() {
     };
 
     fetchGroupUsers();
-  }, [debouncedName, selectedPart, currentPage]);
+  }, [debouncedName, selectedPart, currentPage, refreshKey]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
-      {errors && (
-        <ErrorModal
-          status={errors.status}
-          message={errors.message}
-          onClick={() => setErrors(null)}
-        />
-      )}
-
       {modalState && (
         <GroupActionStepModal
           modalState={modalState}
           onClose={handleClose}
           onNext={handleConfirm}
+        />
+      )}
+
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
         />
       )}
 
@@ -243,6 +245,7 @@ function AdminGroupPage() {
                   isLoading={isLoading}
                   members={pagedMembers}
                   onOpenModal={handleOpenModal}
+                  onRefresh={handleRefresh}
                 />
               )}
               <PageNationButton onPageChange={setCurrentPage} />

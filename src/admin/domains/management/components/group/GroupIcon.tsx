@@ -1,10 +1,10 @@
-import MemoIcon from "../assets/memo.svg?react";
-import ChangeIcon from "../assets/change.svg?react";
-import DemeritIcon from "../assets/demerit.svg?react";
-import StopIcon from "../assets/stop.svg?react";
-import RestoreIcon from "../assets/restore.svg?react";
+import MemoIcon from "../../assets/memo.svg?react";
+import ChangeIcon from "../../assets/change.svg?react";
+import DemeritIcon from "../../assets/demerit.svg?react";
+import StopIcon from "../../assets/stop.svg?react";
+import RestoreIcon from "../../assets/restore.svg?react";
 import type { ComponentType, SVGProps } from "react";
-import type { GroupIconType } from "../types";
+import type { GroupIconType } from "../../types";
 
 interface GroupIconProps {
   label: string;
