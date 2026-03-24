@@ -25,8 +25,12 @@ import GroupActionStepModal, {
   type GroupActionModalState,
   type GroupActionType,
 } from "../components/modal/GroupActionStepModal";
-import { getUsers } from "../apis/group";
+import { getUsers, getWHiteList } from "../apis/group";
 import type { AdminGroupRow, PagedResponse } from "../types";
+import Modal from "@/shared/components/modal/Modal";
+import Input from "@/shared/components/Input";
+import Button from "@/shared/components/Button";
+import WhitelistItem from "../components/modal/group/WhitelistItem";
 
 interface GroupUsersApiRow {
   id: number;
@@ -42,6 +46,14 @@ interface GroupUsersApiRow {
 interface GroupUsersApiResponse {
   content: GroupUsersApiRow[];
   totalElements: number;
+}
+
+export interface ListState {
+  id: number;
+  email: string;
+  part: string;
+  generation: number;
+  registerName: string;
 }
 
 export type ModalState = GroupActionModalState;
@@ -63,6 +75,15 @@ const PART_CODE_TO_LABEL: Record<string, string> = {
   FRONTEND: "프론트엔드",
   DESIGN: "디자인",
 };
+
+const WHITELIST_PART_OPTIONS = ["파트 선택", ...SESSION_PART_OPTIONS.slice(1)];
+const WHITELIST_GENERATION_OPTIONS = [
+  "기수 선택",
+  "11기",
+  "12기",
+  "13기",
+  "14기",
+];
 
 const INITIAL_GROUP_MEMBERS: PagedResponse<AdminGroupRow> = {
   content: [],
@@ -87,6 +108,9 @@ function AdminGroupPage() {
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const [modalState, setModalState] = useState<ModalState>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [listModalOpen, setListModalOpen] = useState(false);
+
+  const [lists, setLists] = useState<ListState[]>([]);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const itemNum = membersPage.totalElements;
   const itemSumNum = GROUP_PAGE_SIZE;
@@ -177,6 +201,21 @@ function AdminGroupPage() {
     fetchGroupUsers();
   }, [debouncedName, selectedPart, currentPage, refreshKey]);
 
+  useEffect(() => {
+    const fetchWhitelist = async () => {
+      try {
+        const res = await getWHiteList();
+        const responseData = res.data?.data ?? res.data;
+
+        setLists(responseData);
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      }
+    };
+
+    fetchWhitelist();
+  }, []);
+
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
       {modalState && (
@@ -185,6 +224,49 @@ function AdminGroupPage() {
           onClose={handleClose}
           onNext={handleConfirm}
         />
+      )}
+
+      {listModalOpen && (
+        <Modal>
+          <Modal.Header onClick={() => setListModalOpen(false)}>
+            화이트리스트(79)
+          </Modal.Header>
+          <div className="mt-5">
+            <div className="flex h-10 gap-2">
+              <div className="w-131.5">
+                <Input />
+              </div>
+              <Button size="large" variant="primary">
+                추가
+              </Button>
+            </div>
+            <div className="mt-2 flex gap-2">
+              <div className="flex-1">
+                <SelectBox
+                  options={WHITELIST_PART_OPTIONS}
+                  defaultValue="파트 선택"
+                  className="w-full"
+                />
+              </div>
+              <div className="w-1/3">
+                <SelectBox
+                  options={WHITELIST_GENERATION_OPTIONS}
+                  defaultValue="기수 선택"
+                  className="w-full"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-7">
+            <span className="text-body-2 text-ec-black">추가 된 사용자</span>
+            <div className="grid grid-cols-2 gap-4">
+              {lists.map((list) => (
+                <WhitelistItem item={list} key={list.id} />
+              ))}
+            </div>
+          </div>
+        </Modal>
       )}
 
       {errors && (
@@ -202,7 +284,7 @@ function AdminGroupPage() {
             label: "화이트리스트",
             buttonType: "primary",
             onClick: () => {
-              handleOpenModal("WHITELIST_ADD");
+              setListModalOpen(true);
             },
           },
         ]}

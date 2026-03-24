@@ -1,6 +1,6 @@
 import MemoAddModal from "./MemoAddModal";
 import MemoListModal from "./MemoListModal";
-import type { GroupMemo, MemoModalTarget } from "./memoModal.types";
+import type { GroupMemo, MemoModalTarget } from "../types/memoModal.types";
 
 type MemoModalStep = "LIST" | "ADD";
 

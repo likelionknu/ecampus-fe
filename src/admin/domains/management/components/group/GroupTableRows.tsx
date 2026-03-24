@@ -25,7 +25,7 @@ import PartModal from "../modal/group/PartModal";
 import type {
   GroupMemo,
   MemoModalTarget,
-} from "../modal/group/memoModal.types";
+} from "../modal/types/memoModal.types";
 import useActionStepModal from "./useActionStepModal";
 
 interface GroupTableRowsProps {

@@ -274,21 +274,6 @@ function AdminDashboardPage() {
         />
       )}
 
-      {/* <Modal>
-        <Modal.Header>사용자 동의</Modal.Header>
-        <Modal.Description>
-          사용자를 검색하여 직접 추가하거나, 파트로 일괄 추가하는 {"\n"}
-          방법 중 하나만 사용할 수 있어요. 지금 선택한 방식으{"\n"}로 계속
-          진행할까요?
-        </Modal.Description>
-        <Modal.ButtonLayout>
-          <Button size="modal" variant="danger">
-            계속
-          </Button>
-          <Modal.Cancelled />
-        </Modal.ButtonLayout>
-      </Modal> */}
-
       {/* 세션 정보 수정 모달 */}
       {editModal && (
         <Modal>

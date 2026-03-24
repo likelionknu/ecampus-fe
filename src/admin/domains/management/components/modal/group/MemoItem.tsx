@@ -1,5 +1,5 @@
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import type { GroupMemo } from "./memoModal.types";
+import type { GroupMemo } from "../types/memoModal.types";
 
 interface MemoItemProps {
   item: GroupMemo;
