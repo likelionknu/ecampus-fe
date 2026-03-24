@@ -19,6 +19,7 @@ import {
   deleteReadNotification,
   getNotification,
   readAllNotification,
+  readNotification,
 } from "../apis/notification";
 import {
   getCommonErrorState,
@@ -201,6 +202,17 @@ function UserNotificationPage() {
     }
   };
 
+  // 알림 개별 읽음
+  const handleRead = async (notification: NotificationRow) => {
+    if (notification.read) return;
+
+    try {
+      await readNotification({ nid: notification.id });
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    }
+  };
+
   // 모달
   const renderStepModal = () => {
     if (!modalState) return null;
@@ -281,6 +293,7 @@ function UserNotificationPage() {
               ) : (
                 <NotificationTableRows
                   isLoading={isLoading}
+                  onRowClick={handleRead}
                   notifications={pagedNotifications}
                 />
               )}

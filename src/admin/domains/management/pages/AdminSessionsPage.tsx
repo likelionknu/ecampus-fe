@@ -6,8 +6,8 @@ import {
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import SessionsTableRows from "../components/SessionsTableRows";
-import SessionHeader from "../components/SessionHeader";
+import SessionsTableRows from "../components/session/SessionsTableRows";
+import SessionHeader from "../components/session/SessionHeader";
 import type { AdminSessionRow } from "../types";
 import { useCallback, useEffect, useState } from "react";
 import CreateModal from "../components/modal/sessions/CreateModal";

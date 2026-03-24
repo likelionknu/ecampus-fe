@@ -179,6 +179,10 @@ function AdminDashboardPage() {
               userIds,
             },
       );
+      setSearchKeyword("");
+      setSelectedMembers([]);
+      setSelectedPartLabel(ADMIN_DASHBOARD_PART_DEFAULT);
+      setSelectedPart("ALL");
       setRefreshKey((prev) => prev + 1);
     } catch (error) {
       setErrors(getCommonErrorState(error));

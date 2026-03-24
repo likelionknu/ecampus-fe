@@ -1,16 +1,45 @@
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
 import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
 import type { NotificationRow } from "../types/NotificationRow";
+import { useNavigate } from "react-router-dom";
 
 interface NotificationTableRowsProps {
   isLoading: boolean;
+  onRowClick: (notification: NotificationRow) => void;
   notifications: NotificationRow[];
 }
 
 function NotificationTableRows({
   isLoading,
+  onRowClick,
   notifications,
 }: NotificationTableRowsProps) {
+  const navigate = useNavigate();
+
+  const handleNavigate = (notification: NotificationRow) => {
+    // 공지사항
+    if (notification.noticeId) navigate("/user/dashboard");
+
+    // 질문
+    if (notification.questionId)
+      navigate(
+        `/user/questions/${notification.questionId}/${notification.sessionId}`,
+      );
+
+    // 자료
+    if (notification.fileId)
+      navigate(
+        `/user/sessions/${notification.sessionId}/files/${notification.fileId}`,
+      );
+
+    // 과제
+    if (notification.assignmentId)
+      navigate(
+        `/user/sessions/${notification.sessionId}/assignments/${notification.assignmentId}`,
+      );
+    return;
+  };
+
   return (
     <div className="text-ec-black flex w-full flex-col">
       {isLoading && (
@@ -42,9 +71,13 @@ function NotificationTableRows({
       {notifications.map((notification, index) => (
         <div
           key={notification.id}
-          className={`flex w-full items-center justify-between px-8 py-5 ${
+          className={`flex w-full cursor-pointer items-center justify-between px-8 py-5 ${
             index % 2 === 1 ? "bg-ec-box" : ""
           }`}
+          onClick={async () => {
+            await onRowClick(notification);
+            handleNavigate(notification);
+          }}
         >
           <span className="text-body-2 text-ec-black max-w-140 truncate">
             {notification.content}
@@ -53,10 +86,10 @@ function NotificationTableRows({
           <div className="flex items-center gap-7">
             <span
               className={`text-body-2 w-10 text-center ${
-                notification.read ? "text-ec-red" : "text-ec-blue"
+                notification.read ? "text-ec-blue" : "text-ec-red"
               }`}
             >
-              {notification.read ? "안 읽음" : "읽음"}
+              {notification.read ? "읽음" : "안 읽음"}
             </span>
             <span className="text-body-2 text-ec-black w-12 text-right">
               {formatDaysAgo(notification.createdAt)}
