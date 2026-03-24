@@ -21,10 +21,7 @@ const MarkdownPreview = forwardRef<HTMLDivElement, Props>(function MarkdownPrevi
         onScroll={onScroll} 
       >
         {content ? (
-          <div className="prose max-w-none">
-           <MarkdownRenderer content={content} />
-            
-          </div>
+          <MarkdownRenderer content={content} />
         ) : (
           <div className="h-full flex items-center justify-center text-sm text-ec-blue">
             미리볼 수 있는 내용이 입력되지 않음

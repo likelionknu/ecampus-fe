@@ -13,6 +13,7 @@ import ListBoxMobile from "../components/application/ListBoxMobile";
 import { AssignmentInfo } from "../components/application/AssignmentInfo";
 import { useEffect, useState } from "react";
 import { getAssignments } from "../apis/assignment";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface AssignmentRow {
   id: number;
@@ -50,8 +51,15 @@ function UserSessionAssignments() {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
+  const navigate = useNavigate();
+  const { sid } = useParams();
+  const sidNumber = sid ? Number(sid) : null;
   const itemNum = assignmentsPage.totalElements;
   const itemSumNum = ASSIGNMENTS_PAGE_SIZE;
+
+  const openAssignmentDetail = (aid: number) => {
+    navigate(`${aid}`);
+  };
 
   const ASSIGNMENT_STATUS_MAP: Record<string, string> = {
     NOT_SUBMITTED: "미제출",
@@ -63,23 +71,23 @@ function UserSessionAssignments() {
   };
 
   useEffect(() => {
+    if (sidNumber === null || Number.isNaN(sidNumber)) return;
+
     const fetchAssignments = async () => {
       setIsLoading(true);
 
       try {
         const res = await getAssignments({
-          sid: 1,
-          page: currentPage - 1, // 서버 0-based
-          size: itemSumNum,
+          sid: sidNumber,
+          page: currentPage - 1,
+          size: ASSIGNMENTS_PAGE_SIZE,
         });
         const responseData = res.data?.data ?? res.data;
 
         setAssignmentsPage({
-          assignments: Array.isArray(responseData?.content)
-            ? responseData.content
-            : [],
+          assignments: responseData?.content ?? [],
           page: responseData?.number ?? 0,
-          size: responseData?.size ?? itemSumNum,
+          size: responseData?.size ?? ASSIGNMENTS_PAGE_SIZE,
           totalElements: responseData?.totalElements ?? 0,
           totalPages: responseData?.totalPages ?? 0,
           hasNext: !(responseData?.last ?? true),
@@ -92,10 +100,9 @@ function UserSessionAssignments() {
     };
 
     fetchAssignments();
-  }, [currentPage, itemSumNum]);
-
+  }, [sidNumber, currentPage]);
   return (
-    <div className="mx-auto flex w-full max-w-251 flex-col gap-5 pt-7">
+    <div className="mx-auto mt-30 flex w-full max-w-251 flex-col gap-5 md:pt-7 xl:mt-0">
       <TitleSection
         title={`과제(${assignmentsPage.totalElements})`}
         subText="내게 부여된 과제를 확인하세요"
@@ -103,7 +110,6 @@ function UserSessionAssignments() {
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {() => {
           const pageAssignments = assignmentsPage.assignments;
-
           return (
             <>
               {!isTablet && (
@@ -117,6 +123,9 @@ function UserSessionAssignments() {
                 <AssignmentsTableRow
                   isLoading={isLoading}
                   assignments={pageAssignments}
+                  onRowClick={(assignment) =>
+                    openAssignmentDetail(assignment.id)
+                  }
                 />
               ) : (
                 <div
@@ -146,6 +155,7 @@ function UserSessionAssignments() {
                         key={assignment.id}
                         title={assignment.name}
                         subText={`${formatDateTime(assignment.endAt)} · 제출 종료`}
+                        onClick={() => openAssignmentDetail(assignment.id)}
                       >
                         <AssignmentInfo
                           label="제출 상태"
@@ -162,7 +172,7 @@ function UserSessionAssignments() {
                   })}
                 </div>
               )}
-              <PageNationButton onPageChange={setCurrentPage} />
+              <PageNationButton onPageChange={(page) => setCurrentPage(page)} />
             </>
           );
         }}
