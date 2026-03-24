@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import TitleSection from "@/shared/components/TitleSection";
@@ -40,30 +40,33 @@ function UserSessionFilesPage() {
 
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
 
-  const fetchFiles = async (page = 0) => {
-    if (!sidNumber) return;
+  const fetchFiles = useCallback(
+    async (page = 0) => {
+      if (!sidNumber) return;
 
-    setIsLoading(true);
-    try {
-      const res = await getSessionFiles({ sid: sidNumber, page, size });
-      const responseData = res.data;
-      setFiles(
-        Array.isArray(responseData?.content) ? responseData.content : [],
-      );
-      setTotalElements(responseData?.totalElements ?? 0);
-    } catch (error) {
-      setErrors(getCommonErrorState(error));
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      setIsLoading(true);
+      try {
+        const res = await getSessionFiles({ sid: sidNumber, page, size });
+        const responseData = res.data;
+        setFiles(
+          Array.isArray(responseData?.content) ? responseData.content : [],
+        );
+        setTotalElements(responseData?.totalElements ?? 0);
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [sidNumber, size],
+  );
+
   useEffect(() => {
     if (!sidNumber) return;
     fetchFiles(0);
-  }, [sidNumber]);
+  }, [sidNumber, fetchFiles]);
 
   const itemNum = totalElements;
-  // const itemSumNum = 8;
 
   return (
     <div className="mx-auto mt-30 flex w-full max-w-251 flex-col gap-5 px-4 md:pt-7 xl:mt-0">

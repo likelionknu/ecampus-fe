@@ -2,6 +2,7 @@ import TwoManIcon from "@user/domains/session/assets/TwoManIcon.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import { useNavigate } from "react-router-dom";
 
 interface SessionItemData {
   sessionId: number;
@@ -12,6 +13,7 @@ interface SessionItemData {
 }
 
 interface SelectSessionItemProps {
+  id: number;
   userCount: number;
   name: string;
   fileCount: number;
@@ -19,13 +21,19 @@ interface SelectSessionItemProps {
 }
 
 const SelectSessionItem = ({
+  id,
   userCount,
   name,
   fileCount,
   assignmentCount,
 }: SelectSessionItemProps) => {
+  const naviage = useNavigate();
+
   return (
-    <div className="my-2.5 flex h-30.25 w-87.5 flex-col lg:w-85 xl:my-0">
+    <div
+      className="my-2.5 flex h-30.25 w-87.5 cursor-pointer flex-col lg:w-85 xl:my-0"
+      onClick={() => naviage(`/user/sessions/${id}/files`)}
+    >
       <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex h-9 w-32 items-center justify-center">
         <div className="flex w-full items-center justify-center gap-1.25">
           <img src={TwoManIcon} alt="Two Man Icon" className="h-3.5 w-4.25" />
@@ -123,6 +131,7 @@ const UserSessionSelect = () => {
           {sessionsData.map((item) => (
             <SelectSessionItem
               key={item.sessionId}
+              id={item.sessionId}
               userCount={item.userCount}
               name={item.name}
               fileCount={item.fileCount}

@@ -34,9 +34,7 @@ function GroupTableRow({ users, isLoading }: GroupTableRowProps) {
       {users.map((user, index) => (
         <div
           key={user.email}
-          className={`px-8 py-4 ${
-            index % 2 === 1 ? "bg-ec-box" : ""
-          }`}
+          className={`px-8 py-4 ${index % 2 === 1 ? "bg-ec-box" : ""}`}
         >
           <div
             className="grid w-full items-center"

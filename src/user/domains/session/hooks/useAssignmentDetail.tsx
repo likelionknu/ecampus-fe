@@ -24,7 +24,7 @@ export default function useAssignmentDetail(
     try {
       const [detailRes, assignmentsRes] = await Promise.all([
         getAssignmentsDetail({ sid: sidNumber, assignmentId }),
-        getAssignments({ sid: sidNumber }),
+        getAssignments({ sid: sidNumber, page: 0, size: 8 }),
       ]);
       const detailData = detailRes.data?.data ?? detailRes.data;
       const assignmentsData = assignmentsRes.data?.data ?? assignmentsRes.data;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useParams } from "react-router-dom";
 import TitleSection from "@/shared/components/TitleSection";
@@ -43,7 +43,7 @@ function UserSessionGroupPage() {
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
 
-  const fetchUsers = async () => {
+  const fetchUsers = useCallback(async () => {
     if (!sidNumber) return;
 
     setIsLoading(true);
@@ -62,11 +62,11 @@ function UserSessionGroupPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [sidNumber]);
 
   useEffect(() => {
     fetchUsers();
-  }, [sidNumber]);
+  }, [fetchUsers]);
 
   const normalizedSearch = search.trim().toLowerCase();
   const filteredGroups = useMemo(() => {

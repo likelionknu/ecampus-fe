@@ -5,17 +5,90 @@ import {
   PageNationItem,
   PageNationMenu,
 } from "@/shared/components/PageNation";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 
 const DataManagementPage = () => {
-  const itemSumNum = 8;
-  const itemNum = 18;
+  const authData = JSON.parse(
+    localStorage.getItem("ecampus.auth.session") || "null",
+  );
+  const token = authData?.state?.session?.accessToken;
+
+  // --------------------------------------자료관리 api 부분 시작--------------------------------------
+
+  interface FileItem {
+    fileId: number;
+    name: string;
+    createdAt: string;
+    writer: string;
+    isPublic: boolean;
+  }
+
+  interface FilesDataType {
+    page: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+    files: FileItem[];
+  }
+
+  const [FilesData, setFilesData] = useState<FilesDataType | null>(null);
+
+  const [FilesDataPage, setFilesDataPage] = useState(1);
+
+  //api요청 주소에 1대신 setFilesDataPage의 값을 받아서 넣으면 됨
+
+  const FilesDataItemNum = FilesData?.totalElements ?? 0;
+
+  const FilesDataSumNum = 8;
+
+  useEffect(() => {
+    const fetchFilesData = async () => {
+      try {
+        const FilesDataResponse = await axios.get(
+          `${import.meta.env.VITE_BASE_API_URL}/v1/admin/sessions/1/files`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              page: FilesDataPage - 1,
+              size: FilesDataSumNum,
+            },
+          },
+        );
+
+        const FilesDataResult = FilesDataResponse.data;
+
+        if (FilesDataResult.data) {
+          setFilesData(FilesDataResult.data);
+          console.log("자료관리 데이터:", FilesDataResult.data);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(
+            "서버 응답 에러:",
+            error.response?.status,
+            error.response?.data,
+          );
+        } else {
+          console.error("네트워크 통신 오류:", error);
+        }
+      }
+    };
+
+    fetchFilesData();
+  }, [FilesDataSumNum, FilesDataPage]);
+
+  // --------------------------------------자료관리 api 부분 끝--------------------------------------
+
   interface DataComponentProps {
-    DataId: string;
+    DataId: number;
     DataName: string;
     DataRegisterDate: string;
     DataRegistrant: string;
-    DataVisibility: string;
-
+    DataVisibility: boolean;
     onClick?: () => void;
   }
   const DataComponent = ({
@@ -40,8 +113,12 @@ const DataManagementPage = () => {
         <div className="text-ec-black ml-6 w-12 justify-start text-center text-sm font-medium">
           {DataRegistrant}
         </div>
-        <div className="text-ec-black ml-6 w-11 justify-start text-center text-sm font-medium">
-          {DataVisibility}
+        <div
+          className={`ml-6 w-11 justify-start text-center text-sm font-medium ${
+            DataVisibility ? "text-ec-blue" : "text-ec-sub"
+          }`}
+        >
+          {DataVisibility ? "공개" : "비공개"}
         </div>
       </div>
     );
@@ -58,8 +135,11 @@ const DataManagementPage = () => {
           </div>
         </div>
         <div className="mt-5">
-          <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-            {({ currentItems, startIndex }) => (
+          <PageNationFrame
+            itemNum={FilesDataItemNum}
+            itemSumNum={FilesDataSumNum}
+          >
+            {({ startIndex }) => (
               <>
                 <div className="flex h-112 w-251.5 flex-col">
                   <PageNationMenu>
@@ -79,22 +159,24 @@ const DataManagementPage = () => {
                       공개 여부
                     </div>
                   </PageNationMenu>
-                  {currentItems.map((item, index) => (
+                  {(FilesData?.files ?? []).map((data, index) => (
                     <PageNationItem
-                      key={startIndex + index}
+                      key={data.fileId}
                       absoluteIndex={startIndex + index}
                     >
                       <DataComponent
-                        DataId={String(startIndex + index + 1)}
-                        DataName={`공지사항 ${item}`}
-                        DataRegisterDate="2026년 2월 13일 오전 12시 38분"
-                        DataRegistrant="김찬주"
-                        DataVisibility="비공개"
+                        DataId={data.fileId}
+                        DataName={data.name}
+                        DataRegisterDate={formatKoreanDateTime12(
+                          data.createdAt,
+                        )}
+                        DataRegistrant={data.writer}
+                        DataVisibility={data.isPublic}
                       />
                     </PageNationItem>
                   ))}
                 </div>
-                <PageNationButton />
+                <PageNationButton onPageChange={setFilesDataPage} />
               </>
             )}
           </PageNationFrame>

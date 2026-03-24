@@ -95,7 +95,7 @@ function UserDashBoardPage() {
     };
 
     fetchDashboard();
-  }, []);
+  }, [token]);
 
   // --------------------------------------대시보드 api 부분 끝--------------------------------------
   // --------------------------------------공지사항 api 부분 시작--------------------------------------
@@ -161,7 +161,7 @@ function UserDashBoardPage() {
     };
 
     fetchNotices();
-  }, [NoticePageitemSumNum, noticePage]);
+  }, [NoticePageitemSumNum, noticePage, token]);
 
   // --------------------------------------공자사항 api 부분 끝--------------------------------------
   // --------------------------------------알람 api 부분 시작--------------------------------------
@@ -235,7 +235,7 @@ function UserDashBoardPage() {
     };
 
     fetchNotices();
-  }, [NotificationsPageitemSumNum, NotificationsPage]);
+  }, [NotificationsPageitemSumNum, NotificationsPage, token]);
 
   // --------------------------------------알람 api 부분 끝--------------------------------------
   // --------------------------------------api 부분 끝--------------------------------------

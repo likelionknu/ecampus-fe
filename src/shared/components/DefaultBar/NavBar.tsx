@@ -63,6 +63,7 @@ const NavBar = () => {
   const isAdmin = role?.toUpperCase() === "ADMIN";
 
   const isSessionSelected = currentSection === "sessions";
+  const isGroupSelected = currentSection === "list";
   const isNotificationSelected = currentSection === "notification";
   const isQuestionSelected = currentSection === "questions";
   const isAdminSelected = pathSegments[0] === "admin";
@@ -91,7 +92,8 @@ const NavBar = () => {
               iconSrc={NavGroup}
               iconAlt="NavGroup"
               label="그룹"
-              selected={false}
+              selected={isGroupSelected}
+              onClick={() => navigate("/user/list")}
             />
             <NavItems
               iconSrc={NavAlart}
