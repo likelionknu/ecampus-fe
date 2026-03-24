@@ -19,31 +19,33 @@ const PART_MAP: Record<string, string> = {
 };
 function GroupTableRow({ users, isLoading }: GroupTableRowProps) {
   return (
-    <div className="flex flex-col">
+    <div className="flex w-235 flex-col">
       {isLoading && (
-        <div className="flex animate-pulse gap-4 rounded-2xl px-4 py-4">
-          <SkeletonCell className="ml-2 h-4 w-12" />
+        <div
+          className="grid animate-pulse items-center rounded-2xl px-8 py-4"
+          style={{ gridTemplateColumns: "80px 120px 120px minmax(0,1fr)" }}
+        >
+          <SkeletonCell className="h-4 w-12" />
           <SkeletonCell className="h-4 w-14" />
           <SkeletonCell className="h-4 w-20" />
-          <SkeletonCell className="h-4 w-171" />
+          <SkeletonCell className="h-4 w-full max-w-171" />
         </div>
       )}
       {users.map((user, index) => (
         <div
           key={user.email}
-          className={`flex items-center px-8 py-4 ${
-            index % 2 === 1 ? "bg-ec-box" : ""
-          }`}
+          className={`px-8 py-4 ${index % 2 === 1 ? "bg-ec-box" : ""}`}
         >
-          <div className="flex gap-5">
-            <span className="text-body-2 mr-7 text-center">
-              {user.course}기
-            </span>
-            <span className="text-body-2 mr-5 text-center">{user.name}</span>
-            <span className="text-body-2 mr-5 text-center">
+          <div
+            className="grid w-full items-center"
+            style={{ gridTemplateColumns: "80px 120px 120px minmax(0,1fr)" }}
+          >
+            <span className="text-body-2 text-left">{user.course}기</span>
+            <span className="text-body-2 text-left">{user.name}</span>
+            <span className="text-body-2 text-left">
               {PART_MAP[user.part] || user.part}
             </span>
-            <span className="text-body-2 text-left">{user.email}</span>
+            <span className="text-body-2 min-w-0 text-left">{user.email}</span>
           </div>
         </div>
       ))}

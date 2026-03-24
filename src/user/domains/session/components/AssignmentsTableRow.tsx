@@ -13,6 +13,7 @@ interface AssignmentRow {
 interface AssignmentsTableRowProps {
   assignments: readonly AssignmentRow[];
   isLoading: boolean;
+  onRowClick?: (assignment: AssignmentRow) => void;
 }
 
 const ASSIGNMENT_STATUS_MAP: Record<AssignmentRow["assignmentStatus"], string> =
@@ -32,6 +33,7 @@ const ASSIGNMENT_EVALUATE_MAP: Record<
 function AssignmentsTableRow({
   assignments,
   isLoading,
+  onRowClick,
 }: AssignmentsTableRowProps) {
   return (
     <div className="flex w-full flex-col">
@@ -57,6 +59,7 @@ function AssignmentsTableRow({
       {assignments.map((assignment, index) => (
         <div
           key={assignment.id}
+          onClick={() => onRowClick?.(assignment)}
           className={`flex cursor-pointer items-center px-4 py-4 ${
             index % 2 === 1 ? "bg-ec-table-header" : ""
           }`}

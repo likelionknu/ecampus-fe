@@ -13,7 +13,7 @@ import {
   type CommonErrorState,
 } from "@/shared/utils/questionError";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
@@ -76,6 +76,7 @@ const MODAL_CONFIG: Record<
 };
 
 function UserSessionQuestionCreatePage() {
+  const { sid } = useParams();
   const navigate = useNavigate();
   const [createQuestion, setCreateQuestion] = useState<CreateQuestion>({
     title: "",
@@ -99,7 +100,7 @@ function UserSessionQuestionCreatePage() {
   const handleConfirm = async () => {
     try {
       await postSessionQuestions({
-        sid: 1,
+        sid: Number(sid),
         payload: createQuestion,
       });
 

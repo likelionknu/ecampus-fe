@@ -5,17 +5,87 @@ import {
   PageNationItem,
   PageNationMenu,
 } from "@/shared/components/PageNation";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { formatDaysAgoTwo } from "@/shared/utils/formatDaysAgo";
 
 const TaskManagementPage = () => {
-  const itemSumNum = 8;
-  const itemNum = 18;
+  const authData = JSON.parse(
+    localStorage.getItem("ecampus.auth.session") || "null",
+  );
+  const token = authData?.state?.session?.accessToken;
+
+  interface TaskManagementDataItem {
+    assignmentId: number;
+    name: string;
+    createdBy: string;
+    endAt: string;
+    targetCount: number;
+    submittedCount: number;
+    unsubmittedCount: number;
+  }
+
+  interface TaskManagementDataType {
+    totalElements: number;
+    totalPages: number;
+    content: TaskManagementDataItem[];
+  }
+
+  const [TaskManagementData, setTaskManagementData] =
+    useState<TaskManagementDataType | null>(null);
+
+  const [TaskManagementDataPage, setTaskManagementDataPage] = useState(1);
+
+  const TaskManagementDataItemNum = TaskManagementData?.totalElements ?? 0;
+
+  const TaskManagementDataSumNum = 8;
+
+  useEffect(() => {
+    const fetchTaskManagementData = async () => {
+      try {
+        const TaskManagementDataResponse = await axios.get(
+          `${import.meta.env.VITE_BASE_API_URL}/v1/admin/sessions/1/assignments`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            params: {
+              page: TaskManagementDataPage - 1,
+              size: TaskManagementDataSumNum,
+            },
+          },
+        );
+
+        const TaskManagementDataResult = TaskManagementDataResponse.data;
+
+        if (TaskManagementDataResult.data) {
+          setTaskManagementData(TaskManagementDataResult.data);
+          console.log("공지사항 페이지 데이터:", TaskManagementDataResult.data);
+        }
+      } catch (error) {
+        if (axios.isAxiosError(error)) {
+          console.error(
+            "서버 응답 에러:",
+            error.response?.status,
+            error.response?.data,
+          );
+        } else {
+          console.error("네트워크 통신 오류:", error);
+        }
+      }
+    };
+
+    fetchTaskManagementData();
+  }, [TaskManagementDataSumNum, TaskManagementDataPage]);
+
   interface TaskComponentProps {
-    DataId: string;
+    DataId: number;
     DataName: string;
     DataRegisterDate: string;
     DataRegistrant: string;
-    DataVisibility: string;
-
+    DataVisibility: number;
+    DataSubmittedCount: number;
+    DataUnSubmittedCount: number;
     onClick?: () => void;
   }
   const TaskComponent = ({
@@ -24,6 +94,8 @@ const TaskManagementPage = () => {
     DataRegisterDate,
     DataRegistrant,
     DataVisibility,
+    DataSubmittedCount,
+    DataUnSubmittedCount,
     onClick,
   }: TaskComponentProps) => {
     return (
@@ -39,16 +111,16 @@ const TaskManagementPage = () => {
             {DataRegisterDate}
           </div>
           <div className="text-ec-black w-12 justify-start text-center text-sm font-medium">
-            {DataRegistrant}
+            {DataRegistrant}일
           </div>
           <div className="text-ec-black w-12 justify-start text-center text-sm font-medium">
-            {DataVisibility}
+            {DataVisibility}건
           </div>
           <div className="text-ec-black w-12 justify-start text-center text-sm font-medium">
-            {DataVisibility}
+            {DataSubmittedCount}건
           </div>
           <div className="text-ec-black w-12 justify-start text-center text-sm font-medium">
-            {DataVisibility}
+            {DataUnSubmittedCount}건
           </div>
         </div>
       </div>
@@ -76,8 +148,12 @@ const TaskManagementPage = () => {
           </div>
         </div>
         <TaskNotionComponent />
-        <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-          {({ currentItems, startIndex }) => (
+
+        <PageNationFrame
+          itemNum={TaskManagementDataItemNum}
+          itemSumNum={TaskManagementDataSumNum}
+        >
+          {({ startIndex }) => (
             <>
               <div className="flex h-112 w-251.5 flex-col">
                 <PageNationMenu>
@@ -103,22 +179,24 @@ const TaskManagementPage = () => {
                     미제출
                   </div>
                 </PageNationMenu>
-                {currentItems.map((item, index) => (
+                {(TaskManagementData?.content ?? []).map((data, index) => (
                   <PageNationItem
-                    key={startIndex + index}
+                    key={data.assignmentId}
                     absoluteIndex={startIndex + index}
                   >
                     <TaskComponent
-                      DataId={String(startIndex + index + 1)}
-                      DataName={`공지사항 ${item}`}
-                      DataRegisterDate="김찬주"
-                      DataRegistrant="1234일"
-                      DataVisibility="123명"
+                      DataId={data.assignmentId}
+                      DataName={data.name}
+                      DataRegisterDate={data.createdBy}
+                      DataRegistrant={formatDaysAgoTwo(data.endAt)}
+                      DataVisibility={data.targetCount}
+                      DataSubmittedCount={data.submittedCount}
+                      DataUnSubmittedCount={data.unsubmittedCount}
                     />
                   </PageNationItem>
                 ))}
               </div>
-              <PageNationButton />
+              <PageNationButton onPageChange={setTaskManagementDataPage} />
             </>
           )}
         </PageNationFrame>
