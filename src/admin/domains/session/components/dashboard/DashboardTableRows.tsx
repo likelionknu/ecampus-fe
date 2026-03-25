@@ -1,14 +1,10 @@
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { SkeletonCell } from "@/shared/components/skeleton";
+import { formatKoreanDateTime12, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import EraseIcon from "../../assets/erase.svg?react";
-import type { AdminDashboardMemberRow } from "../../types/dashboard";
-import { deleteMember } from "../../api/dashboard";
+import type { AdminDashboardMemberRow } from "../../types";
+import { deleteMember } from "../../api";
 import { useState } from "react";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
+import { ErrorModal } from "@/shared/components/modal";
 
 interface DashboardTableRowsProps {
   sessionId: number;

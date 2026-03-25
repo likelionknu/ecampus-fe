@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
+import type { ConfirmDoneModalPhase } from "@/shared/types";
 
 export type ActionStepModalState<TAction extends string> = {
   action: TAction;

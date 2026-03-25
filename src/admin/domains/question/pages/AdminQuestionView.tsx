@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import TitleSection from "@/shared/components/TitleSection";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import { getAdminQuestionDetail } from "../apis/question";
-import AdminQuestionDetailContent from "../components/AdminQuestionDetailContent";
-import type { AdminQuestionDetail } from "../types/question";
+import { TitleSection } from "@/shared/components";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { getAdminQuestionDetail } from "../apis";
+import { AdminQuestionDetailContent } from "../components";
+import type { AdminQuestionDetail } from "../types";
 
 function parsePositiveInteger(value: string | null) {
   if (!value) {

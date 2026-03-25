@@ -1,25 +1,14 @@
 import { useMediaQuery } from "react-responsive";
-import TitleSection from "@/shared/components/TitleSection";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import SessionsTableRows from "../components/session/SessionsTableRows";
-import SessionHeader from "../components/session/SessionHeader";
+import { TitleSection, PageNationButton, PageNationFrame, PageNationMenu } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { SessionsTableRows, SessionHeader } from "../components/session";
 import type { AdminSessionRow } from "../types";
 import { useCallback, useEffect, useState } from "react";
-import CreateModal from "../components/modal/sessions/CreateModal";
-import ConfirmModal from "../components/modal/sessions/ConfirmModal";
-import DoneModal from "../components/modal/sessions/DoneModal";
-import type { CreateConfirmDoneModalStep } from "@/shared/types/ModalStep";
-import { createSession, getSessions } from "../apis/session";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
+import { CreateModal, ConfirmModal, DoneModal } from "../components/modal/sessions";
+import type { CreateConfirmDoneModalStep } from "@/shared/types";
+import { createSession, getSessions } from "../apis";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { ErrorModal } from "@/shared/components/modal";
 
 interface SessionsPageState {
   sessions: AdminSessionRow[];

@@ -1,6 +1,6 @@
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import { formatDateTime } from "@/shared/utils/date";
-import { ASSIGNMENTS_TABLE_COLUMNS } from "../constants/assignmentsTable";
+import { SkeletonCell } from "@/shared/components/skeleton";
+import { formatDateTime } from "@/shared/utils";
+import { ASSIGNMENTS_TABLE_COLUMNS } from "../constants";
 
 interface AssignmentRow {
   id: number;

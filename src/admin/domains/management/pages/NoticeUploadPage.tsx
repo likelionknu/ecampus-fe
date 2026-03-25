@@ -1,5 +1,5 @@
 import { useState } from "react"
-import NoticeUploadLayout from "../components/markdown/NoticeUploadLayout"
+import { NoticeUploadLayout } from "../components/markdown";
 
 export default function NoticeUploadPage() {
 

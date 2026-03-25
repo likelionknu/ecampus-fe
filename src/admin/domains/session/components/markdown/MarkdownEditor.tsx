@@ -1,7 +1,7 @@
 import { forwardRef, useState } from "react";
 import uploadIcon from "@admin/domains/session/assets/upload.png";
-import Modal from "@/shared/components/modal/Modal";
-import Button from "@/shared/components/Button";
+import { Modal } from "@/shared/components/modal";
+import { Button } from "@/shared/components";
 
 interface Props {
   content: string;

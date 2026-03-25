@@ -1,9 +1,5 @@
-import TabBar from "@/shared/components/TabBar";
-import {
-  ADMIN_DASHBOARD_TAG_ITEMS,
-  ADMIN_MANAGEMENT_TAG_ITEMS,
-  USER_SESSION_TAG_ITEMS,
-} from "@/shared/constants/tabItems";
+import { TabBar } from "@/shared/components";
+import { ADMIN_DASHBOARD_TAG_ITEMS, ADMIN_MANAGEMENT_TAG_ITEMS, USER_SESSION_TAG_ITEMS } from "@/shared/constants";
 import type { ComponentProps } from "react";
 import { Outlet, useParams } from "react-router-dom";
 

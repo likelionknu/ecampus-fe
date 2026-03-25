@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthSessionStore } from "@auth/stores/authStore";
+import { useAuthSessionStore } from "@auth/stores";
 import NavLogo from "@shared/assets/NavLogo.png";
 import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";

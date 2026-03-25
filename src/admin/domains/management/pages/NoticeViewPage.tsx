@@ -1,21 +1,11 @@
-import Button from "@/shared/components/Button";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { Button } from "@/shared/components";
+import { formatKoreanDateTime12, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import ReactMarkdown from "react-markdown";
-import { markdownComponents } from "../../session/components/markdown/MarkdownComponents";
-import Modal from "@/shared/components/modal/Modal";
+import { markdownComponents } from "../../session/components/markdown";
+import { Modal, ErrorModal } from "@/shared/components/modal";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  deleteNotice,
-  getNoticeDetail,
-  pinNotice,
-  unpinNotice,
-} from "../apis/notice";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
+import { deleteNotice, getNoticeDetail, pinNotice, unpinNotice } from "../apis";
 
 interface NoticeData {
   id: number;

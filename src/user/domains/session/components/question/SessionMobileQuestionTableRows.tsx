@@ -1,6 +1,6 @@
-﻿import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import MobileItem from "@/user/shared/components/MobileItem";
-import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
+﻿import { formatKoreanDateTime12 } from "@/shared/utils";
+import { MobileItem } from "@/user/shared/components";
+import type { SessionQuestionRow } from "../../types";
 
 interface SessionMobileQuestionTableRowsProps {
   questions: SessionQuestionRow[];

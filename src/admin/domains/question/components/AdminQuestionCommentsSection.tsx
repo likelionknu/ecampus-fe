@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
-import Button from "@/shared/components/Button";
-import TextBox from "@/shared/components/TextBox";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import {
-  createAdminQuestionComment,
-  getAdminQuestionComments,
-} from "../apis/comment";
+import { Button, TextBox } from "@/shared/components";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { createAdminQuestionComment, getAdminQuestionComments } from "../apis";
 import AdminQuestionCommentItem from "./AdminQuestionCommentItem";
-import type { AdminQuestionComment } from "../types/question";
+import type { AdminQuestionComment } from "../types";
 
 interface AdminQuestionCommentsSectionProps {
   qid: number;

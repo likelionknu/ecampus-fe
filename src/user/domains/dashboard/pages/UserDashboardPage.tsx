@@ -8,22 +8,14 @@ import DashboardMain1 from "@shared/assets/DashboardMain1.png";
 import DashboardMain2 from "@shared/assets/DashboardMain2.png";
 import DashboardMain3 from "@shared/assets/DashboardMain3.png";
 
-import { PageNationFrame } from "@shared/components/PageNation";
-import { PageNationItem } from "@shared/components/PageNation";
-import { PageNationMenu } from "@shared/components/PageNation";
-import { PageNationButton } from "@shared/components/PageNation";
-import { PageNationMobileFrame } from "@/shared/components/PageNationMobile";
-import { PageNationMobileItem } from "@/shared/components/PageNationMobile";
-import { PageNationMobileButton } from "@/shared/components/PageNationMobile";
+import { PageNationFrame, PageNationItem, PageNationMenu, PageNationButton } from "@shared/components";
+import { PageNationMobileFrame, PageNationMobileItem, PageNationMobileButton } from "@/shared/components";
 
-import { DashboardProfileModal } from "../components/DashboardModal";
-import { DashboardDemeritsModal } from "../components/DashboardModal";
-import { NotionSpecificModal } from "../components/DashboardModal";
+import { DashboardProfileModal, DashboardDemeritsModal, NotionSpecificModal } from "../components";
 
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import { SkeletonCell } from "@/shared/components/skeleton";
 
-import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { formatDaysAgo, formatKoreanDateTime12 } from "@/shared/utils";
 
 function UserDashBoardPage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);

@@ -1,5 +1,5 @@
 import { api } from "@/shared/apis";
-import type { CreateQuestion } from "../types/CreateQuestion";
+import type { CreateQuestion } from "../types";
 
 // 세션 질문 조회
 export const getSessionQuestions = async ({

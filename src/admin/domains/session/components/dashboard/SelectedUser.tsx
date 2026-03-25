@@ -1,4 +1,4 @@
-import type { MemberState } from "../../types/dashboard";
+import type { MemberState } from "../../types";
 
 interface SelectedUserProps {
   item: MemberState;

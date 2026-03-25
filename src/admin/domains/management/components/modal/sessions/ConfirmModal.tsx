@@ -1,6 +1,6 @@
-import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
-import type { ModalProps } from "@/shared/types/Modal";
+import { Button } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
+import type { ModalProps } from "@/shared/types";
 
 function ConfirmModal({ onClick, onClose }: ModalProps) {
   return (

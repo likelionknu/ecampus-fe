@@ -1,5 +1,5 @@
-import TextBox from "@/shared/components/TextBox";
-import BoxLayout from "@/user/shared/components/BoxLayout";
+import { TextBox } from "@/shared/components";
+import { BoxLayout } from "@/user/shared/components";
 
 interface AdminQuestionContentSectionProps {
   label: string;

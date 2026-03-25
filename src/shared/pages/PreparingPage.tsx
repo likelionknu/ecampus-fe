@@ -1,7 +1,6 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import NavLogo from "@shared/assets/NavLogo.png";
-import PageBackground from "@shared/components/PageBackground";
-import LegalFooter from "@shared/components/LegalFooter";
+import { PageBackground, LegalFooter } from "@shared/components";
 
 function PreparingIllustration() {
   return (

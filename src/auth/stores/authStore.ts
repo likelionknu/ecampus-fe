@@ -1,10 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type {
-  AuthSession,
-  GoogleLoginResponseData,
-  UserRole,
-} from "@auth/types/auth";
+import type { AuthSession, GoogleLoginResponseData, UserRole } from "@auth/types";
 
 const AUTH_STORAGE_KEY = "ecampus.auth.session";
 

@@ -1,6 +1,6 @@
-import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
-import MobileItem from "@/user/shared/components/MobileItem";
-import type { NotificationRow } from "../types/NotificationRow";
+import { formatDaysAgo } from "@/shared/utils";
+import { MobileItem } from "@/user/shared/components";
+import type { NotificationRow } from "../types";
 
 interface MobileNotifitcationTableRowsProps {
   notifications: NotificationRow[];

@@ -1,5 +1,5 @@
 import { api } from "@/shared/apis";
-import type { QuestionRequestStatus } from "@/shared/types/QuestionRequestStatus";
+import type { QuestionRequestStatus } from "@/shared/types";
 
 interface GetQuestionsParams {
   title: string;

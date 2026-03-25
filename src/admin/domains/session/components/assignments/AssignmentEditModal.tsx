@@ -1,13 +1,9 @@
 import { type FormEvent, useEffect, useState } from "react";
 import CalendarIconImg from "@admin/domains/session/assets/calendar.png";
-import Button from "@/shared/components/Button";
-import Input from "@/shared/components/Input";
-import Modal from "@/shared/components/modal/Modal";
-import {
-  getUpdateAdminAssignmentErrorMessage,
-  updateAdminAssignment,
-} from "../../api/assignment";
-import type { AdminAssignmentDetail } from "../../types/assignment";
+import { Button, Input } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
+import { getUpdateAdminAssignmentErrorMessage, updateAdminAssignment } from "../../api";
+import type { AdminAssignmentDetail } from "../../types";
 
 const TITLE_MAX_LENGTH = 80;
 const DESCRIPTION_MAX_LENGTH = 700;

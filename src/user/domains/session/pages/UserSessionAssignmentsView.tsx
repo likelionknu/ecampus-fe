@@ -1,21 +1,14 @@
 import { useMediaQuery } from "react-responsive";
-import Button from "@/shared/components/Button";
-import TextBox from "@/shared/components/TextBox";
-import TitleSection from "@/shared/components/TitleSection";
-import AssignmentMetaRow from "../components/AssignmentsMetaRow";
-import QuestionContentSection from "../components/question/QuestionContentSection";
+import { Button, TextBox, TitleSection } from "@/shared/components";
+import { AssignmentsMetaRow as AssignmentMetaRow, AssignmentContentSection } from "../components";
+import { QuestionContentSection } from "../components/question";
 import { useEffect, useState } from "react";
-import { postAssignmentSubmission } from "../apis/assignment";
+import { postAssignmentSubmission } from "../apis";
 import { useParams } from "react-router-dom";
-import AssignmentContentSection from "../components/AssignmentContentSection";
-import Modal from "@/shared/components/modal/Modal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import useAssignmentDetail from "../hooks/useAssignmentDetail";
-import { createAssignmentMetaRows } from "../utils/assignmentMeta";
+import { Modal, ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { useAssignmentDetail } from "../hooks";
+import { createAssignmentMetaRows } from "../utils";
 
 function UserSessionAssignmentsView() {
   const isTablet = useMediaQuery({ maxWidth: 1024 });

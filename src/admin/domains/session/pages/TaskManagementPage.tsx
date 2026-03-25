@@ -1,14 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { api } from "@/shared/apis";
-import TitleSection from "@/shared/components/TitleSection";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationItem,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import { formatDaysAgoTwo } from "@/shared/utils/formatDaysAgo";
+import { TitleSection, PageNationButton, PageNationFrame, PageNationItem, PageNationMenu } from "@/shared/components";
+import { formatDaysAgoTwo } from "@/shared/utils";
 
 interface TaskManagementDataItem {
   assignmentId: number;

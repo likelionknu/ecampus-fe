@@ -1,8 +1,8 @@
 import { useState } from "react";
-import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
-import { getCommonErrorState } from "@/shared/utils/questionError";
-import { deleteAdminQuestion } from "../apis/question";
+import { Button } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
+import { getCommonErrorState } from "@/shared/utils";
+import { deleteAdminQuestion } from "../apis";
 
 interface AdminQuestionDeleteModalProps {
   qid: number;

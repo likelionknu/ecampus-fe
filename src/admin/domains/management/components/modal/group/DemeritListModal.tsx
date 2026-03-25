@@ -1,5 +1,5 @@
-import Modal from "@/shared/components/modal/Modal";
-import type { GroupDemerit } from "../types/demeritModal.types";
+import { Modal } from "@/shared/components/modal";
+import type { GroupDemerit } from "../types";
 import MemoBox from "./MemoBox";
 import DemeritItem from "./DemeritItem";
 

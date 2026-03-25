@@ -1,13 +1,10 @@
 import { useEffect, useState } from "react";
-import QuestionCommentItem from "@/shared/components/comment/QuestionCommentItem";
-import TextBox from "@/shared/components/TextBox";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import { getComments } from "../apis/comment";
-import type { CommentState } from "../types/CommentState";
+import { QuestionCommentItem } from "@/shared/components/comment";
+import { TextBox } from "@/shared/components";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { getComments } from "../apis";
+import type { CommentState } from "../types";
 
 function MobileCommentSection({
   qid,

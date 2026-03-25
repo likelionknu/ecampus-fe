@@ -1,4 +1,4 @@
-import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
+import { TableHeaderLabel } from "@/shared/components/table";
 
 const GROUP_TABLE_COLUMNS =
   "grid-cols-[0.55fr_0.85fr_0.9fr_2.2fr_2.2fr_0.7fr_3.6fr]";

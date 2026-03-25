@@ -3,19 +3,14 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import AdminRoutes from "@admin/AdminRoutes";
-import GoogleCallback from "@auth/api/GoogleCallback";
-import LoginErrorPage from "@auth/pages/LoginErrorPage";
-import LoginPage from "@auth/pages/LoginPage";
-import BaseLayout from "@shared/layouts/BaseLayout";
-import ErrorPage from "@shared/pages/ErrorPage";
-import MaintenancePage from "@shared/pages/MaintenancePage";
-import PreparingPage from "@shared/pages/PreparingPage";
-import PrivacyPolicyPage from "@shared/pages/PrivacyPolicyPage";
-import ScreenSizeErrorPage from "@shared/pages/ScreenSizeErrorPage";
-import UserRoutes from "@user/UserRoutes";
-import TestPage from "./shared/pages/TestPage";
-import RequireAuth from "./auth/components/RequireAuth";
+import { AdminRoutes } from "@admin";
+import { GoogleCallback } from "@auth/api";
+import { LoginErrorPage, LoginPage } from "@auth/pages";
+import { BaseLayout } from "@shared/layouts";
+import { ErrorPage, MaintenancePage, PreparingPage, PrivacyPolicyPage, ScreenSizeErrorPage } from "@shared/pages";
+import { UserRoutes } from "@user";
+import { TestPage } from "./shared/pages";
+import { RequireAuth } from "./auth/components";
 
 const router = createBrowserRouter([
   { path: "/", element: <GoogleCallback /> },

@@ -1,5 +1,5 @@
-import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
-import { SESSIONS_TABLE_COLUMNS } from "../../constants/sessionsTable";
+import { TableHeaderLabel } from "@/shared/components/table";
+import { SESSIONS_TABLE_COLUMNS } from "../../constants";
 
 function SessionHeader() {
   return (

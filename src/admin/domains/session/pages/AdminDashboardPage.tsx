@@ -1,42 +1,14 @@
-import TitleSection from "@/shared/components/TitleSection";
+import { TitleSection, SerachBar, Button, SelectBox, PageNationButton, PageNationFrame, PageNationMenu, Input } from "@/shared/components";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import SessionInfoOverview from "../components/dashboard/SessionInfoOverview";
-import type { SessionDashboardData } from "../components/dashboard/SessionInfoOverview";
-import SerachBar from "@/shared/components/SerachBar";
-import Button from "@/shared/components/Button";
-import SelectBox from "@/shared/components/SelectBox";
+import { SessionInfoOverview, type SessionDashboardData, SelectedUser, DashboardHeader, DashboardTableRows, SessionActivateButton, SessionDeactivateButton } from "../components/dashboard";
 import { useMediaQuery } from "react-responsive";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import {
-  ADMIN_DASHBOARD_PART_DEFAULT,
-  SESSION_PART_OPTIONS,
-} from "@/shared/constants/selectOptions";
-import SelectedUser from "../components/dashboard/SelectedUser";
-import DashboardHeader from "../components/dashboard/DashboardHeader";
-import DashboardTableRows from "../components/dashboard/DashboardTableRows";
-import SessionActivateButton from "../components/dashboard/SessionActivateButton";
-import SessionDeactivateButton from "../components/dashboard/SessionDeactivateButton";
-import type { AdminDashboardMemberRow, MemberState } from "../types/dashboard";
-import {
-  addMembers,
-  editSessionInfo,
-  getSessionInfo,
-  getSessionMember,
-  serachUser,
-} from "../api/dashboard";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import Modal from "@/shared/components/modal/Modal";
-import Input from "@/shared/components/Input";
+import { TableEmptyState } from "@/shared/components/table";
+import { ADMIN_DASHBOARD_PART_DEFAULT, SESSION_PART_OPTIONS } from "@/shared/constants";
+import type { AdminDashboardMemberRow, MemberState } from "../types";
+import { addMembers, editSessionInfo, getSessionInfo, getSessionMember, serachUser } from "../api";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { ErrorModal, Modal } from "@/shared/components/modal";
 
 interface SessionMembersPageState {
   content: AdminDashboardMemberRow[];

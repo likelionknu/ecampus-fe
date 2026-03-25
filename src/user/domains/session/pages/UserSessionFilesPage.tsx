@@ -1,25 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
-import TitleSection from "@/shared/components/TitleSection";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import FilesTableHeader from "../components/FilesTableHeader";
-import FilesTableRow from "../components/FilesTableRow";
-import ListBoxMobile from "../components/application/ListBoxMobile";
-import { InfoMobile } from "../components/application/InfoMobile";
-import { getSessionFiles } from "../apis/sessionFile";
-import type { SessionFile } from "../types/SessionFile";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
+import { TitleSection, PageNationButton, PageNationFrame, PageNationMenu } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { formatKoreanDateTime12, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { FilesTableHeader, FilesTableRow } from "../components";
+import { ListBoxMobile, InfoMobile } from "../components/application";
+import { getSessionFiles } from "../apis";
+import type { SessionFile } from "../types";
+import { ErrorModal } from "@/shared/components/modal";
 
 function UserSessionFilesPage() {
   const navigate = useNavigate();

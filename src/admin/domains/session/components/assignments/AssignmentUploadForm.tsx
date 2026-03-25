@@ -5,12 +5,8 @@ import {
   useParams,
 } from "react-router-dom";
 import CalendarIconImg from "@admin/domains/session/assets/calendar.png";
-import {
-  createSessionAssignment,
-  getCreateSessionAssignmentErrorMessage,
-} from "@admin/domains/session/api/assignment";
-import Button from "@/shared/components/Button";
-import Input from "@/shared/components/Input";
+import { createSessionAssignment, getCreateSessionAssignmentErrorMessage } from "@admin/domains/session/api";
+import { Button, Input } from "@/shared/components";
 
 const NOTICE_MESSAGE =
   "과제 등록 시 세션에 추가된 모든 사용자가 과제 대상으로 포함돼요";

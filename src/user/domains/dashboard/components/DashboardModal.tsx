@@ -2,7 +2,7 @@ import { useEffect, type ReactNode, useState } from "react";
 import xWhite from "@user/domains/dashboard/assets/xWhite.png";
 import xBlack from "@user/domains/dashboard/assets/xBlack.png";
 import axios from "axios";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { formatKoreanDateTime12 } from "@/shared/utils";
 
 // --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
 const authData = JSON.parse(

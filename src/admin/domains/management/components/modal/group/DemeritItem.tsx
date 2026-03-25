@@ -1,6 +1,6 @@
-import Button from "@/shared/components/Button";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import type { GroupDemerit } from "../types/demeritModal.types";
+import { Button } from "@/shared/components";
+import { formatKoreanDateTime12 } from "@/shared/utils";
+import type { GroupDemerit } from "../types";
 
 interface DemeritItemProps {
   item: GroupDemerit;

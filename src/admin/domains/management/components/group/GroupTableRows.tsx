@@ -1,37 +1,14 @@
 import { useState } from "react";
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import GroupActionStepModal, {
-  type GroupActionType,
-} from "../modal/GroupActionStepModal";
+import { SkeletonCell } from "@/shared/components/skeleton";
+import { GroupActionStepModal, type GroupActionType } from "../modal";
 import GroupIcon from "./GroupIcon";
 import type { AdminGroupRow } from "../../types";
-import {
-  addDemerit,
-  addMemo,
-  changePart,
-  changeGeneration,
-  deleteAllDemerits,
-  deleteAllMemos,
-  deleteDemerit,
-  deleteMemo,
-  getDemerits,
-  getMemos,
-} from "../../apis/group";
-import { SESSION_PART_OPTIONS } from "@/shared/constants/selectOptions";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import MemoModal from "../modal/group/MemoModal";
-import GenerationModal from "../modal/group/GenerationModal";
-import PartModal from "../modal/group/PartModal";
-import DemeritModal from "../modal/group/DemeritModal";
-import type {
-  GroupMemo,
-  MemoModalTarget,
-} from "../modal/types/memoModal.types";
-import type { GroupDemerit } from "../modal/types/demeritModal.types";
+import { addDemerit, addMemo, changePart, changeGeneration, deleteAllDemerits, deleteAllMemos, deleteDemerit, deleteMemo, getDemerits, getMemos } from "../../apis";
+import { SESSION_PART_OPTIONS } from "@/shared/constants";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { ErrorModal } from "@/shared/components/modal";
+import { MemoModal, GenerationModal, PartModal, DemeritModal } from "../modal/group";
+import type { GroupMemo, MemoModalTarget, GroupDemerit } from "../modal/types";
 import useActionStepModal from "./useActionStepModal";
 
 interface GroupTableRowsProps {

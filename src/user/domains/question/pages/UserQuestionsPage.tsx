@@ -1,29 +1,14 @@
 ﻿import { useMediaQuery } from "react-responsive";
-import SerachBar from "@/shared/components/SerachBar";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TitleSection from "@/shared/components/TitleSection";
-import MobileQuestionsTableRows from "@/user/domains/question/components/MobileQuestionsTableRows";
-import QuestionTableHeader from "../components/QuestionTableHeader";
-import QuestionTableRows from "../components/QuestionTableRows";
-import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
-import SelectBox from "@/shared/components/SelectBox";
-import {
-  QUESTION_STATUS_DEFAULT_OPTION,
-  QUESTION_STATUS_OPTIONS,
-  QUESTION_STATUS_OPTION_TO_REQUEST_STATUS,
-} from "@/shared/constants/selectOptions";
+import { SerachBar, PageNationButton, PageNationFrame, PageNationMenu, TitleSection, SelectBox } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { MobileQuestionsTableRows } from "@/user/domains/question/components";
+import { QuestionTableHeader, QuestionTableRows } from "../components";
+import type { SessionQuestionRow } from "../../session/types";
+import { QUESTION_STATUS_DEFAULT_OPTION, QUESTION_STATUS_OPTIONS, QUESTION_STATUS_OPTION_TO_REQUEST_STATUS } from "@/shared/constants";
 import { useEffect, useState } from "react";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import { getQuestions } from "../apis/questions";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { getQuestions } from "../apis";
 
 interface QuestionsPageState {
   questions: SessionQuestionRow[];

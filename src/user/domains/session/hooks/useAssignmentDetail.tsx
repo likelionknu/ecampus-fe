@@ -1,6 +1,6 @@
 import { useCallback, useState } from "react";
-import { getAssignments, getAssignmentsDetail } from "../apis/assignment";
-import type { AssignmentDetail } from "../utils/assignmentMeta";
+import { getAssignments, getAssignmentsDetail } from "../apis";
+import type { AssignmentDetail } from "../utils";
 
 interface AssignmentSummary {
   id: number;

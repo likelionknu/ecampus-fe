@@ -1,8 +1,5 @@
 import { api } from "@/shared/apis";
-import type {
-  AdminQuestionDetail,
-  AdminQuestionDetailResponse,
-} from "../types/question";
+import type { AdminQuestionDetail, AdminQuestionDetailResponse } from "../types";
 
 interface AdminQuestionApiErrorPayload {
   code: string | null;

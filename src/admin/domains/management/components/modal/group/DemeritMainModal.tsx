@@ -1,6 +1,5 @@
-import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
-import SelectBox from "@/shared/components/SelectBox";
+import { Button, SelectBox } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
 
 interface DemeritMainModalProps {
   currentPoint: number;
@@ -44,12 +43,14 @@ function DemeritMainModal({
         <SelectBox
           options={reasonOptions}
           defaultValue={selectedReason}
+          value={selectedReason}
           className="w-full"
           onChange={onSelectReason}
         />
         <SelectBox
           options={scoreOptions}
           defaultValue={selectedScore}
+          value={selectedScore}
           className="w-full"
           onChange={onSelectScore}
         />

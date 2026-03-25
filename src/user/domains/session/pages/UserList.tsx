@@ -1,24 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import TitleSection from "@/shared/components/TitleSection";
-import SerachBar from "@/shared/components/SerachBar";
-import SelectBox from "@/shared/components/SelectBox";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationItem,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import {
-  SESSION_PART_OPTIONS,
-  SESSION_PARTS_DEFAULT_OPTION,
-} from "@/shared/constants/selectOptions";
+import { TitleSection, SerachBar, SelectBox, PageNationButton, PageNationFrame, PageNationItem, PageNationMenu } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { SESSION_PART_OPTIONS, SESSION_PARTS_DEFAULT_OPTION } from "@/shared/constants";
 
 const SESSION_PART_OPTIONS_API_VALUE: Record<string, string> = {
   전체: "",

@@ -1,4 +1,4 @@
-import type { ButtonVariant } from "@/shared/types/Button";
+import type { ButtonVariant } from "@/shared/types";
 
 export type QuestionCreateModalState = "confirm" | "success" | "error";
 

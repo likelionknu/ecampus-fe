@@ -1,6 +1,6 @@
 import DemeritListModal from "./DemeritListModal";
 import DemeritMainModal from "./DemeritMainModal";
-import type { GroupDemerit } from "../types/demeritModal.types";
+import type { GroupDemerit } from "../types";
 
 type DemeritModalStep = "MAIN" | "LIST";
 

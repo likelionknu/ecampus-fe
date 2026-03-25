@@ -1,4 +1,4 @@
-import { formatDateTime } from "@/shared/utils/date";
+import { formatDateTime } from "@/shared/utils";
 import type React from "react";
 
 export interface AssignmentDetail {

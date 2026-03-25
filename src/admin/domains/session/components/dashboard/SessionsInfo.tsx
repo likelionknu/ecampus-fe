@@ -1,4 +1,4 @@
-import TextBox from "@/shared/components/TextBox";
+import { TextBox } from "@/shared/components";
 import NextIcon from "../../assets/next.svg?react";
 
 interface SessionInfoItem {

@@ -1,8 +1,8 @@
 // import { useState } from "react";
 // import Button from "../components/Button";
 // import SerachBar from "../components/SerachBar";
-import TabBar from "../components/TabBar";
-import DefaultBar from "../components/DefaultBar/DefaultBar";
+import { TabBar } from "../components";
+import { DefaultBar } from "../components/DefaultBar";
 
 // import Modal from "../components/Modal";
 

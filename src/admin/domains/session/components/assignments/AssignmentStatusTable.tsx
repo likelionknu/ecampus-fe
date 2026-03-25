@@ -1,12 +1,8 @@
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
-import { formatKoreanDateTime24 } from "@/shared/utils/formatKoreanDateTime";
-import {
-  formatAssignmentStatus,
-  formatEvaluateStatus,
-} from "@/user/utils/assignment";
-import type { AdminAssignmentParticipant } from "../../types/assignment";
+import { SkeletonCell } from "@/shared/components/skeleton";
+import { TableEmptyState, TableHeaderLabel } from "@/shared/components/table";
+import { formatKoreanDateTime24 } from "@/shared/utils";
+import { formatAssignmentStatus, formatEvaluateStatus } from "@/user/utils";
+import type { AdminAssignmentParticipant } from "../../types";
 
 const ASSIGNMENT_STATUS_TABLE_COLUMNS =
   "0.55fr 0.8fr 0.9fr 1.55fr 1.55fr 1.55fr 0.65fr 0.65fr";

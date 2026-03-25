@@ -1,19 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import { useParams } from "react-router-dom";
-import TitleSection from "@/shared/components/TitleSection";
-import SerachBar from "@/shared/components/SerachBar";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import GroupTableHeader from "../components/GroupTableHeader";
-import GroupTableRow from "../components/GroupTableRow";
-import { GroupInfo } from "../components/application/GroupInfo";
-import ListBoxMobile from "../components/application/ListBoxMobile";
-import { getSessionUsers } from "../apis/group";
+import { TitleSection, SerachBar, PageNationButton, PageNationFrame, PageNationMenu } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { GroupTableHeader, GroupTableRow } from "../components";
+import { GroupInfo, ListBoxMobile } from "../components/application";
+import { getSessionUsers } from "../apis";
 
 interface Group {
   course: number;

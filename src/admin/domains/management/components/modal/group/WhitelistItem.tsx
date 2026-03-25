@@ -1,15 +1,10 @@
 import { useState } from "react";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import { deleteWhitelist } from "../../../apis/group";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { deleteWhitelist } from "../../../apis";
 import StopIcon from "../../../assets/stop.svg?react";
-import type { ListState } from "../../../pages/AdminGroupPage";
-import GroupActionStepModal, {
-  type GroupActionModalState,
-} from "../GroupActionStepModal";
+import type { ListState } from "../../../pages";
+import { GroupActionStepModal, type GroupActionModalState } from "..";
 
 interface WhitelistItemProps {
   item: ListState;

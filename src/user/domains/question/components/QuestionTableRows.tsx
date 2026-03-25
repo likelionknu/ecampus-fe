@@ -1,12 +1,9 @@
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import type { SessionQuestionRow } from "../../session/types/SessionQuestionRow";
+import { SkeletonCell } from "@/shared/components/skeleton";
+import { formatKoreanDateTime12 } from "@/shared/utils";
+import type { SessionQuestionRow } from "../../session/types";
 import { useNavigate } from "react-router-dom";
-import {
-  formatQuestionStatus,
-  isCompletedQuestionStatus,
-} from "@/user/utils/question";
-import { QUESTION_TABLE_COLUMNS } from "../constants/questionTable";
+import { formatQuestionStatus, isCompletedQuestionStatus } from "@/user/utils";
+import { QUESTION_TABLE_COLUMNS } from "../constants";
 
 interface QuestionTableRowsProps {
   isLoading: boolean;

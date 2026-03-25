@@ -1,20 +1,11 @@
-import Button from "@/shared/components/Button";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { Button } from "@/shared/components";
+import { formatKoreanDateTime12, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import ReactMarkdown from "react-markdown";
-import { markdownComponents } from "../components/markdown/MarkdownComponents";
+import { markdownComponents } from "../components/markdown";
 import { useEffect, useState } from "react";
-import Modal from "@/shared/components/modal/Modal";
+import { Modal, ErrorModal } from "@/shared/components/modal";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  deleteSessionFile,
-  getSessionFile,
-  toggleSessionFileStatus,
-} from "../api/files";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
+import { deleteSessionFile, getSessionFile, toggleSessionFileStatus } from "../api";
 
 interface FileData {
   fileId: number;

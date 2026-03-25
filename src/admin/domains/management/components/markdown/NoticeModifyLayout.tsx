@@ -1,18 +1,12 @@
 import { useRef, useState, type Dispatch, type SetStateAction } from "react";
-import Button from "@/shared/components/Button";
-import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync";
-import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor";
-import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview";
-import Input from "@/shared/components/Input";
-import Modal from "@/shared/components/modal/Modal";
+import { Button, Input } from "@/shared/components";
+import { useScrollSync } from "@/admin/domains/session/hooks";
+import { MarkdownEditor, MarkdownPreview } from "@/admin/domains/session/components/markdown";
+import { Modal, ErrorModal } from "@/shared/components/modal";
 import { useNavigate, useParams } from "react-router-dom";
-import { getPresignedUrl } from "@/admin/domains/session/api/files";
-import { modifyNotice } from "../../apis/notice";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
+import { getPresignedUrl } from "@/admin/domains/session/api";
+import { modifyNotice } from "../../apis";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 
 interface Props {
   title: string;

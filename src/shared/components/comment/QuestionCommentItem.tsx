@@ -1,14 +1,9 @@
 import { useState } from "react";
-import Button from "@/shared/components/Button";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import Modal from "@/shared/components/modal/Modal";
-import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import { deleteComment } from "@/user/shared/apis/comment";
-import type { CommentState } from "@/user/shared/types/CommentState";
+import { Button } from "@/shared/components";
+import { ErrorModal, Modal } from "@/shared/components/modal";
+import { formatDaysAgo, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { deleteComment } from "@/user/shared/apis";
+import type { CommentState } from "@/user/shared/types";
 
 const CommentStatus = () => {
   return (

@@ -1,7 +1,6 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -57,12 +56,6 @@ export const PageNationFrame = ({
       }).slice(startIndex, startIndex + itemSumNum),
     [itemNum, itemSumNum, startIndex],
   );
-
-  useEffect(() => {
-    if (currentPage !== safeCurrentPage) {
-      setCurrentPage(safeCurrentPage);
-    }
-  }, [currentPage, safeCurrentPage]);
 
   const value = useMemo(
     () => ({
