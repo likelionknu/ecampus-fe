@@ -1,8 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import rehypeHighlight from "rehype-highlight";
+// import rehypeHighlight from "rehype-highlight";
 import { markdownComponents } from "./MarkdownComponents";
-
 
 interface Props {
   content: string;
@@ -13,7 +12,7 @@ export default function MarkdownRenderer({ content }: Props) {
     <div className="prose max-w-none">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
-        rehypePlugins={[rehypeHighlight]}
+        // rehypePlugins={[rehypeHighlight]}
         components={markdownComponents}
       >
         {content}

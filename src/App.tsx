@@ -4,11 +4,16 @@ import {
   createBrowserRouter,
 } from "react-router-dom";
 import { AdminRoutes } from "@admin";
-import { GoogleCallback } from "@auth/api";
 import { BaseLayout } from "@shared/layouts";
 import { UserRoutes } from "@user";
 import { lazy, Suspense, type ReactElement } from "react";
 import RequireAccess from "./auth/components/RequireAuth";
+
+const GoogleCallback = lazy(() =>
+  import("@auth/api").then((module) => ({
+    default: module.GoogleCallback,
+  })),
+);
 
 const LoginPage = lazy(() =>
   import("@auth/pages").then((module) => ({
@@ -27,21 +32,25 @@ const ErrorPage = lazy(() =>
     default: module.ErrorPage,
   })),
 );
+
 const MaintenancePage = lazy(() =>
   import("@shared/pages").then((module) => ({
     default: module.MaintenancePage,
   })),
 );
+
 const PreparingPage = lazy(() =>
   import("@shared/pages").then((module) => ({
     default: module.PreparingPage,
   })),
 );
+
 const PrivacyPolicyPage = lazy(() =>
   import("@shared/pages").then((module) => ({
     default: module.PrivacyPolicyPage,
   })),
 );
+
 const ScreenSizeErrorPage = lazy(() =>
   import("@shared/pages").then((module) => ({
     default: module.ScreenSizeErrorPage,
@@ -53,8 +62,7 @@ const withSuspense = (element: ReactElement) => (
 );
 
 const router = createBrowserRouter([
-  { path: "/", element: <GoogleCallback /> },
-
+  { path: "/", element: withSuspense(<GoogleCallback />) },
   {
     path: "/auth/login",
     element: withSuspense(<LoginPage />),
