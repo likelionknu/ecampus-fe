@@ -148,7 +148,7 @@ export default function FilesUploadLayout({
               size="primary"
               onClick={() => {
                 setModalType(null);
-                navigate("/admin/sessions/data/management");
+                navigate(-1);
               }}
             >
               확인
