@@ -2,6 +2,9 @@ import { LegalFooter, PageBackground } from "@shared/components";
 import { Link } from "react-router-dom";
 import NavLogo from "@shared/assets/NavLogo.png";
 
+const desktopSectionClassName =
+  "relative hidden w-full flex-col lg:flex lg:min-h-screen lg:px-[clamp(2.5rem,3.8vw,3.5rem)] lg:pt-[clamp(3rem,4.5vw,3.75rem)] lg:pb-[clamp(2.5rem,4vw,3.125rem)]";
+
 // 공통 404(Not Found) 페이지입니다.
 function ErrorPage() {
   return (
@@ -46,19 +49,19 @@ function ErrorPage() {
       </section>
 
       {/*웹*/}
-      <section className="relative hidden w-full flex-col lg:absolute lg:top-0 lg:left-224.25 lg:z-10 lg:flex lg:h-190 lg:w-135.75 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+      <section className={desktopSectionClassName}>
         <div className="flex items-center gap-4">
           <img
             src={NavLogo}
             alt="LIKELION KNU 로고"
             className="h-9 w-6 shrink-0 brightness-0"
           />
-          <span className="text-ec-black tracking-ec-tight text-[44px] leading-none font-semibold">
+          <span className="text-ec-black tracking-ec-tight text-[clamp(2rem,3vw,2.75rem)] leading-none font-semibold">
             LIKELION KNU
           </span>
         </div>
 
-        <div className="mt-21.5">
+        <div className="mt-[clamp(4rem,8vw,5.375rem)]">
           <h1 className="typo-title text-ec-black">페이지를 찾을 수 없어요</h1>
           <p className="typo-body-1 text-ec-sub mt-4">
             찾고 있는 페이지를 찾을 수 없거나, 일시적으로 사용할 수 없어요
@@ -66,7 +69,7 @@ function ErrorPage() {
 
           <Link
             to="/user/dashboard"
-            className="bg-ec-blue text-ec-gnb-white typo-body-1 rounded-ec-10 focus-visible:outline-ec-blue hover:bg-ec-blue-item mt-11 inline-flex items-center justify-center px-6 py-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+            className="bg-ec-blue text-ec-gnb-white typo-body-1 rounded-ec-10 focus-visible:outline-ec-blue hover:bg-ec-blue-item mt-11 inline-flex w-full max-w-72 items-center justify-center px-6 py-2.5 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
           >
             대시보드로 돌아가기
           </Link>

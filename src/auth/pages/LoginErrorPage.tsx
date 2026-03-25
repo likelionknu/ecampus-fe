@@ -6,6 +6,9 @@ import { googleOAuth as GoogleLogin } from "@/auth/api";
 import NavLogo from "@shared/assets/NavLogo.png";
 import { LegalFooter, PageBackground } from "@shared/components";
 
+const desktopSectionClassName =
+  "relative hidden w-full flex-col lg:flex lg:min-h-screen lg:px-[clamp(2.5rem,3.8vw,3.5rem)] lg:pt-[clamp(3rem,4.5vw,3.75rem)] lg:pb-[clamp(2.5rem,4vw,3.125rem)]";
+
 function LoginErrorPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -73,19 +76,19 @@ function LoginErrorPage() {
       </section>
 
       {/*웹*/}
-      <section className="relative hidden w-full flex-col lg:absolute lg:top-0 lg:left-223.5 lg:z-10 lg:flex lg:h-190 lg:w-136.5 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+      <section className={desktopSectionClassName}>
         <div className="flex items-center gap-4">
           <img
             src={NavLogo}
             alt="LIKELION KNU 로고"
             className="h-9 w-6 shrink-0 brightness-0"
           />
-          <span className="text-ec-black tracking-ec-tight text-3xl leading-none font-semibold sm:text-[44px]">
+          <span className="text-ec-black tracking-ec-tight text-3xl leading-none font-semibold sm:text-[44px] lg:text-[clamp(2rem,3vw,2.75rem)]">
             LIKELION KNU
           </span>
         </div>
 
-        <div className="mt-15.5">
+        <div className="mt-[clamp(3.5rem,6vw,4.25rem)]">
           <div
             role="alert"
             className="border-ec-red text-ec-red rounded-ec-10 flex h-12 w-full max-w-96 items-center border px-4.5 text-sm leading-6 font-medium"
