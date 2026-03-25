@@ -1,5 +1,5 @@
-import Input from "@/shared/components/Input";
-import BoxLayout from "@/user/shared/components/BoxLayout";
+import { Input } from "@/shared/components";
+import { BoxLayout } from "@/user/shared/components";
 
 interface AssignmentContentSectionProps {
   label: string;

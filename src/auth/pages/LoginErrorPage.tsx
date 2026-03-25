@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import GoogleLoginButton from "@auth/components/GoogleLoginButton";
-import {
-  buildLoginErrorPath,
-  normalizeAuthError,
-  readAuthErrorFromSearchParams,
-} from "@auth/utils/authErrors";
-import GoogleLogin from "@/auth/api/googleOAuth";
+import { GoogleLoginButton } from "@auth/components";
+import { buildLoginErrorPath, normalizeAuthError, readAuthErrorFromSearchParams } from "@auth/utils";
+import { googleOAuth as GoogleLogin } from "@/auth/api";
 import NavLogo from "@shared/assets/NavLogo.png";
-import LegalFooter from "@shared/components/LegalFooter";
-import PageBackground from "@shared/components/PageBackground";
+import { LegalFooter, PageBackground } from "@shared/components";
 
 function LoginErrorPage() {
   const navigate = useNavigate();

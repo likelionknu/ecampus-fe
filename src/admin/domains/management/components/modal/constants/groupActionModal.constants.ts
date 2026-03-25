@@ -1,7 +1,4 @@
-import type {
-  GroupActionModalConfig,
-  GroupActionType,
-} from "../types/groupActionModal.types";
+import type { GroupActionModalConfig, GroupActionType } from "../types";
 
 export const MODAL_CONFIG = {
   USER_MEMO_ADD: {

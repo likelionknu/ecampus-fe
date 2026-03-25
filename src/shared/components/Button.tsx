@@ -1,4 +1,4 @@
-import type { ButtonSize, ButtonVariant } from "@/shared/types/Button";
+import type { ButtonSize, ButtonVariant } from "@/shared/types";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;

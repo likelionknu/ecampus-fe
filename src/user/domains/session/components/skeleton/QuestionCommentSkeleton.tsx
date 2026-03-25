@@ -1,4 +1,4 @@
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import { SkeletonCell } from "@/shared/components/skeleton";
 
 function QuestionCommentSkeleton() {
   return (

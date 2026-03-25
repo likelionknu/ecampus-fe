@@ -1,8 +1,7 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import LoginLoadingVector from "@auth/assets/Vector.svg";
 import NavLogo from "@shared/assets/NavLogo.png";
-import LegalFooter from "@shared/components/LegalFooter";
-import PageBackground from "@shared/components/PageBackground";
+import { LegalFooter, PageBackground } from "@shared/components";
 
 function LoginLoadingIllustration() {
   return (

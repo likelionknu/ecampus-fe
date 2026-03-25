@@ -1,18 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import LoginLoadingPage from "@auth/pages/LoginLoadingPage";
-import {
-  AuthFlowError,
-  buildLoginErrorPath,
-  createAuthErrorInfo,
-  getGoogleOAuthErrorMessage,
-  normalizeAuthError,
-} from "@auth/utils/authErrors";
-import type { ApiResponse, GoogleLoginResponseData } from "@auth/types/auth";
-import {
-  getDefaultRouteByRole,
-  useAuthSessionStore,
-} from "@/auth/stores/authStore";
+import { LoginLoadingPage } from "@auth/pages";
+import { AuthFlowError, buildLoginErrorPath, createAuthErrorInfo, getGoogleOAuthErrorMessage, normalizeAuthError } from "@auth/utils";
+import type { ApiResponse, GoogleLoginResponseData } from "@auth/types";
+import { getDefaultRouteByRole, useAuthSessionStore } from "@/auth/stores";
 import { validateGoogleOAuthState } from "@auth/api/googleOAuth";
 
 const GoogleCallback = () => {

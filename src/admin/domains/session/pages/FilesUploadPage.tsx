@@ -1,5 +1,5 @@
 import { useState } from "react";
-import EditorLayout from "../components/markdown/FilesUploadLayout";
+import { FilesUploadLayout as EditorLayout } from "../components/markdown";
 
 export default function FilesUploadPage() {
   const [title, setTitle] = useState("");

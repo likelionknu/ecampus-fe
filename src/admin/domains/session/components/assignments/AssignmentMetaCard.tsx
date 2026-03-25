@@ -1,8 +1,8 @@
 import { useMediaQuery } from "react-responsive";
-import TextBox from "@/shared/components/TextBox";
-import { formatKoreanDateTime24 } from "@/shared/utils/formatKoreanDateTime";
-import AssignmentMetaRow from "@/user/domains/session/components/AssignmentsMetaRow";
-import type { AdminAssignmentDetail } from "../../types/assignment";
+import { TextBox } from "@/shared/components";
+import { formatKoreanDateTime24 } from "@/shared/utils";
+import { AssignmentsMetaRow as AssignmentMetaRow } from "@/user/domains/session/components";
+import type { AdminAssignmentDetail } from "../../types";
 
 interface AssignmentMetaCardProps {
   assignment: Pick<

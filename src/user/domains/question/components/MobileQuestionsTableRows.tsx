@@ -1,11 +1,8 @@
-﻿import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import type { SessionQuestionRow } from "@/user/domains/session/types/SessionQuestionRow";
-import MobileItem from "../../../shared/components/MobileItem";
+﻿import { formatKoreanDateTime12 } from "@/shared/utils";
+import type { SessionQuestionRow } from "@/user/domains/session/types";
+import { MobileItem } from "../../../shared/components";
 import TableIcon from "../assets/tableIcon.png";
-import {
-  formatQuestionStatus,
-  isCompletedQuestionStatus,
-} from "@/user/utils/question";
+import { formatQuestionStatus, isCompletedQuestionStatus } from "@/user/utils";
 
 interface MobileQuestionsTableRowsProps {
   questions: SessionQuestionRow[];

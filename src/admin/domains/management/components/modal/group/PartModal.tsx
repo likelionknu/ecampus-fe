@@ -1,6 +1,5 @@
-import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
-import SelectBox from "@/shared/components/SelectBox";
+import { Button, SelectBox } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
 
 interface PartModalProps {
   currentPart?: string;

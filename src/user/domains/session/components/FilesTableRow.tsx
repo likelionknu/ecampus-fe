@@ -1,6 +1,6 @@
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import type { SessionFile } from "../types/SessionFile";
+import { SkeletonCell } from "@/shared/components/skeleton";
+import { formatKoreanDateTime12 } from "@/shared/utils";
+import type { SessionFile } from "../types";
 
 interface FilesTableRowsProps {
   files: SessionFile[];

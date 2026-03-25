@@ -1,8 +1,8 @@
-import { markdownComponents } from "@/admin/domains/session/components/markdown/MarkdownComponents";
+import { markdownComponents } from "@/admin/domains/session/components/markdown";
 import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getSpecificFile } from "../apis/sessionFile";
+import { getSpecificFile } from "../apis";
 
 function UserSessionFilesViewPage() {
   const { fileId: fileIdParam } = useParams();

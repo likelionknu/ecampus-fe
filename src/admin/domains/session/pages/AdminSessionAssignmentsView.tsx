@@ -1,26 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import Button from "@/shared/components/Button";
-import TitleSection from "@/shared/components/TitleSection";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import Modal from "@/shared/components/modal/Modal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import AssignmentDeleteModal from "../components/assignments/AssignmentDeleteModal";
-import AssignmentEditModal from "../components/assignments/AssignmentEditModal";
-import AssignmentDescriptionSection from "../components/assignments/AssignmentDescriptionSection";
-import AssignmentMetaCard from "../components/assignments/AssignmentMetaCard";
-import AssignmentStatusTable from "../components/assignments/AssignmentStatusTable";
-import {
-  getAdminAssignmentDetail,
-  getAdminAssignmentSubmits,
-} from "../api/assignment";
-import type {
-  AdminAssignmentDetail,
-  AdminAssignmentParticipantsPage,
-} from "../types/assignment";
+import { Button, TitleSection } from "@/shared/components";
+import { ErrorModal, Modal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { AssignmentDeleteModal, AssignmentEditModal, AssignmentDescriptionSection, AssignmentMetaCard, AssignmentStatusTable } from "../components/assignments";
+import { getAdminAssignmentDetail, getAdminAssignmentSubmits } from "../api";
+import type { AdminAssignmentDetail, AdminAssignmentParticipantsPage } from "../types";
 
 function parsePositiveInteger(value: string | null) {
   if (!value) {

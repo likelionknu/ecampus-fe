@@ -1,7 +1,7 @@
 import TwoManIcon from "@user/domains/session/assets/TwoManIcon.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import { SkeletonCell } from "@/shared/components/skeleton";
 import { useNavigate } from "react-router-dom";
 
 interface SessionItemData {

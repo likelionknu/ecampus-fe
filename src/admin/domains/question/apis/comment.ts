@@ -1,9 +1,6 @@
 import { api } from "@/shared/apis";
-import { formatDaysAgo } from "@/shared/utils/formatDaysAgo";
-import type {
-  AdminQuestionComment,
-  AdminQuestionCommentResponse,
-} from "../types/question";
+import { formatDaysAgo } from "@/shared/utils";
+import type { AdminQuestionComment, AdminQuestionCommentResponse } from "../types";
 
 interface AdminQuestionCommentApiErrorPayload {
   code: string | null;

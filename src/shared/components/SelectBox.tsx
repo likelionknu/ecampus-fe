@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface SelectBoxProps {
   options: string[];
@@ -15,10 +15,9 @@ const SelectBox: React.FC<SelectBoxProps> = ({
 }) => {
   const [selected, setSelected] = useState<string>(defaultValue || options[0]);
   const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    setSelected(defaultValue || options[0]);
-  }, [defaultValue, options]);
+  const fallbackSelected = defaultValue || options[0] || "";
+  const resolvedSelected =
+    selected && options.includes(selected) ? selected : fallbackSelected;
 
   const handleSelect = (option: string) => {
     setSelected(option);
@@ -36,10 +35,10 @@ const SelectBox: React.FC<SelectBoxProps> = ({
       >
         <span
           className={`text-sm font-medium ${
-            selected === defaultValue ? "text-ec-sub" : "text-ec-black"
+            resolvedSelected === defaultValue ? "text-ec-sub" : "text-ec-black"
           }`}
         >
-          {selected}
+          {resolvedSelected}
         </span>
         <svg
           className={`h-4 w-4 transition-transform ${isOpen ? "rotate-180" : ""}`}

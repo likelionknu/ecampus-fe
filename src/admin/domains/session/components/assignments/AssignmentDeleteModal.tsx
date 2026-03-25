@@ -1,11 +1,8 @@
 import { useState } from "react";
-import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
-import {
-  deleteAdminAssignment,
-  getDeleteAdminAssignmentErrorMessage,
-} from "../../api/assignment";
-import type { AdminAssignmentDetail } from "../../types/assignment";
+import { Button } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
+import { deleteAdminAssignment, getDeleteAdminAssignmentErrorMessage } from "../../api";
+import type { AdminAssignmentDetail } from "../../types";
 
 interface AssignmentDeleteModalProps {
   assignment: Pick<AdminAssignmentDetail, "assignmentId" | "title">;

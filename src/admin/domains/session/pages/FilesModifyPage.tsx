@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import ModifyLayout from "../components/markdown/FilesModifyLayout";
+import { FilesModifyLayout as ModifyLayout } from "../components/markdown";
 
 interface FileEditState {
   file?: {

@@ -1,13 +1,7 @@
-import TitleSection from "@/shared/components/TitleSection";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationItem,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
+import { TitleSection, PageNationButton, PageNationFrame, PageNationItem, PageNationMenu } from "@/shared/components";
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { formatKoreanDateTime12 } from "@/shared/utils";
 import { useNavigate } from "react-router-dom";
 
 const AdminNotionPage = () => {

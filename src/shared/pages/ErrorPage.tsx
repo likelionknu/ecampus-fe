@@ -1,5 +1,4 @@
-import LegalFooter from "@shared/components/LegalFooter";
-import PageBackground from "@shared/components/PageBackground";
+import { LegalFooter, PageBackground } from "@shared/components";
 import { Link } from "react-router-dom";
 import NavLogo from "@shared/assets/NavLogo.png";
 

@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import TitleSection from "@/shared/components/TitleSection";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import {
-  getAdminQuestionDetail,
-  updateAdminQuestionAnswer,
-} from "../apis/question";
-import AdminQuestionDeleteModal from "../components/AdminQuestionDeleteModal";
-import AdminQuestionDetailContent from "../components/AdminQuestionDetailContent";
-import type { AdminQuestionDetail } from "../types/question";
+import { TitleSection } from "@/shared/components";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { getAdminQuestionDetail, updateAdminQuestionAnswer } from "../apis";
+import { AdminQuestionDeleteModal, AdminQuestionDetailContent } from "../components";
+import type { AdminQuestionDetail } from "../types";
 
 const ANSWER_MAX_LENGTH = 700;
 

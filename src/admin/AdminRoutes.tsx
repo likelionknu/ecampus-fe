@@ -1,22 +1,8 @@
 ﻿import type { RouteObject } from "react-router-dom";
-import AdminSessionsPage from "./domains/management/pages/AdminSessionsPage";
-import SessionTabLayout from "@/shared/layouts/SessionTabLayout";
-import AdminGroupPage from "./domains/management/pages/AdminGroupPage";
-import DataManagementPage from "./domains/session/pages/DataManagementPage";
-import TaskManagementPage from "./domains/session/pages/TaskManagementPage";
-import AdminQuestionPage from "./domains/management/pages/AdminQuestionPage";
-import AdminNotionPage from "./domains/management/pages/AdminNotionPage";
-import AdminQuestionManageView from "./domains/question/pages/AdminQuestionManageView";
-import AdminQuestionView from "./domains/question/pages/AdminQuestionView";
-import FilesUploadPage from "./domains/session/pages/FilesUploadPage";
-import FilesViewPage from "./domains/session/pages/FilesViewPage";
-import FilesModifyPage from "./domains/session/pages/FilesModifyPage";
-import NoticeUploadPage from "./domains/management/pages/NoticeUploadPage";
-import NoticeViewPage from "./domains/management/pages/NoticeViewPage";
-import NoticeModifyPage from "./domains/management/pages/NoticeModifyPage";
-import AdminDashboardPage from "./domains/session/pages/AdminDashboardPage";
-import AdminSessionAssignmentsView from "./domains/session/pages/AdminSessionAssignmentsView";
-import AdminSessionAssignmentUpload from "./domains/session/pages/AdminSessionAssignmentUpload";
+import { AdminSessionsPage, AdminGroupPage, AdminQuestionPage, AdminNotionPage, NoticeUploadPage, NoticeViewPage, NoticeModifyPage } from "./domains/management/pages";
+import { SessionTabLayout } from "@/shared/layouts";
+import { DataManagementPage, TaskManagementPage, FilesUploadPage, FilesViewPage, FilesModifyPage, AdminDashboardPage, AdminSessionAssignmentsView, AdminSessionAssignmentUpload } from "./domains/session/pages";
+import { AdminQuestionManageView, AdminQuestionView } from "./domains/question/pages";
 
 const adminRoutes: RouteObject[] = [
   {

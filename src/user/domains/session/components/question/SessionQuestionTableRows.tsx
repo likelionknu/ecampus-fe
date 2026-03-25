@@ -1,6 +1,6 @@
-﻿import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
+﻿import { SkeletonCell } from "@/shared/components/skeleton";
+import { formatKoreanDateTime12 } from "@/shared/utils";
+import type { SessionQuestionRow } from "../../types";
 import { useNavigate } from "react-router-dom";
 
 interface SessionQuestionTableRowsProps {

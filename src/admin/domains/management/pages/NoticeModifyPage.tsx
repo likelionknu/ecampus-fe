@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
-import NoticeModifyLayout from "../components/markdown/NoticeModifyLayout";
-import { getNoticeDetail } from "../apis/notice";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
+import { NoticeModifyLayout } from "../components/markdown";
+import { getNoticeDetail } from "../apis";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 
 interface NoticeEditState {
   notice?: {

@@ -1,13 +1,9 @@
 import { useState } from "react";
-import Button from "@/shared/components/Button";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import Modal from "@/shared/components/modal/Modal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import { deleteAdminQuestionComment } from "../apis/comment";
-import type { AdminQuestionComment } from "../types/question";
+import { Button } from "@/shared/components";
+import { ErrorModal, Modal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { deleteAdminQuestionComment } from "../apis";
+import type { AdminQuestionComment } from "../types";
 
 interface AdminQuestionCommentItemProps {
   comment: AdminQuestionComment;

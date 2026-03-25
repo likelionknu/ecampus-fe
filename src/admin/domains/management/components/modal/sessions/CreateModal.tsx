@@ -1,7 +1,6 @@
-import Button from "@/shared/components/Button";
-import Input from "@/shared/components/Input";
-import Modal from "@/shared/components/modal/Modal";
-import type { ModalProps } from "@/shared/types/Modal";
+import { Button, Input } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
+import type { ModalProps } from "@/shared/types";
 
 function CreateModal({ name, onChange, onClick, onClose }: ModalProps) {
   return (

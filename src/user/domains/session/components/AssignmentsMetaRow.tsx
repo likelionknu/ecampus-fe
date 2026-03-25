@@ -1,5 +1,5 @@
 import type React from "react";
-import SkeletonCell from "@/shared/components/skeleton/SkeletonCell";
+import { SkeletonCell } from "@/shared/components/skeleton";
 
 interface AssignmentMetaRowProps {
   label: string;

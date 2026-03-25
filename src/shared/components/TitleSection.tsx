@@ -1,5 +1,5 @@
 import Button from "@/shared/components/Button";
-import type { ButtonVariant } from "@/shared/types/Button";
+import type { ButtonVariant } from "@/shared/types";
 import { useMediaQuery } from "react-responsive";
 
 interface TitleAction {

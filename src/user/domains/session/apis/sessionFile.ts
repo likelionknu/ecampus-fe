@@ -1,8 +1,5 @@
 import { api } from "@/shared/apis";
-import type {
-  SessionFileDetail,
-  SessionFilesResponse,
-} from "../types/SessionFile";
+import type { SessionFileDetail, SessionFilesResponse } from "../types";
 
 export const getSessionFiles = async ({
   sid,

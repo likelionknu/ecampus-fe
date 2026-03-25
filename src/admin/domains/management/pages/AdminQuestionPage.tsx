@@ -1,17 +1,9 @@
-import TitleSection from "@/shared/components/TitleSection";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationItem,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import SerachBar from "@/shared/components/SerachBar";
-import SelectBox from "@/shared/components/SelectBox";
-import { QUESTION_STATUS_OPTIONS } from "@/shared/constants/selectOptions";
+import { TitleSection, PageNationButton, PageNationFrame, PageNationItem, PageNationMenu, SerachBar, SelectBox } from "@/shared/components";
+import { QUESTION_STATUS_OPTIONS } from "@/shared/constants";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { formatKoreanDateTime12 } from "@/shared/utils";
 
 const QUESTION_STATUS_TO_API_VALUE: Record<string, string> = {
   전체: "",

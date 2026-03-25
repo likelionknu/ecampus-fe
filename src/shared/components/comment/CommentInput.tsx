@@ -1,12 +1,8 @@
 import { useState } from "react";
-import Button from "../Button";
-import ErrorModal from "../modal/ErrorModal";
-import Modal from "../modal/Modal";
-import { createComment } from "@/user/shared/apis/comment";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
+import { Button } from "..";
+import { ErrorModal, Modal } from "../modal";
+import { createComment } from "@/user/shared/apis";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 
 interface CommentInputProps {
   qid: number;

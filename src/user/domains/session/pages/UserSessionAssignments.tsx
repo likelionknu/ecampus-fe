@@ -1,18 +1,11 @@
 import { useMediaQuery } from "react-responsive";
-import TitleSection from "@/shared/components/TitleSection";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import { formatDateTime } from "@/shared/utils/date";
-import AssignmentsTableHeader from "../components/AssignmentsTableHeader";
-import AssignmentsTableRow from "../components/AssignmentsTableRow";
-import ListBoxMobile from "../components/application/ListBoxMobile";
-import { AssignmentInfo } from "../components/application/AssignmentInfo";
+import { TitleSection, PageNationButton, PageNationFrame, PageNationMenu } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { formatDateTime } from "@/shared/utils";
+import { AssignmentsTableHeader, AssignmentsTableRow } from "../components";
+import { ListBoxMobile, AssignmentInfo } from "../components/application";
 import { useEffect, useState } from "react";
-import { getAssignments } from "../apis/assignment";
+import { getAssignments } from "../apis";
 import { useNavigate, useParams } from "react-router-dom";
 
 interface AssignmentRow {

@@ -1,9 +1,9 @@
-import TitleSection from "@/shared/components/TitleSection";
-import type { ButtonVariant } from "@/shared/types/Button";
+import { TitleSection } from "@/shared/components";
+import type { ButtonVariant } from "@/shared/types";
 import AdminQuestionCommentsSection from "./AdminQuestionCommentsSection";
 import AdminQuestionContentSection from "./AdminQuestionContentSection";
 import AdminQuestionMetaCard from "./AdminQuestionMetaCard";
-import type { AdminQuestionDetail } from "../types/question";
+import type { AdminQuestionDetail } from "../types";
 
 interface AdminQuestionDetailAction {
   label: string;

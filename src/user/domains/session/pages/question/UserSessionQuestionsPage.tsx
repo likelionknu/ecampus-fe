@@ -1,23 +1,13 @@
 ﻿import { useNavigate, useParams } from "react-router-dom";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TitleSection from "@/shared/components/TitleSection";
-import SessionQuestionTableHeader from "../../components/question/SessionQuestionTableHeader";
-import SessionQuestionTableRows from "../../components/question/SessionQuestionTableRows";
-import type { SessionQuestionRow } from "../../types/SessionQuestionRow";
+import { TableEmptyState } from "@/shared/components/table";
+import { PageNationButton, PageNationFrame, PageNationMenu, TitleSection } from "@/shared/components";
+import { SessionQuestionTableHeader, SessionQuestionTableRows, SessionMobileQuestionTableRows } from "../../components/question";
+import type { SessionQuestionRow } from "../../types";
 import { useMediaQuery } from "react-responsive";
-import SessionMobileQuestionTableRows from "../../components/question/SessionMobileQuestionTableRows";
 import { useCallback, useEffect, useState } from "react";
-import { getSessionQuestions } from "../../apis/sessionQuestion";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
+import { getSessionQuestions } from "../../apis";
+import { ErrorModal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 
 interface QuestionsPageState {
   questions: SessionQuestionRow[];

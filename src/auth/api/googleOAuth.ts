@@ -1,4 +1,4 @@
-﻿import { createAuthErrorInfo, AuthFlowError } from "@auth/utils/authErrors";
+﻿import { createAuthErrorInfo, AuthFlowError } from "@auth/utils";
 
 const GOOGLE_URL = "https://accounts.google.com/o/oauth2/v2/auth?";
 const GOOGLE_OAUTH_STATE_KEY = "ecampus.auth.google.state";

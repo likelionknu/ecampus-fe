@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import DefaultBar from "../components/DefaultBar/DefaultBar";
+import { DefaultBar } from "../components/DefaultBar";
 
 function BaseLayout() {
   return (

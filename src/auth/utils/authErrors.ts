@@ -1,9 +1,5 @@
 import axios from "axios";
-import type {
-  ApiResponse,
-  AuthErrorInfo,
-  AuthErrorReason,
-} from "@auth/types/auth";
+import type { ApiResponse, AuthErrorInfo, AuthErrorReason } from "@auth/types";
 
 const BACKEND_ERROR_REASON_BY_CODE: Record<string, AuthErrorReason> = {
   C401: "unauthorized",

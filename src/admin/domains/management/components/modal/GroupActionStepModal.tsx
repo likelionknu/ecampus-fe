@@ -1,10 +1,7 @@
-﻿import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
-import { MODAL_CONFIG } from "./constants/groupActionModal.constants";
-import type {
-  GroupActionModalState,
-  GroupActionType,
-} from "./types/groupActionModal.types";
+﻿import { Button } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
+import { MODAL_CONFIG } from "./constants";
+import type { GroupActionModalState, GroupActionType } from "./types";
 export type { GroupActionModalState, GroupActionType };
 
 interface GroupActionStepModalProps {

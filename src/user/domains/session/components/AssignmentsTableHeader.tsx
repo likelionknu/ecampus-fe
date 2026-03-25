@@ -1,5 +1,5 @@
-import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
-import { ASSIGNMENTS_TABLE_COLUMNS } from "../constants/assignmentsTable";
+import { TableHeaderLabel } from "@/shared/components/table";
+import { ASSIGNMENTS_TABLE_COLUMNS } from "../constants";
 
 function AssignmentsTableHeader() {
   return (

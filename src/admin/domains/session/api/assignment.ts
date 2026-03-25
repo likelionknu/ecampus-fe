@@ -1,12 +1,6 @@
 import axios from "axios";
 import { api } from "@/shared/apis";
-import type {
-  AdminAssignmentDetail,
-  AdminAssignmentDetailResponse,
-  AdminAssignmentParticipant,
-  AdminAssignmentParticipantsPage,
-  AdminAssignmentSubmitsPageResponse,
-} from "../types/assignment";
+import type { AdminAssignmentDetail, AdminAssignmentDetailResponse, AdminAssignmentParticipant, AdminAssignmentParticipantsPage, AdminAssignmentSubmitsPageResponse } from "../types";
 
 interface SessionApiErrorPayload {
   code: string | null;

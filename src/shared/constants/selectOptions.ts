@@ -1,5 +1,4 @@
-import type { QuestionRequestStatus } from "@/shared/types/QuestionRequestStatus";
-import type { UserRequestStatus } from "@/shared/types/QuestionRequestStatus";
+import type { QuestionRequestStatus, UserRequestStatus } from "@/shared/types";
 
 export const ADMIN_GROUP_PART_DEFAULT = "정렬";
 

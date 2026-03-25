@@ -1,27 +1,15 @@
 ﻿import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import TextBox from "@/shared/components/TextBox";
-import CommentInput from "@/shared/components/comment/CommentInput";
-import { formatKoreanDateTime24 } from "@/shared/utils/formatKoreanDateTime";
-import QuestionContentSection from "@/user/domains/session/components/question/QuestionContentSection";
-import QuestionMetaRow from "@/user/domains/session/components/question/QuestionMetaRow";
-import QuestionMetaRowSkeleton from "@/user/domains/session/components/skeleton/QuestionMetaRowSkeleton";
-import TitleSection from "@/shared/components/TitleSection";
+import { TextBox, TitleSection, Button } from "@/shared/components";
+import { CommentInput } from "@/shared/components/comment";
+import { formatKoreanDateTime24, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import { QuestionContentSection, QuestionMetaRow } from "@/user/domains/session/components/question";
+import { QuestionMetaRowSkeleton } from "@/user/domains/session/components/skeleton";
 import { useMediaQuery } from "react-responsive";
-import Modal from "@/shared/components/modal/Modal";
-import Button from "@/shared/components/Button";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import {
-  deleteSessionQuestions,
-  getSessionQuestion,
-} from "../apis/sessionQuestion";
-import CommentSection from "../components/CommnentSection";
-import MobileCommentSection from "../components/MobileCommentSection";
-import type { SessionQuestionDetailRow } from "@/user/domains/session/types/SessionQuestionDetailRow";
+import { Modal, ErrorModal } from "@/shared/components/modal";
+import { deleteSessionQuestions, getSessionQuestion } from "../apis";
+import { CommnentSection as CommentSection, MobileCommentSection } from "../components";
+import type { SessionQuestionDetailRow } from "@/user/domains/session/types";
 
 type ModalState = "CONFIRM" | "DONE" | null;
 type QuestionMetaRow = {

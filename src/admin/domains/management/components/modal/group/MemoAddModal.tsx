@@ -1,5 +1,5 @@
-import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
+import { Button } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
 
 interface MemoAddModalProps {
   value: string;

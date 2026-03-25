@@ -1,4 +1,4 @@
-import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
+import type { ConfirmDoneModalPhase } from "@/shared/types";
 
 export type GroupActionType =
   | "USER_MEMO_DELETE"

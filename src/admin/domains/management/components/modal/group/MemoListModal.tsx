@@ -1,7 +1,7 @@
-import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/modal/Modal";
+import { Button } from "@/shared/components";
+import { Modal } from "@/shared/components/modal";
 import MemoBox from "./MemoBox";
-import type { GroupMemo, MemoModalTarget } from "../types/memoModal.types";
+import type { GroupMemo, MemoModalTarget } from "../types";
 import MemoItem from "./MemoItem";
 
 interface MemoListModalProps {

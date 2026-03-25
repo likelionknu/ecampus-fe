@@ -1,4 +1,4 @@
-import TextBox from "@/shared/components/TextBox";
+import { TextBox } from "@/shared/components";
 
 interface SessionOverviewItem {
   label: string;

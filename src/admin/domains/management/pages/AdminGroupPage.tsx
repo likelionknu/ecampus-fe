@@ -1,41 +1,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import SelectBox from "@/shared/components/SelectBox";
-import SerachBar from "@/shared/components/SerachBar";
-import TitleSection from "@/shared/components/TitleSection";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import {
-  ADMIN_GROUP_PART_DEFAULT,
-  SESSION_PART_OPTIONS,
-} from "@/shared/constants/selectOptions";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
-import GroupHeader from "../components/group/GroupHeader";
-import GroupTableRows from "../components/group/GroupTableRows";
-import GroupActionStepModal, {
-  type GroupActionModalState,
-  type GroupActionType,
-} from "../components/modal/GroupActionStepModal";
-import {
-  addWhiteList,
-  getUsers,
-  getWHiteList,
-  terminateUser,
-} from "../apis/group";
+import { SelectBox, SerachBar, TitleSection, PageNationButton, PageNationFrame, PageNationMenu, Input, Button } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { ADMIN_GROUP_PART_DEFAULT, SESSION_PART_OPTIONS } from "@/shared/constants";
+import { ErrorModal, Modal } from "@/shared/components/modal";
+import { getCommonErrorState, type CommonErrorState, formatKoreanDateTime12 } from "@/shared/utils";
+import { GroupHeader, GroupTableRows } from "../components/group";
+import { GroupActionStepModal, type GroupActionModalState, type GroupActionType } from "../components/modal";
+import { addWhiteList, getUsers, getWHiteList, terminateUser } from "../apis";
 import type { AdminGroupRow, PagedResponse } from "../types";
-import Modal from "@/shared/components/modal/Modal";
-import Input from "@/shared/components/Input";
-import Button from "@/shared/components/Button";
-import WhitelistItem from "../components/modal/group/WhitelistItem";
+import { WhitelistItem } from "../components/modal/group";
 import type { whitelistState } from "../types/whitelist";
 
 interface GroupUsersApiRow {

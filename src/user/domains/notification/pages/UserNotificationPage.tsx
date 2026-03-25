@@ -1,31 +1,13 @@
 ﻿import { useMediaQuery } from "react-responsive";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  PageNationButton,
-  PageNationFrame,
-  PageNationMenu,
-} from "@/shared/components/PageNation";
-import TableEmptyState from "@/shared/components/table/TableEmptyState";
-import TitleSection from "@/shared/components/TitleSection";
-import MobileNotifitcationTableRows from "../components/MobileNotificationTableRows";
-import NotificationTableHeader from "../components/NotificationTableHeader";
-import NotificationTableRows from "../components/NotificationTableRows";
-import type { NotificationRow } from "../types/NotificationRow";
-import Modal from "@/shared/components/modal/Modal";
-import Button from "@/shared/components/Button";
-import type { ConfirmDoneModalPhase } from "@/shared/types/ModalStep";
-import {
-  deleteAllNotification,
-  deleteReadNotification,
-  getNotification,
-  readAllNotification,
-  readNotification,
-} from "../apis/notification";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
-import ErrorModal from "@/shared/components/modal/ErrorModal";
+import { PageNationButton, PageNationFrame, PageNationMenu, TitleSection, Button } from "@/shared/components";
+import { TableEmptyState } from "@/shared/components/table";
+import { MobileNotificationTableRows as MobileNotifitcationTableRows, NotificationTableHeader, NotificationTableRows } from "../components";
+import type { NotificationRow } from "../types";
+import { Modal, ErrorModal } from "@/shared/components/modal";
+import type { ConfirmDoneModalPhase } from "@/shared/types";
+import { deleteAllNotification, deleteReadNotification, getNotification, readAllNotification, readNotification } from "../apis";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 
 type ActionType = "MARK_ALL_READ" | "DELETE_ALL" | "DELETE_READ";
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;

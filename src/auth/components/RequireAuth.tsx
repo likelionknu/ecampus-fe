@@ -1,4 +1,4 @@
-import { useAuthSessionStore } from "@/auth/stores/authStore";
+import { useAuthSessionStore } from "@/auth/stores";
 import { Navigate } from "react-router-dom";
 
 function RequireAuth({ children }: { children: React.ReactNode }) {

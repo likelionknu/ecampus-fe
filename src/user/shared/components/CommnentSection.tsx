@@ -1,13 +1,10 @@
-import ErrorModal from "@/shared/components/modal/ErrorModal";
-import QuestionCommentItem from "@/shared/components/comment/QuestionCommentItem";
-import QuestionCommentSkeleton from "@/user/domains/session/components/skeleton/QuestionCommentSkeleton";
-import {
-  getCommonErrorState,
-  type CommonErrorState,
-} from "@/shared/utils/questionError";
+import { ErrorModal } from "@/shared/components/modal";
+import { QuestionCommentItem } from "@/shared/components/comment";
+import { QuestionCommentSkeleton } from "@/user/domains/session/components/skeleton";
+import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import { useEffect, useState } from "react";
-import { getComments } from "../apis/comment";
-import type { CommentState } from "../types/CommentState";
+import { getComments } from "../apis";
+import type { CommentState } from "../types";
 
 function CommentSection({
   qid,

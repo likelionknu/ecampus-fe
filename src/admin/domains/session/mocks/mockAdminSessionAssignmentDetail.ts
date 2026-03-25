@@ -1,4 +1,4 @@
-import type { AdminAssignmentDetail } from "../types/assignment";
+import type { AdminAssignmentDetail } from "../types";
 
 export const mockAdminSessionAssignmentDetail: AdminAssignmentDetail = {
   assignmentId: 18,
