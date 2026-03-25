@@ -3,6 +3,7 @@ import { useState } from "react";
 interface SelectBoxProps {
   options: string[];
   defaultValue?: string;
+  value?: string;
   onChange?: (value: string) => void;
   className?: string;
 }
@@ -10,17 +11,26 @@ interface SelectBoxProps {
 const SelectBox: React.FC<SelectBoxProps> = ({
   options,
   defaultValue,
+  value,
   onChange,
   className = "",
 }) => {
   const [selected, setSelected] = useState<string>(defaultValue || options[0]);
   const [isOpen, setIsOpen] = useState(false);
+  const isControlled = value !== undefined;
   const fallbackSelected = defaultValue || options[0] || "";
-  const resolvedSelected =
+  const uncontrolledSelected =
     selected && options.includes(selected) ? selected : fallbackSelected;
+  const controlledSelected =
+    value && options.includes(value) ? value : fallbackSelected;
+  const resolvedSelected = isControlled
+    ? controlledSelected
+    : uncontrolledSelected;
 
   const handleSelect = (option: string) => {
-    setSelected(option);
+    if (!isControlled) {
+      setSelected(option);
+    }
     onChange?.(option);
     setIsOpen(false);
   };

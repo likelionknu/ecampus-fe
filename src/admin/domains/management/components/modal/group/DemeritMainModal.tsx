@@ -43,12 +43,14 @@ function DemeritMainModal({
         <SelectBox
           options={reasonOptions}
           defaultValue={selectedReason}
+          value={selectedReason}
           className="w-full"
           onChange={onSelectReason}
         />
         <SelectBox
           options={scoreOptions}
           defaultValue={selectedScore}
+          value={selectedScore}
           className="w-full"
           onChange={onSelectScore}
         />
