@@ -8,10 +8,23 @@ import DashboardMain1 from "@shared/assets/DashboardMain1.png";
 import DashboardMain2 from "@shared/assets/DashboardMain2.png";
 import DashboardMain3 from "@shared/assets/DashboardMain3.png";
 
-import { PageNationFrame, PageNationItem, PageNationMenu, PageNationButton } from "@shared/components";
-import { PageNationMobileFrame, PageNationMobileItem, PageNationMobileButton } from "@/shared/components";
+import {
+  PageNationFrame,
+  PageNationItem,
+  PageNationMenu,
+  PageNationButton,
+} from "@shared/components";
+import {
+  PageNationMobileFrame,
+  PageNationMobileItem,
+  PageNationMobileButton,
+} from "@/shared/components";
 
-import { DashboardProfileModal, DashboardDemeritsModal, NotionSpecificModal } from "../components";
+import {
+  DashboardProfileModal,
+  DashboardDemeritsModal,
+  NotionSpecificModal,
+} from "../components";
 
 import { SkeletonCell } from "@/shared/components/skeleton";
 
@@ -209,7 +222,6 @@ function UserDashBoardPage() {
 
         if (NotificationsResult.data) {
           setNotificationsData(NotificationsResult.data);
-          console.log("최근알림 데이터:", NotificationsResult.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {

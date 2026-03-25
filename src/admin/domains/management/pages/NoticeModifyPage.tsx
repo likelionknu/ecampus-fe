@@ -44,7 +44,6 @@ export default function NoticeModifyPage() {
         setTitle(notice.title);
         setContent(notice.content);
       } catch (error) {
-        console.error(error);
         setErrors(getCommonErrorState(error));
       } finally {
         setLoading(false);

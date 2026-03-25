@@ -1,4 +1,12 @@
-import { TitleSection, PageNationButton, PageNationFrame, PageNationItem, PageNationMenu, SerachBar, SelectBox } from "@/shared/components";
+import {
+  TitleSection,
+  PageNationButton,
+  PageNationFrame,
+  PageNationItem,
+  PageNationMenu,
+  SerachBar,
+  SelectBox,
+} from "@/shared/components";
 import { QUESTION_STATUS_OPTIONS } from "@/shared/constants";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -73,7 +81,6 @@ const AdminQuestionPage = () => {
 
         if (QuestionDataResult.data) {
           setQuestionData(QuestionDataResult.data);
-          console.log("질문 및 답변 데이터:", QuestionDataResult.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {

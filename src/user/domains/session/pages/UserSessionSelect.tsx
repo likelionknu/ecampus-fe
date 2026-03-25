@@ -85,7 +85,6 @@ const UserSessionSelect = () => {
         if (Array.isArray(result.data)) {
           setSessionsData(result.data);
           setLoading(false);
-          console.log("세션 데이터:", result.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {

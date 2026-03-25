@@ -5,42 +5,79 @@ import {
 } from "react-router-dom";
 import { AdminRoutes } from "@admin";
 import { GoogleCallback } from "@auth/api";
-import { LoginErrorPage, LoginPage } from "@auth/pages";
 import { BaseLayout } from "@shared/layouts";
-import { ErrorPage, MaintenancePage, PreparingPage, PrivacyPolicyPage, ScreenSizeErrorPage } from "@shared/pages";
 import { UserRoutes } from "@user";
-import { TestPage } from "./shared/pages";
 import { RequireAuth } from "./auth/components";
+import { lazy, Suspense, type ReactElement } from "react";
+
+const LoginPage = lazy(() =>
+  import("@auth/pages").then((module) => ({
+    default: module.LoginPage,
+  })),
+);
+
+const LoginErrorPage = lazy(() =>
+  import("@auth/pages").then((module) => ({
+    default: module.LoginErrorPage,
+  })),
+);
+
+const ErrorPage = lazy(() =>
+  import("@shared/pages").then((module) => ({
+    default: module.ErrorPage,
+  })),
+);
+const MaintenancePage = lazy(() =>
+  import("@shared/pages").then((module) => ({
+    default: module.MaintenancePage,
+  })),
+);
+const PreparingPage = lazy(() =>
+  import("@shared/pages").then((module) => ({
+    default: module.PreparingPage,
+  })),
+);
+const PrivacyPolicyPage = lazy(() =>
+  import("@shared/pages").then((module) => ({
+    default: module.PrivacyPolicyPage,
+  })),
+);
+const ScreenSizeErrorPage = lazy(() =>
+  import("@shared/pages").then((module) => ({
+    default: module.ScreenSizeErrorPage,
+  })),
+);
+
+const withSuspense = (element: ReactElement) => (
+  <Suspense fallback={null}>{element}</Suspense>
+);
 
 const router = createBrowserRouter([
   { path: "/", element: <GoogleCallback /> },
-  {
-    path: "/test",
-    element: <TestPage />,
-  },
+
   {
     path: "/auth/login",
-    element: <LoginPage />,
+    element: withSuspense(<LoginPage />),
     handle: { title: "Login" },
   },
   {
     path: "/auth/login-error",
-    element: <LoginErrorPage />,
+    element: withSuspense(<LoginErrorPage />),
     handle: { title: "Login Error" },
   },
   {
     path: "/preparing",
-    element: <PreparingPage />,
+    element: withSuspense(<PreparingPage />),
     handle: { title: "Preparing" },
   },
   {
     path: "/maintenance",
-    element: <MaintenancePage />,
+    element: withSuspense(<MaintenancePage />),
     handle: { title: "Maintenance" },
   },
   {
     path: "/privacy-policy",
-    element: <PrivacyPolicyPage />,
+    element: withSuspense(<PrivacyPolicyPage />),
     handle: { title: "Privacy Policy" },
   },
   {
@@ -70,7 +107,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <ErrorPage />,
+    element: withSuspense(<ErrorPage />),
     handle: { title: "Not Found" },
   },
 ]);

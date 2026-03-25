@@ -1,5 +1,9 @@
 import { Button } from "@/shared/components";
-import { formatKoreanDateTime12, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import {
+  formatKoreanDateTime12,
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils";
 import ReactMarkdown from "react-markdown";
 import { markdownComponents } from "../../session/components/markdown";
 import { Modal, ErrorModal } from "@/shared/components/modal";
@@ -42,7 +46,6 @@ function NoticeViewPage() {
         const res = await getNoticeDetail(Number(nid));
         setNotice(res.data.data);
       } catch (error) {
-        console.error(error);
         setErrors(getCommonErrorState(error));
       } finally {
         setLoading(false);
@@ -72,7 +75,6 @@ function NoticeViewPage() {
       setNotice((prev) => (prev ? { ...prev, pinned: true } : prev));
       setModalType("noticeLockSuccess");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       setModalType(null);
     } finally {
@@ -90,7 +92,6 @@ function NoticeViewPage() {
       await deleteNotice(notice.id);
       setModalType("noticeDeleteSuccess");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       setModalType(null);
     } finally {

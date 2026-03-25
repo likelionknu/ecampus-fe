@@ -45,7 +45,6 @@ export default function FilesModifyLayout({
 
       setModalType("modifySuccess");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       throw error;
     }

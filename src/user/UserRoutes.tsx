@@ -1,43 +1,108 @@
+import { lazy, Suspense, type ReactElement } from "react";
 import type { RouteObject } from "react-router-dom";
 import { SessionTabLayout } from "@shared/layouts";
-import { UserDashboardPage as UserDashBoardPage } from "@/user/domains/dashboard/pages";
-import { UserSessionQuestionsPage, UserSessionQuestionCreatePage } from "./domains/session/pages/question";
-import { UserSessionGroupPage, UserSessionSelect, UserSessionAssignments, UserSessionAssignmentsView, UserSessionFilesPage, UserSessionFilesViewPage, UserList as UserListPage } from "./domains/session/pages";
-import { UserQuestionsPage } from "./domains/question/pages";
-import { UserQuestionDetailPage } from "./shared/pages";
-import { UserNotificationPage } from "./domains/notification/pages";
+
+const UserDashboardPage = lazy(() =>
+  import("@/user/domains/dashboard/pages").then((module) => ({
+    default: module.UserDashboardPage,
+  })),
+);
+const UserSessionQuestionsPage = lazy(() =>
+  import("./domains/session/pages/question").then((module) => ({
+    default: module.UserSessionQuestionsPage,
+  })),
+);
+const UserSessionQuestionCreatePage = lazy(() =>
+  import("./domains/session/pages/question").then((module) => ({
+    default: module.UserSessionQuestionCreatePage,
+  })),
+);
+const UserSessionGroupPage = lazy(() =>
+  import("./domains/session/pages").then((module) => ({
+    default: module.UserSessionGroupPage,
+  })),
+);
+const UserSessionSelect = lazy(() =>
+  import("./domains/session/pages").then((module) => ({
+    default: module.UserSessionSelect,
+  })),
+);
+const UserSessionAssignments = lazy(() =>
+  import("./domains/session/pages").then((module) => ({
+    default: module.UserSessionAssignments,
+  })),
+);
+const UserSessionAssignmentsView = lazy(() =>
+  import("./domains/session/pages").then((module) => ({
+    default: module.UserSessionAssignmentsView,
+  })),
+);
+const UserSessionFilesPage = lazy(() =>
+  import("./domains/session/pages").then((module) => ({
+    default: module.UserSessionFilesPage,
+  })),
+);
+const UserSessionFilesViewPage = lazy(() =>
+  import("./domains/session/pages").then((module) => ({
+    default: module.UserSessionFilesViewPage,
+  })),
+);
+const UserListPage = lazy(() =>
+  import("./domains/session/pages").then((module) => ({
+    default: module.UserList,
+  })),
+);
+const UserQuestionsPage = lazy(() =>
+  import("./domains/question/pages").then((module) => ({
+    default: module.UserQuestionsPage,
+  })),
+);
+const UserQuestionDetailPage = lazy(() =>
+  import("./shared/pages").then((module) => ({
+    default: module.UserQuestionDetailPage,
+  })),
+);
+const UserNotificationPage = lazy(() =>
+  import("./domains/notification/pages").then((module) => ({
+    default: module.UserNotificationPage,
+  })),
+);
+
+const withSuspense = (element: ReactElement) => (
+  <Suspense fallback={null}>{element}</Suspense>
+);
 
 const userRoutes: RouteObject[] = [
   {
     children: [
       {
         path: "dashboard",
-        element: <UserDashBoardPage />,
+        element: withSuspense(<UserDashboardPage />),
         handle: { title: "대시보드" },
       },
       {
         path: "sessions",
-        element: <UserSessionSelect />,
+        element: withSuspense(<UserSessionSelect />),
         handle: { title: "세션" },
       },
       {
         path: "notification",
-        element: <UserNotificationPage />,
+        element: withSuspense(<UserNotificationPage />),
         handle: { title: "알림" },
       },
       {
         path: "questions",
-        element: <UserQuestionsPage />,
+        element: withSuspense(<UserQuestionsPage />),
         handle: { title: "질문" },
       },
       {
         path: "list",
-        element: <UserListPage />,
+        element: withSuspense(<UserListPage />),
         handle: { title: "그룹" },
       },
       {
         path: "questions/:questionId/:sessionId",
-        element: <UserQuestionDetailPage />,
+        element: withSuspense(<UserQuestionDetailPage />),
         handle: { title: "질문 상세" },
       },
     ],
@@ -48,16 +113,28 @@ const userRoutes: RouteObject[] = [
     element: <SessionTabLayout tabType="userSession" />,
     handle: { title: "세션" },
     children: [
-      { path: "files", element: <UserSessionFilesPage /> },
-      { path: "files/:fileId", element: <UserSessionFilesViewPage /> },
-      { path: "assignments", element: <UserSessionAssignments /> },
+      { path: "files", element: withSuspense(<UserSessionFilesPage />) },
+      {
+        path: "files/:fileId",
+        element: withSuspense(<UserSessionFilesViewPage />),
+      },
+      {
+        path: "assignments",
+        element: withSuspense(<UserSessionAssignments />),
+      },
       {
         path: "assignments/:assignmentId",
-        element: <UserSessionAssignmentsView />,
+        element: withSuspense(<UserSessionAssignmentsView />),
       },
-      { path: "groups", element: <UserSessionGroupPage /> },
-      { path: "questions", element: <UserSessionQuestionsPage /> },
-      { path: "questions/new", element: <UserSessionQuestionCreatePage /> },
+      { path: "groups", element: withSuspense(<UserSessionGroupPage />) },
+      {
+        path: "questions",
+        element: withSuspense(<UserSessionQuestionsPage />),
+      },
+      {
+        path: "questions/new",
+        element: withSuspense(<UserSessionQuestionCreatePage />),
+      },
     ],
   },
 ];
