@@ -1,13 +1,39 @@
 import { useCallback, useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
-import { SelectBox, SerachBar, TitleSection, PageNationButton, PageNationFrame, PageNationMenu, Input, Button } from "@/shared/components";
+import {
+  SelectBox,
+  SerachBar,
+  TitleSection,
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+  Input,
+  Button,
+} from "@/shared/components";
 import { TableEmptyState } from "@/shared/components/table";
-import { ADMIN_GROUP_PART_DEFAULT, SESSION_PART_OPTIONS } from "@/shared/constants";
+import {
+  ADMIN_GROUP_PART_DEFAULT,
+  SESSION_PART_OPTIONS,
+} from "@/shared/constants";
 import { ErrorModal, Modal } from "@/shared/components/modal";
-import { getCommonErrorState, type CommonErrorState, formatKoreanDateTime12 } from "@/shared/utils";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+  formatKoreanDateTime12,
+} from "@/shared/utils";
 import { GroupHeader, GroupTableRows } from "../components/group";
-import { GroupActionStepModal, type GroupActionModalState, type GroupActionType } from "../components/modal";
-import { addWhiteList, getUsers, getWHiteList, terminateUser } from "../apis";
+import {
+  GroupActionStepModal,
+  type GroupActionModalState,
+  type GroupActionType,
+} from "../components/modal";
+import {
+  addWhiteList,
+  getUsers,
+  getWHiteList,
+  reactiveUser,
+  suspendUser,
+} from "../apis";
 import type { AdminGroupRow, PagedResponse } from "../types";
 import { WhitelistItem } from "../components/modal/group";
 import type { whitelistState } from "../types/whitelist";
@@ -87,6 +113,7 @@ function AdminGroupPage() {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const [modalState, setModalState] = useState<ModalState>(null);
+  const [isActionSubmitting, setIsActionSubmitting] = useState(false);
   const [selectedActionUid, setSelectedActionUid] = useState<number | null>(
     null,
   );
@@ -105,9 +132,10 @@ function AdminGroupPage() {
 
   // 모달 비활성화
   const handleClose = useCallback(() => {
+    if (isActionSubmitting) return;
     setModalState(null);
     setSelectedActionUid(null);
-  }, []);
+  }, [isActionSubmitting]);
 
   // 모달 활성화
   const handleOpenModal = useCallback(
@@ -119,30 +147,36 @@ function AdminGroupPage() {
   );
 
   const handleConfirm = async () => {
-    if (!modalState) return;
+    if (!modalState || isActionSubmitting) return;
 
-    if (
-      (modalState.action === "USER_SUSPEND" ||
-        modalState.action === "USER_REACTIVE") &&
-      selectedActionUid !== null
-    ) {
-      try {
-        await terminateUser({ uid: selectedActionUid });
+    setIsActionSubmitting(true);
+
+    try {
+      if (
+        modalState.action === "USER_SUSPEND" ||
+        modalState.action === "USER_REACTIVE"
+      ) {
+        if (selectedActionUid === null) return;
+
+        const actionRequest =
+          modalState.action === "USER_SUSPEND" ? suspendUser : reactiveUser;
+        await actionRequest({ uid: selectedActionUid });
         handleRefresh();
-      } catch (error) {
-        setErrors(getCommonErrorState(error));
-        return;
       }
+
+      if (modalState.action === "WHITELIST_ADD") {
+        const isAdded = await handleAddList();
+
+        if (!isAdded) return;
+        handleRefresh();
+      }
+
+      setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsActionSubmitting(false);
     }
-
-    if (modalState.action === "WHITELIST_ADD") {
-      const isAdded = await handleAddList();
-
-      if (!isAdded) return;
-      handleRefresh();
-    }
-
-    setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
   };
 
   // 새로고침
@@ -343,6 +377,7 @@ function AdminGroupPage() {
           modalState={modalState}
           onClose={handleClose}
           onNext={handleConfirm}
+          isSubmitting={isActionSubmitting}
         />
       )}
 

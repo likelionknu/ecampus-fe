@@ -841,6 +841,7 @@ function GroupTableRows({
           modalState={partActionModal.state}
           onClose={handleClosePartActionModal}
           onNext={handleConfirmPartAction}
+          isSubmitting={isSubmitting}
         />
       )}
 
@@ -849,6 +850,7 @@ function GroupTableRows({
           modalState={generationActionModal.state}
           onClose={handleCloseGenerationActionModal}
           onNext={handleConfirmGenerationAction}
+          isSubmitting={isSubmitting}
         />
       )}
 
@@ -857,6 +859,7 @@ function GroupTableRows({
           modalState={memoActionModal.state}
           onClose={handleCloseMemoActionModal}
           onNext={handleConfirmMemoAction}
+          isSubmitting={isSubmitting}
         />
       )}
 
@@ -865,6 +868,7 @@ function GroupTableRows({
           modalState={demeritActionModal.state}
           onClose={handleCloseDemeritActionModal}
           onNext={handleConfirmDemeritAction}
+          isSubmitting={isSubmitting}
         />
       )}
 

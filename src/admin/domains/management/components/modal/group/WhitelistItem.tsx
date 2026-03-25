@@ -21,6 +21,8 @@ function WhitelistItem({ item, onDeleted }: WhitelistItemProps) {
   };
 
   const handleCloseModal = () => {
+    if (isSubmitting) return;
+
     if (modalState?.phase === "DONE") {
       onDeleted?.();
     }
@@ -51,6 +53,7 @@ function WhitelistItem({ item, onDeleted }: WhitelistItemProps) {
           modalState={modalState}
           onClose={handleCloseModal}
           onNext={handleConfirmDelete}
+          isSubmitting={isSubmitting}
         />
       )}
 

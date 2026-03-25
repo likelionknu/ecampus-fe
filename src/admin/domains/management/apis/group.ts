@@ -27,12 +27,22 @@ export const getUsers = async ({
   return res;
 };
 
-// 사용자 정지/재개
-export const terminateUser = async ({ uid }: { uid: number | string }) => {
+// 사용자 이용 정지
+export const suspendUser = async ({ uid }: { uid: number | string }) => {
   const res = await api.patch(`/v1/admin/users/${uid}/terminates`);
 
   return res;
 };
+
+// 사용자 이용 재개
+export const reactiveUser = async ({ uid }: { uid: number | string }) => {
+  const res = await api.patch(`/v1/admin/users/${uid}/terminates`);
+
+  return res;
+};
+
+// 레거시 호환용 alias
+export const terminateUser = suspendUser;
 
 // 화이트리스트 조회
 export const getWHiteList = async () => {
