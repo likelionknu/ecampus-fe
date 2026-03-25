@@ -52,15 +52,11 @@ export const getWHiteList = async () => {
 };
 
 // 화이트리스트 유저 추가
-export const addWhiteList = async ({
-  email,
-  part,
-  generation,
-}: whitelistState) => {
+export const addWhiteList = async ({ email, part, course }: whitelistState) => {
   const res = await api.post("/v1/admin/whitelist", {
     email,
     part,
-    generation,
+    course,
   });
 
   return res;
@@ -129,13 +125,13 @@ export const changePart = async ({
 // 기수 변경
 export const changeGeneration = async ({
   uid,
-  generation,
+  course,
 }: {
   uid: number;
-  generation: string;
+  course: number;
 }) => {
   const res = await api.patch(`/v1/admin/users/${uid}/profile/generation`, {
-    generation,
+    course,
   });
 
   return res;

@@ -43,7 +43,7 @@ interface GroupUsersApiRow {
   part: string;
   name: string;
   email: string;
-  generation: number;
+  course: number;
   createdAt: string;
   demerit: number;
   useable?: boolean;
@@ -58,7 +58,7 @@ export interface ListState {
   id: number;
   email: string;
   part: string;
-  generation: number;
+  course: number;
   registerName: string;
 }
 
@@ -123,7 +123,7 @@ function AdminGroupPage() {
   const [addList, setAddList] = useState<whitelistState>({
     email: "",
     part: "",
-    generation: "",
+    course: 0,
   });
   const [lists, setLists] = useState<ListState[]>([]);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
@@ -207,11 +207,11 @@ function AdminGroupPage() {
   };
 
   const handleWhitelistGenerationChange = (generationLabel: string) => {
-    const generation = generationLabel.match(/\d+/)?.[0] ?? "";
+    const course = Number.parseInt(generationLabel.match(/\d+/)?.[0] ?? "", 10);
 
     setAddList((prev) => ({
       ...prev,
-      generation,
+      course: Number.isFinite(course) ? course : 0,
     }));
   };
 
@@ -233,7 +233,7 @@ function AdminGroupPage() {
   };
 
   const handleAddList = async (): Promise<boolean> => {
-    if (!addList.email.trim() || !addList.part || !addList.generation) {
+    if (!addList.email.trim() || !addList.part || !addList.course) {
       return false;
     }
 
@@ -242,7 +242,7 @@ function AdminGroupPage() {
       setAddList({
         email: "",
         part: "",
-        generation: "",
+        course: 0,
       });
       return true;
     } catch (error) {
@@ -279,7 +279,7 @@ function AdminGroupPage() {
         const mappedMembers = Array.isArray(responseData.content)
           ? responseData.content.map((member) => ({
               id: member.id,
-              generation: member.generation,
+              course: member.course,
               part: PART_CODE_TO_LABEL[member.part] ?? member.part,
               name: member.name,
               email: member.email,
