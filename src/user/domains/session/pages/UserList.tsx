@@ -1,10 +1,21 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { TitleSection, SerachBar, SelectBox, PageNationButton, PageNationFrame, PageNationItem, PageNationMenu } from "@/shared/components";
+import {
+  TitleSection,
+  SerachBar,
+  SelectBox,
+  PageNationButton,
+  PageNationFrame,
+  PageNationItem,
+  PageNationMenu,
+} from "@/shared/components";
 import { TableEmptyState } from "@/shared/components/table";
 import { ErrorModal } from "@/shared/components/modal";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
-import { SESSION_PART_OPTIONS, SESSION_PARTS_DEFAULT_OPTION } from "@/shared/constants";
+import {
+  SESSION_PART_OPTIONS,
+  SESSION_PARTS_DEFAULT_OPTION,
+} from "@/shared/constants";
 
 const SESSION_PART_OPTIONS_API_VALUE: Record<string, string> = {
   전체: "",
@@ -139,7 +150,6 @@ const UserListPage = () => {
         );
 
         const responseData = response.data?.data ?? response.data;
-        console.log("사용자 목록 데이터:", responseData);
 
         setErrors(null);
         setUserListPage({

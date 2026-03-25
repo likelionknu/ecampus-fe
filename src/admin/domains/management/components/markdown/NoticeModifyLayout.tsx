@@ -1,7 +1,10 @@
 import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { Button, Input } from "@/shared/components";
 import { useScrollSync } from "@/admin/domains/session/hooks";
-import { MarkdownEditor, MarkdownPreview } from "@/admin/domains/session/components/markdown";
+import {
+  MarkdownEditor,
+  MarkdownPreview,
+} from "@/admin/domains/session/components/markdown";
 import { Modal, ErrorModal } from "@/shared/components/modal";
 import { useNavigate, useParams } from "react-router-dom";
 import { getPresignedUrl } from "@/admin/domains/session/api";
@@ -54,7 +57,6 @@ export default function ModifyLayout({
 
       setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       throw error;
     }
@@ -80,7 +82,6 @@ export default function ModifyLayout({
 
       setModalType("noticeModifySuccess");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       setModalType(null);
     } finally {

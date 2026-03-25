@@ -53,7 +53,6 @@ export default function FilesUploadLayout({
       }
       setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       throw error;
     }
@@ -77,7 +76,6 @@ export default function FilesUploadLayout({
 
       setModalType("success");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
     } finally {
       setLoading(false);

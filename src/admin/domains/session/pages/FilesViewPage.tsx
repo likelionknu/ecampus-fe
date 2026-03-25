@@ -1,11 +1,19 @@
 import { Button } from "@/shared/components";
-import { formatKoreanDateTime12, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import {
+  formatKoreanDateTime12,
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils";
 import ReactMarkdown from "react-markdown";
 import { markdownComponents } from "../components/markdown";
 import { useEffect, useState } from "react";
 import { Modal, ErrorModal } from "@/shared/components/modal";
 import { useNavigate, useParams } from "react-router-dom";
-import { deleteSessionFile, getSessionFile, toggleSessionFileStatus } from "../api";
+import {
+  deleteSessionFile,
+  getSessionFile,
+  toggleSessionFileStatus,
+} from "../api";
 
 interface FileData {
   fileId: number;
@@ -40,7 +48,6 @@ function FilesViewPage() {
         setFile(data);
         setIsPublic(data.isPublic);
       } catch (error) {
-        console.error(error);
         setErrors(getCommonErrorState(error));
         throw error;
       } finally {
@@ -58,7 +65,6 @@ function FilesViewPage() {
       setIsPublic(nextState);
       setModalType("toggleSuccess");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       throw error;
     }
@@ -71,7 +77,6 @@ function FilesViewPage() {
 
       setModalType("deleteSuccess");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       throw error;
     }

@@ -1,4 +1,10 @@
-import { TitleSection, PageNationButton, PageNationFrame, PageNationItem, PageNationMenu } from "@/shared/components";
+import {
+  TitleSection,
+  PageNationButton,
+  PageNationFrame,
+  PageNationItem,
+  PageNationMenu,
+} from "@/shared/components";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { formatKoreanDateTime12 } from "@/shared/utils";
@@ -60,7 +66,6 @@ const AdminNotionPage = () => {
 
         if (NotionDataResult.data) {
           setNotionData(NotionDataResult.data);
-          console.log("공지사항 페이지 데이터:", NotionDataResult.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {

@@ -1,7 +1,10 @@
 import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { Button, Input } from "@/shared/components";
 import { useScrollSync } from "@/admin/domains/session/hooks";
-import { MarkdownEditor, MarkdownPreview } from "@/admin/domains/session/components/markdown";
+import {
+  MarkdownEditor,
+  MarkdownPreview,
+} from "@/admin/domains/session/components/markdown";
 import { Modal, ErrorModal } from "@/shared/components/modal";
 import { useNavigate } from "react-router-dom";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
@@ -56,7 +59,6 @@ export default function EditorLayout({
       }
       setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       setModalType("uploadError");
       throw error;
@@ -79,7 +81,6 @@ export default function EditorLayout({
 
       setModalType("noticeSuccess");
     } catch (error) {
-      console.error(error);
       setErrors(getCommonErrorState(error));
       setModalType("uploadError");
     } finally {

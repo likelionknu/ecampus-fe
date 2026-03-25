@@ -141,7 +141,6 @@ export const DashboardProfileModal = ({
 
         if (result.data) {
           setUserProfileData(result.data);
-          console.log("모달 프로필 데이터:", result.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -178,7 +177,7 @@ export const DashboardProfileModal = ({
           label="파트(역할)"
           value={
             UserProfileData?.part
-              ? USER_PART_LABELS[UserProfileData.part] ?? UserProfileData.part
+              ? (USER_PART_LABELS[UserProfileData.part] ?? UserProfileData.part)
               : ""
           }
         />
@@ -249,7 +248,6 @@ export const DashboardDemeritsModal = ({
 
         if (Array.isArray(result.data)) {
           setDemeritsModalData(result.data);
-          console.log("벌점 상세 내용 데이터:", result.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -317,7 +315,6 @@ export const NotionSpecificModal = ({
 
         if (result.data) {
           setNotionSpecificModalData(result.data);
-          console.log("공지사항 상세 데이터:", result.data);
         }
       } catch (error) {
         if (axios.isAxiosError(error)) {
