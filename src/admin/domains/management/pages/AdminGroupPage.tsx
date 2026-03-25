@@ -90,7 +90,8 @@ const WHITELIST_GENERATION_OPTIONS = [
   "13기",
   "14기",
 ];
-
+const WHITELIST_PART_PLACEHOLDER = WHITELIST_PART_OPTIONS[0] ?? "";
+const WHITELIST_COURSE_PLACEHOLDER = WHITELIST_GENERATION_OPTIONS[0] ?? "";
 const INITIAL_GROUP_MEMBERS: PagedResponse<AdminGroupRow> = {
   content: [],
   totalElements: 0,
@@ -125,7 +126,11 @@ function AdminGroupPage() {
     part: "",
     course: 0,
   });
-  const [lists, setLists] = useState<ListState[]>([]);
+  const [selectedWhitelistPartLabel, setSelectedWhitelistPartLabel] = useState(
+    WHITELIST_PART_PLACEHOLDER,
+  );
+  const [selectedWhitelistCourseLabel, setSelectedWhitelistCourseLabel] =
+    useState(WHITELIST_COURSE_PLACEHOLDER);  const [lists, setLists] = useState<ListState[]>([]);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const itemNum = membersPage.totalElements;
   const itemSumNum = GROUP_PAGE_SIZE;
@@ -196,6 +201,8 @@ function AdminGroupPage() {
   };
 
   const handleWhitelistPartChange = (partLabel: string) => {
+    setSelectedWhitelistPartLabel(partLabel);
+
     const selectedIndex = WHITELIST_PART_OPTIONS.indexOf(partLabel);
     const selectedPartCode =
       selectedIndex <= 0 ? "" : (PART_REQUEST_CODES[selectedIndex] ?? "");
@@ -207,6 +214,8 @@ function AdminGroupPage() {
   };
 
   const handleWhitelistGenerationChange = (generationLabel: string) => {
+    setSelectedWhitelistCourseLabel(generationLabel);
+
     const course = Number.parseInt(generationLabel.match(/\d+/)?.[0] ?? "", 10);
 
     setAddList((prev) => ({
@@ -244,6 +253,8 @@ function AdminGroupPage() {
         part: "",
         course: 0,
       });
+      setSelectedWhitelistPartLabel(WHITELIST_PART_PLACEHOLDER);
+      setSelectedWhitelistCourseLabel(WHITELIST_COURSE_PLACEHOLDER);
       return true;
     } catch (error) {
       setErrors(getCommonErrorState(error));
@@ -312,7 +323,7 @@ function AdminGroupPage() {
   }, [listModalOpen, refreshKey, fetchWhitelist]);
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280 xl:px-8">
       {listModalOpen && (
         <Modal>
           <Modal.Header onClick={() => setListModalOpen(false)}>
@@ -341,7 +352,8 @@ function AdminGroupPage() {
               <div className="flex-1">
                 <SelectBox
                   options={WHITELIST_PART_OPTIONS}
-                  defaultValue="파트 선택"
+                  defaultValue={WHITELIST_PART_PLACEHOLDER}
+                  value={selectedWhitelistPartLabel}
                   onChange={handleWhitelistPartChange}
                   className="w-full"
                 />
@@ -349,7 +361,8 @@ function AdminGroupPage() {
               <div className="w-1/3">
                 <SelectBox
                   options={WHITELIST_GENERATION_OPTIONS}
-                  defaultValue="기수 선택"
+                  defaultValue={WHITELIST_COURSE_PLACEHOLDER}
+                  value={selectedWhitelistCourseLabel}
                   onChange={handleWhitelistGenerationChange}
                   className="w-full"
                 />

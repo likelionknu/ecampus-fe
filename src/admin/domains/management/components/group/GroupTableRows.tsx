@@ -3,11 +3,27 @@ import { SkeletonCell } from "@/shared/components/skeleton";
 import { GroupActionStepModal, type GroupActionType } from "../modal";
 import GroupIcon from "./GroupIcon";
 import type { AdminGroupRow } from "../../types";
-import { addDemerit, addMemo, changePart, changeGeneration, deleteAllDemerits, deleteAllMemos, deleteDemerit, deleteMemo, getDemerits, getMemos } from "../../apis";
+import {
+  addDemerit,
+  addMemo,
+  changePart,
+  changeGeneration,
+  deleteAllDemerits,
+  deleteAllMemos,
+  deleteDemerit,
+  deleteMemo,
+  getDemerits,
+  getMemos,
+} from "../../apis";
 import { SESSION_PART_OPTIONS } from "@/shared/constants";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import { ErrorModal } from "@/shared/components/modal";
-import { MemoModal, GenerationModal, PartModal, DemeritModal } from "../modal/group";
+import {
+  MemoModal,
+  GenerationModal,
+  PartModal,
+  DemeritModal,
+} from "../modal/group";
 import type { GroupMemo, MemoModalTarget, GroupDemerit } from "../modal/types";
 import useActionStepModal from "./useActionStepModal";
 
@@ -539,7 +555,10 @@ function GroupTableRows({
         await deleteAllDemerits({ uid: selectedMember.uid });
         break;
       case "USER_DEMERIT_REVOKE":
-        await deleteDemerit({ uid: selectedMember.uid, did: Number(payload.did) });
+        await deleteDemerit({
+          uid: selectedMember.uid,
+          did: Number(payload.did),
+        });
         break;
       default:
         break;
