@@ -17,7 +17,7 @@ export interface AdminSessionRow {
 
 export interface AdminGroupRow {
   id: number;
-  generation: number;
+  course: number;
   part: string;
   name: string;
   email: string;

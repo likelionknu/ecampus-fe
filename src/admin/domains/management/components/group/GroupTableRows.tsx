@@ -454,7 +454,7 @@ function GroupTableRows({
     setSelectedMember({
       uid: member.id,
       name: member.name,
-      generation: member.generation,
+      course: member.course,
       part: member.part,
       penaltyPoint: member.penaltyPoint,
     });
@@ -579,7 +579,7 @@ function GroupTableRows({
     setSelectedMember({
       uid: member.id,
       name: member.name,
-      generation: member.generation,
+      course: member.course,
       part: member.part,
       penaltyPoint: member.penaltyPoint,
     });
@@ -603,7 +603,7 @@ function GroupTableRows({
     setSelectedMember({
       uid: member.id,
       name: member.name,
-      generation: member.generation,
+      course: member.course,
       part: member.part,
       penaltyPoint: member.penaltyPoint,
     });
@@ -653,12 +653,12 @@ function GroupTableRows({
     try {
       await changeGeneration({
         uid: selectedMember.uid,
-        generation: selectedGeneration,
+        course: Number(selectedGeneration),
       });
       onRefresh();
       generationActionModal.openDone("USER_GENERATION_CHANGE");
       setSelectedMember((prev) =>
-        prev ? { ...prev, generation: Number(selectedGeneration) } : prev,
+        prev ? { ...prev, course: Number(selectedGeneration) } : prev,
       );
     } catch (error) {
       setErrors(getCommonErrorState(error));
@@ -681,7 +681,7 @@ function GroupTableRows({
     setSelectedMember({
       uid: member.id,
       name: member.name,
-      generation: member.generation,
+      course: member.course,
       part: member.part,
       penaltyPoint: member.penaltyPoint,
     });
@@ -812,7 +812,7 @@ function GroupTableRows({
 
       {isGenerationModalOpen && selectedMember && (
         <GenerationModal
-          currentGeneration={selectedMember.generation}
+          currentGeneration={selectedMember.course}
           options={GENERATION_OPTION_LABELS}
           selectedGeneration={selectedGeneration}
           isSubmitting={isSubmitting}
@@ -901,7 +901,7 @@ function GroupTableRows({
             index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
           }`}
         >
-          <span className="min-w-0">{member.generation}기</span>
+          <span className="min-w-0">{member.course}기</span>
           <span className="min-w-0 truncate" title={member.part}>
             {member.part}
           </span>

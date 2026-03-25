@@ -1,7 +1,7 @@
 export interface MemoModalTarget {
   uid: number;
   name: string;
-  generation: number;
+  course: number;
 }
 
 export interface GroupMemo {
