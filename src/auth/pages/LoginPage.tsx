@@ -7,6 +7,9 @@ import { googleOAuth as GoogleLogin } from "@/auth/api";
 import NavLogo from "@shared/assets/NavLogo.png";
 import { LegalFooter, PageBackground } from "@shared/components";
 
+const desktopSectionClassName =
+  "relative hidden w-full flex-col lg:flex lg:min-h-screen lg:px-[clamp(2.5rem,3.8vw,3.5rem)] lg:pt-[clamp(3rem,4.5vw,3.75rem)] lg:pb-[clamp(2.5rem,4vw,3.125rem)]";
+
 function LoginPage() {
   const navigate = useNavigate();
   const hasHydrated = useAuthSessionStore((state) => state.hasHydrated);
@@ -75,19 +78,19 @@ function LoginPage() {
       </section>
 
       {/*웹*/}
-      <section className="relative hidden w-full flex-col lg:absolute lg:top-0 lg:left-223.5 lg:z-10 lg:flex lg:h-190 lg:w-136.5 lg:px-13.75 lg:pt-15 lg:pb-12.5">
+      <section className={desktopSectionClassName}>
         <div className="flex items-center gap-4">
           <img
             src={NavLogo}
             alt="LIKELION KNU 로고"
             className="h-9 w-6 shrink-0 brightness-0"
           />
-          <span className="text-ec-black tracking-ec-tight text-3xl leading-none font-semibold sm:text-[44px]">
+          <span className="text-ec-black tracking-ec-tight text-3xl leading-none font-semibold sm:text-[44px] lg:text-[clamp(2rem,3vw,2.75rem)]">
             LIKELION KNU
           </span>
         </div>
 
-        <div className="mt-21.5">
+        <div className="mt-[clamp(4rem,8vw,5.375rem)]">
           <h1 className="typo-title text-ec-black">다시 돌아온 걸 환영해요!</h1>
           <p className="typo-body-1 text-ec-sub mt-4">
             멋쟁이사자처럼 강남대학교에 소속된 사용자만 이용할 수 있어요
