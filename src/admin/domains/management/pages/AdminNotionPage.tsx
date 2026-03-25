@@ -8,8 +8,10 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { useNavigate } from "react-router-dom";
 
 const AdminNotionPage = () => {
+  const navigate = useNavigate();
   const authData = JSON.parse(
     localStorage.getItem("ecampus.auth.session") || "null",
   );
@@ -80,7 +82,7 @@ const AdminNotionPage = () => {
     };
 
     fetchNotionData();
-  }, [NotionDataSumNum, NotionDataPage]);
+  }, [NotionDataSumNum, NotionDataPage, token]);
 
   // --------------------------------------공지사항 api 부분 끝--------------------------------------
 
@@ -131,7 +133,12 @@ const AdminNotionPage = () => {
       <div className="flex h-full w-251.5 flex-col items-center">
         <div className="flex w-full justify-between">
           <TitleSection title={`공지사항`} />
-          <div className="bg-ec-blue rounded-ec-10 flex h-9.5 w-30 cursor-pointer items-center justify-center">
+          <div
+            className="bg-ec-blue rounded-ec-10 flex h-9.5 w-30 cursor-pointer items-center justify-center"
+            onClick={() => {
+              navigate("upload");
+            }}
+          >
             <div className="text-ec-gnb-white text-center text-base font-medium">
               새 자료 추가
             </div>
@@ -173,6 +180,7 @@ const AdminNotionPage = () => {
                         NotionFix={data.pinned}
                         NotionDate={formatKoreanDateTime12(data.createdAt)}
                         NotionRegistrant={data.authorName}
+                        onClick={() => navigate(`${data.id}`)}
                       />
                     </PageNationItem>
                   ))}

@@ -5,9 +5,9 @@ export interface TabItemConfig {
 }
 
 export const ADMIN_DASHBOARD_TAG_ITEMS: TabItemConfig[] = [
-  { label: "대시보드", path: "/admin/sessions/dashboard" },
-  { label: "자료 관리", path: "/admin/sessions/data/management" },
-  { label: "과제 관리", path: "/admin/sessions/task/management" },
+  { label: "대시보드", path: "dashboard" },
+  { label: "자료 관리", path: "files" },
+  { label: "과제 관리", path: "assignments" },
 ];
 
 export const ADMIN_MANAGEMENT_TAG_ITEMS: TabItemConfig[] = [

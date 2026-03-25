@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api } from "@/shared/apis";
 import TitleSection from "@/shared/components/TitleSection";
 import {
@@ -32,16 +32,6 @@ const INITIAL_TASK_MANAGEMENT_DATA: TaskManagementDataType = {
   totalPages: 0,
   content: [],
 };
-
-function parsePositiveInteger(value: string | null) {
-  if (!value) {
-    return null;
-  }
-
-  const parsedValue = Number(value);
-
-  return Number.isInteger(parsedValue) && parsedValue > 0 ? parsedValue : null;
-}
 
 interface TaskComponentProps {
   assignmentId: number;
@@ -105,8 +95,7 @@ function TaskNotionComponent() {
 
 const TaskManagementPage = () => {
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
-  const sessionId = parsePositiveInteger(searchParams.get("sid"));
+  const { sid } = useParams();
   const [taskManagementData, setTaskManagementData] = useState(
     INITIAL_TASK_MANAGEMENT_DATA,
   );
@@ -118,14 +107,14 @@ const TaskManagementPage = () => {
     let isMounted = true;
 
     const fetchTaskManagementData = async () => {
-      if (!sessionId) {
+      if (!sid) {
         setTaskManagementData(INITIAL_TASK_MANAGEMENT_DATA);
         return;
       }
 
       try {
         const response = await api.get(
-          `/v1/admin/sessions/${sessionId}/assignments`,
+          `/v1/admin/sessions/${sid}/assignments`,
           {
             params: {
               page: taskManagementDataPage - 1,
@@ -155,26 +144,18 @@ const TaskManagementPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [sessionId, taskManagementDataPage]);
+  }, [sid, taskManagementDataPage]);
 
   const handleCreateClick = () => {
-    if (!sessionId) {
-      return;
-    }
-
-    navigate(`/admin/sessions/assignments/upload?sid=${sessionId}`);
+    navigate("upload");
   };
 
   const handleAssignmentClick = (assignmentId: number) => {
-    const nextSearchParams = new URLSearchParams({
-      aid: String(assignmentId),
-    });
-
-    if (sessionId) {
-      nextSearchParams.set("sid", String(sessionId));
+    if (!sid) {
+      return;
     }
 
-    navigate(`/admin/sessions/assignments?${nextSearchParams.toString()}`);
+    navigate(`/admin/sessions/${sid}/assignments/${assignmentId}`);
   };
 
   return (
@@ -185,9 +166,9 @@ const TaskManagementPage = () => {
           <button
             type="button"
             onClick={handleCreateClick}
-            disabled={!sessionId}
+            disabled={!sid}
             className={`rounded-ec-10 flex h-9.5 w-30 items-center justify-center ${
-              sessionId
+              sid
                 ? "bg-ec-blue cursor-pointer"
                 : "bg-ec-blue cursor-not-allowed opacity-50"
             }`}
@@ -199,7 +180,7 @@ const TaskManagementPage = () => {
         </div>
         <TaskNotionComponent />
 
-        {!sessionId && (
+        {!sid && (
           <div className="text-ec-red w-full text-sm">
             세션 정보가 없어 과제 목록을 불러올 수 없어요. `sid`를 확인해주세요.
           </div>

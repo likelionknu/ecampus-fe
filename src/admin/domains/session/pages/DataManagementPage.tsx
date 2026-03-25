@@ -8,8 +8,12 @@ import {
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
+import { useNavigate, useParams } from "react-router-dom";
 
 const DataManagementPage = () => {
+  const navigate = useNavigate();
+  const { sid } = useParams();
+
   const authData = JSON.parse(
     localStorage.getItem("ecampus.auth.session") || "null",
   );
@@ -44,10 +48,12 @@ const DataManagementPage = () => {
   const FilesDataSumNum = 8;
 
   useEffect(() => {
+    if (!token) return;
+
     const fetchFilesData = async () => {
       try {
         const FilesDataResponse = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/admin/sessions/1/files`,
+          `${import.meta.env.VITE_BASE_API_URL}/v1/admin/sessions/${sid}/files`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -79,7 +85,7 @@ const DataManagementPage = () => {
     };
 
     fetchFilesData();
-  }, [FilesDataSumNum, FilesDataPage]);
+  }, [FilesDataPage, token, sid]);
 
   // --------------------------------------자료관리 api 부분 끝--------------------------------------
 
@@ -128,7 +134,10 @@ const DataManagementPage = () => {
       <div className="flex h-full w-251.5 flex-col items-center">
         <div className="flex w-full justify-between">
           <TitleSection title={`자료 관리`} />
-          <div className="bg-ec-blue rounded-ec-10 flex h-9.5 w-30 cursor-pointer items-center justify-center">
+          <div
+            className="bg-ec-blue rounded-ec-10 flex h-9.5 w-30 cursor-pointer items-center justify-center"
+            onClick={() => navigate("upload")}
+          >
             <div className="text-ec-gnb-white text-center text-base font-medium">
               새 자료 추가
             </div>
@@ -172,6 +181,7 @@ const DataManagementPage = () => {
                         )}
                         DataRegistrant={data.writer}
                         DataVisibility={data.isPublic}
+                        onClick={() => navigate(`${data.fileId}`)}
                       />
                     </PageNationItem>
                   ))}

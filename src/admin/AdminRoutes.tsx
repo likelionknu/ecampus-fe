@@ -1,6 +1,5 @@
 ﻿import type { RouteObject } from "react-router-dom";
 import AdminSessionsPage from "./domains/management/pages/AdminSessionsPage";
-import PreparingPage from "@shared/pages/PreparingPage";
 import SessionTabLayout from "@/shared/layouts/SessionTabLayout";
 import AdminGroupPage from "./domains/management/pages/AdminGroupPage";
 import DataManagementPage from "./domains/session/pages/DataManagementPage";
@@ -36,25 +35,10 @@ const adminRoutes: RouteObject[] = [
         element: <AdminQuestionManageView />,
         handle: { title: "질문" },
       },
-      {
-        path: "notices",
-        element: <PreparingPage />,
-        handle: { title: "공지사항" },
-      },
+      { path: "notices", element: <AdminNotionPage /> },
       { path: "notices/upload", element: <NoticeUploadPage /> },
       { path: "notices/:nid", element: <NoticeViewPage /> },
       { path: "notices/:nid/modify", element: <NoticeModifyPage /> },
-    ],
-  },
-  {
-    path: "sessions",
-    element: <SessionTabLayout tabType="adminDashboard" />,
-    handle: { title: "세션 관리 / [14기] 아기사자 - 백엔드 파트" },
-    children: [
-      { path: "data/management", element: <DataManagementPage /> },
-      { path: "task/management", element: <TaskManagementPage /> },
-      { path: "notion", element: <AdminNotionPage /> },
-      { path: "dashboard/:sessionId", element: <AdminDashboardPage /> },
     ],
   },
   {
@@ -63,8 +47,10 @@ const adminRoutes: RouteObject[] = [
     handle: { title: "세션 관리 / [14기] 아기사자 - 백엔드 파트" },
     children: [
       { path: "dashboard", element: <AdminDashboardPage /> },
-      { path: "assignments", element: <AdminSessionAssignmentsView /> },
+      { path: "assignments", element: <TaskManagementPage /> },
       { path: "assignments/upload", element: <AdminSessionAssignmentUpload /> },
+      { path: "assignments/:aid", element: <AdminSessionAssignmentsView /> },
+      { path: "files", element: <DataManagementPage /> },
       { path: "files/upload", element: <FilesUploadPage /> },
       { path: "files/:fid", element: <FilesViewPage /> },
       { path: "files/:fid/modify", element: <FilesModifyPage /> },

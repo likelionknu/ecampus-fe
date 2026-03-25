@@ -1,5 +1,9 @@
 import { type FormEvent, useState } from "react";
-import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import CalendarIconImg from "@admin/domains/session/assets/calendar.png";
 import {
   createSessionAssignment,
@@ -68,7 +72,7 @@ function AssignmentUploadField({
   return (
     <div className="flex w-full flex-col gap-2.5">
       <div className="flex items-center justify-between gap-4">
-        <span className="text-base font-medium text-ec-black">{label}</span>
+        <span className="text-ec-black text-base font-medium">{label}</span>
         {typeof remainingCount === "number" && (
           <span className="text-caption text-ec-sub">
             {remainingCount}자 남음
@@ -83,14 +87,14 @@ function AssignmentUploadField({
 function AssignmentUploadForm() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const { sid } = useParams();
   const [form, setForm] = useState(INITIAL_FORM_STATE);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const locationState = location.state as AssignmentUploadLocationState | null;
   const sessionId =
-    parseSessionId(searchParams.get("sid")) ??
+    parseSessionId(sid) ??
     parseSessionId(locationState?.sid) ??
     parseSessionId(locationState?.sessionId);
 
@@ -102,7 +106,9 @@ function AssignmentUploadForm() {
     }
 
     if (!sessionId) {
-      setErrorMessage("세션 정보가 없어 과제를 등록할 수 없어요. sid를 확인해주세요.");
+      setErrorMessage(
+        "세션 정보가 없어 과제를 등록할 수 없어요. sid를 확인해주세요.",
+      );
       return;
     }
 
@@ -143,7 +149,7 @@ function AssignmentUploadForm() {
       });
 
       setForm(INITIAL_FORM_STATE);
-      navigate(`/admin/sessions/task/management?sid=${sessionId}`);
+      navigate(`/admin/sessions/${sessionId}/assignments`);
     } catch (error) {
       setErrorMessage(getCreateSessionAssignmentErrorMessage(error));
     } finally {
@@ -156,7 +162,7 @@ function AssignmentUploadForm() {
       className="flex w-full flex-col items-end gap-5"
       onSubmit={handleSubmit}
     >
-      <div className="border-ec-blue rounded-ec-10 self-stretch border bg-ec-white px-7 py-4.5 text-body-2 text-ec-blue">
+      <div className="border-ec-blue rounded-ec-10 bg-ec-white text-body-2 text-ec-blue self-stretch border px-7 py-4.5">
         {NOTICE_MESSAGE}
       </div>
 
@@ -217,7 +223,7 @@ function AssignmentUploadForm() {
             setErrorMessage("");
             setForm((prev) => ({ ...prev, description: e.target.value }));
           }}
-          className="bg-ec-box rounded-ec-10 h-55.5 w-full resize-none px-8 py-3 text-sm leading-6 text-ec-black placeholder:text-sm placeholder:text-ec-sub outline-none"
+          className="bg-ec-box rounded-ec-10 text-ec-black placeholder:text-ec-sub h-55.5 w-full resize-none px-8 py-3 text-sm leading-6 outline-none placeholder:text-sm"
         />
       </AssignmentUploadField>
 

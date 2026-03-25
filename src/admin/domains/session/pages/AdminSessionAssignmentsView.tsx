@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Button from "@/shared/components/Button";
 import TitleSection from "@/shared/components/TitleSection";
 import ErrorModal from "@/shared/components/modal/ErrorModal";
@@ -55,9 +55,10 @@ const INITIAL_ASSIGNMENT_PARTICIPANTS_PAGE: AdminAssignmentParticipantsPage = {
 
 function AdminSessionAssignmentsView() {
   const navigate = useNavigate();
+  const { aid, sid } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
-  const assignmentId = parsePositiveInteger(searchParams.get("aid"));
-  const sessionId = parsePositiveInteger(searchParams.get("sid"));
+  const assignmentId = parsePositiveInteger(aid ?? null);
+  const sessionId = parsePositiveInteger(sid ?? null);
   const currentPage = parseNonNegativeInteger(searchParams.get("page")) ?? 0;
   const [assignment, setAssignment] = useState<AdminAssignmentDetail | null>(
     null,
@@ -174,9 +175,7 @@ function AdminSessionAssignmentsView() {
   const handleDeleteSuccessConfirm = () => {
     setIsDeleteSuccessModalOpen(false);
     navigate(
-      sessionId
-        ? `/admin/sessions/task/management?sid=${sessionId}`
-        : "/admin/sessions/task/management",
+      sessionId ? `/admin/sessions/${sessionId}/assignments` : "/admin/sessions",
       {
         replace: true,
       },
