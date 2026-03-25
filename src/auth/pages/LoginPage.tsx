@@ -8,7 +8,7 @@ import {
 import {
   getDefaultRouteByRole,
   useAuthSessionStore,
-} from "@auth/utils/authStore";
+} from "@/auth/stores/authStore";
 import GoogleLogin from "@/auth/api/googleOAuth";
 import NavLogo from "@shared/assets/NavLogo.png";
 import LegalFooter from "@shared/components/LegalFooter";

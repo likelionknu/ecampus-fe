@@ -1,39 +1,113 @@
-import { useRef } from "react"
-import InputBox from "@/shared/components/InputBox"
-import Button from "@/shared/components/Button"
-import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync"
-import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor"
-import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview"
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
+import Button from "@/shared/components/Button";
+import { useScrollSync } from "@/admin/domains/session/hooks/useScrollSync";
+import MarkdownEditor from "@/admin/domains/session/components/markdown/MarkdownEditor";
+import MarkdownPreview from "@/admin/domains/session/components/markdown/MarkdownPreview";
+import Input from "@/shared/components/Input";
+import Modal from "@/shared/components/modal/Modal";
+import { useNavigate } from "react-router-dom";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import { getPresignedUrl } from "@/admin/domains/session/api/files";
+import { uploadNotice } from "../../apis/notice";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 
 interface Props {
-  title: string
-  content: string
-  setTitle: (v: string) => void
-  setContent: (v: string) => void
+  title: string;
+  content: string;
+  setTitle: (v: string) => void;
+  setContent: Dispatch<SetStateAction<string>>;
 }
 
 export default function EditorLayout({
   title,
   content,
   setTitle,
-  setContent
+  setContent,
 }: Props) {
-  const editorRef = useRef<HTMLTextAreaElement | null>(null)
-  const previewRef = useRef<HTMLDivElement | null>(null)
-  useScrollSync(editorRef, previewRef)
+  const navigate = useNavigate();
+  const editorRef = useRef<HTMLTextAreaElement | null>(null);
+  const previewRef = useRef<HTMLDivElement | null>(null);
+  useScrollSync(editorRef, previewRef);
+  const [modalType, setModalType] = useState<
+    | "noticeConfirm"
+    | "noticeSuccess"
+    | "inputGuide"
+    | "fileGuide"
+    | "uploadError"
+    | null
+  >(null);
 
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const res = await getPresignedUrl({
+        fileName: file.name,
+        contentType: file.type,
+      });
+      const { uploadUrl, fileUrl } = res.data.data;
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+      if (!uploadResponse.ok) {
+        throw new Error("Presigned URL upload failed");
+      }
+      setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      setModalType("uploadError");
+      throw error;
+    }
+  };
+
+  const handleSubmit = async () => {
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle || trimmedTitle.length > 80) {
+      setModalType("inputGuide");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setErrors(null);
+
+      await uploadNotice(trimmedTitle, content);
+
+      setModalType("noticeSuccess");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      setModalType("uploadError");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <div className="px-5 pt-5">
-      <div className="flex items-center justify-between mb-8">
+    <div className="mt-30 px-5 pt-5 md:pt-7 xl:mt-0">
+      <div className="mb-8 flex items-center justify-between">
         <div className="w-228.5">
-          <InputBox
+          <Input
             placeholder="제목을 입력하세요"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
         </div>
-        <Button size="primary">
-          추가
+        <Button
+          size="primary"
+          onClick={() => setModalType("noticeConfirm")}
+          disabled={loading}
+        >
+          {loading ? "추가 중..." : "추가"}
         </Button>
       </div>
 
@@ -43,15 +117,74 @@ export default function EditorLayout({
             ref={editorRef}
             content={content}
             onChange={setContent}
+            onImageUpload={handleImageUpload}
           />
         </div>
         <div className="w-125.25">
-          <MarkdownPreview
-            ref={previewRef}
-            content={content}
-          />
+          <MarkdownPreview ref={previewRef} content={content} />
         </div>
       </div>
+      {modalType === "noticeConfirm" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            새로운 공지사항 등록
+          </Modal.Header>
+          <Modal.Description>
+            해당 내용을 공지사항으로 업로드할까요? <br />
+            모든 사용자에게 알림이 발송돼요
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={handleSubmit} disabled={loading}>
+              확인
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "noticeSuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            새로운 공지사항 등록
+          </Modal.Header>
+          <Modal.Description>공지사항을 업로드했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              onClick={() => {
+                setModalType(null);
+                navigate("/admin/notices");
+              }}
+            >
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "inputGuide" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            입력 형식 안내
+          </Modal.Header>
+          <Modal.Description>
+            공지사항의 제목은 최대 80자까지 입력할 수 있어요
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={() => setModalType(null)}>
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => {
+            setErrors(null);
+            setModalType(null);
+          }}
+        />
+      )}
     </div>
-  )
+  );
 }

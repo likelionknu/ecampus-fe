@@ -1,9 +1,9 @@
 import Button from "@/shared/components/Button";
 import Input from "@/shared/components/Input";
-import Modal from "@/shared/components/Modal";
+import Modal from "@/shared/components/modal/Modal";
 import type { ModalProps } from "@/shared/types/Modal";
 
-function CreateModal({ name, onChange, onNext, onClose }: ModalProps) {
+function CreateModal({ name, onChange, onClick, onClose }: ModalProps) {
   return (
     <Modal>
       <Modal.Header onClick={onClose}>새 세션 추가</Modal.Header>
@@ -16,7 +16,7 @@ function CreateModal({ name, onChange, onNext, onClose }: ModalProps) {
         />
       </div>
       <div className="mt-8 flex justify-end">
-        <Button size="large" variant="primary" onClick={onNext}>
+        <Button size="large" variant="primary" onClick={onClick}>
           추가
         </Button>
       </div>

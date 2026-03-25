@@ -1,122 +1,296 @@
 import Button from "@/shared/components/Button";
 import { formatKoreanDateTime12 } from "@/shared/utils/formatKoreanDateTime";
 import ReactMarkdown from "react-markdown";
+import { markdownComponents } from "../../session/components/markdown/MarkdownComponents";
+import Modal from "@/shared/components/modal/Modal";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import {
+  deleteNotice,
+  getNoticeDetail,
+  pinNotice,
+  unpinNotice,
+} from "../apis/notice";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
 
-interface FileData {
-  fileId: number;
-  name: string;
+interface NoticeData {
+  id: number;
+  title: string;
   content: string;
   createdAt: string;
-  writer: string;
-  isPublic: boolean;
+  createdUserName: string;
+  pinned: boolean;
 }
 
-const file: FileData = {
-  fileId: 1,
-  name: "4주차, 매핑 및 구조 설계",
-  content: `
-> 작성 중인 문서입니다.
-
-## 4주차, 매핑 및 구조 설계
-
-데이터 하나하나가 독립적으로 저장되고, 사용된다면 서비스는 작동하기 어려울거에요. 쇼핑몰 페이지를 예를 들면, 사용자가 상점을 만들고, 상점에 상품을 등록하는 이 모든 흐름은 모두 연결되어 있어요.
-
-## Mapping(매핑) 이란?
-
-데이터베이스 관점에서의 매핑은, “자바 객체와 데이터베이스 테이블 간 연결”하는 것을 의미해요.
-
-![연관 관계 매핑 미사용 #1](/markdown-test.png)
-
-1. 상품을 판매하려는 사용자 A
-2. 사용자 A가 등록한 상점
-3. 사용자 A가 상점에 등록한 상품 A, B, C
-`,
-  createdAt: "2026-03-15T17:31:03.680478",
-  writer: "우승연",
-  isPublic: false,
-};
-
 function NoticeViewPage() {
+  const navigate = useNavigate();
+  const { nid } = useParams();
+  const [modalType, setModalType] = useState<
+    | "noticeDelete"
+    | "noticeDeleteSuccess"
+    | "noticeLock"
+    | "noticeLockSuccess"
+    | "noticeUnlock"
+    | "noticeUnlockSuccess"
+    | null
+  >(null);
+  const [notice, setNotice] = useState<NoticeData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [pinning, setPinning] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [errors, setErrors] = useState<CommonErrorState | null>(null);
+
+  useEffect(() => {
+    const fetchNotice = async () => {
+      try {
+        setLoading(true);
+        setErrors(null);
+        const res = await getNoticeDetail(Number(nid));
+        setNotice(res.data.data);
+      } catch (error) {
+        console.error(error);
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (nid) {
+      void fetchNotice();
+    }
+  }, [nid]);
+
+  const handleTogglePinNotice = async () => {
+    if (!notice || pinning) return;
+
+    try {
+      setPinning(true);
+      setErrors(null);
+
+      if (notice.pinned) {
+        await unpinNotice(notice.id);
+        setNotice((prev) => (prev ? { ...prev, pinned: false } : prev));
+        setModalType("noticeUnlockSuccess");
+        return;
+      }
+
+      await pinNotice(notice.id);
+      setNotice((prev) => (prev ? { ...prev, pinned: true } : prev));
+      setModalType("noticeLockSuccess");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      setModalType(null);
+    } finally {
+      setPinning(false);
+    }
+  };
+
+  const handleDeleteNotice = async () => {
+    if (!notice || deleting) return;
+
+    try {
+      setDeleting(true);
+      setErrors(null);
+
+      await deleteNotice(notice.id);
+      setModalType("noticeDeleteSuccess");
+    } catch (error) {
+      console.error(error);
+      setErrors(getCommonErrorState(error));
+      setModalType(null);
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  if (loading) return <div>불러오는 중...</div>;
+  if (!notice) return <div>데이터가 없어요</div>;
+
   return (
     <div className="prose bg-ec-white w-full max-w-251.5 px-12 py-12">
-
-      <h1 className="text-3xl font-semibold text-ec-black mb-2 ">
-        {file.name}
+      <h1 className="text-ec-black mb-2 text-3xl font-semibold">
+        {notice.title}
       </h1>
-      <div className="flex gap-8 text-xs mb-6">
+      <div className="mb-6 flex gap-8 text-xs">
         <div className="flex gap-2">
           <span className="text-ec-sub">작성</span>
           <span className="text-ec-black">
-            {formatKoreanDateTime12(file.createdAt)}
+            {formatKoreanDateTime12(notice.createdAt)}
           </span>
         </div>
         <div className="flex gap-2">
           <span className="text-ec-sub">등록자</span>
-          <span className="text-ec-black">
-            {file.writer}
+          <span className="text-ec-black">{notice.createdUserName}</span>
+        </div>
+        <div className="flex gap-2">
+          <span className="text-ec-sub">고정 상태</span>
+          <span className={notice.pinned ? "text-ec-red" : "text-ec-blue"}>
+            {notice.pinned ? "고정" : "미고정"}
           </span>
         </div>
       </div>
 
-      {/* 버튼 */}
-      <div className="flex gap-2 mb-6">
-        <Button size="primary" variant="primary">
-          고정
+      <div className="mb-6 flex gap-2">
+        <Button
+          size="primary"
+          variant="primary"
+          onClick={() =>
+            setModalType(notice.pinned ? "noticeUnlock" : "noticeLock")
+          }
+        >
+          {notice.pinned ? "고정 해제" : "고정"}
         </Button>
-        <Button size="primary" variant="primary">
+        <Button
+          size="primary"
+          variant="primary"
+          onClick={() =>
+            navigate(`/admin/notices/${notice.id}/modify`, {
+              state: {
+                notice: {
+                  id: notice.id,
+                  title: notice.title,
+                  content: notice.content,
+                  createdAt: notice.createdAt,
+                  authorName: notice.createdUserName,
+                  pinned: notice.pinned,
+                },
+              },
+            })
+          }
+        >
           수정
         </Button>
-        <Button size="primary" variant="danger">
+        <Button
+          size="primary"
+          variant="danger"
+          onClick={() => setModalType("noticeDelete")}
+        >
           삭제
         </Button>
       </div>
-
-      {/* markdown */}
- <ReactMarkdown
-        components={{
-          h1: ({children}) => (
-            <h1 className="text-3xl font-semibold text-ec-black mt-10 mb-4">
-              {children}
-            </h1>
-          ),
-
-          h2: ({children}) => (
-            <h2 className="text-2xl font-semibold text-ec-black mt-8 mb-3 border-b pb-2 border-ec-outline">
-              {children}
-            </h2>
-          ),
-
-          p: ({children}) => (
-            <p className="text-ec-black leading-7 mb-4">
-              {children}
-            </p>
-          ),
-
-          li: ({children}) => (
-            <li className="text-ec-black leading-7">
-              {children}
-            </li>
-          ),
-
-          img: ({src, alt}) => (
-            <img
-              src={src || ""}
-              alt={alt || ""}
-              className="rounded-ec-10 border border-ec-outline my-6"
-            />
-          ),
-
-        blockquote: ({children}) => (
-  <blockquote className="bg-ec-blue text-ec-white px-4 py-2 rounded-ec-10 [&>p]:text-ec-white [&>p]:m-0 border-none [&>p]:after:content-none [&>p]:before:content-none not-italic">
-    {children}
-  </blockquote>
-),
-        }}
-      >
-        {file.content}
+      <ReactMarkdown components={markdownComponents}>
+        {notice.content}
       </ReactMarkdown>
-
-
+      {modalType === "noticeDelete" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지 사항 삭제
+          </Modal.Header>
+          <Modal.Description>
+            이 공지사항을 삭제할까요? <br />이 작업은 되돌릴 수 없어요
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              variant="danger"
+              onClick={handleDeleteNotice}
+              disabled={deleting}
+            >
+              {deleting ? "삭제 중..." : "삭제"}
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "noticeDeleteSuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지 사항 삭제
+          </Modal.Header>
+          <Modal.Description>공지 사항을 삭제했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              onClick={() => {
+                setModalType(null);
+                navigate("/admin/notices");
+              }}
+            >
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "noticeLock" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지사항 고정
+          </Modal.Header>
+          <Modal.Description>
+            이 공지사항을 고정할까요? <br />
+            고정된 공지사항은 최상단에 위치해요
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              onClick={handleTogglePinNotice}
+              disabled={pinning}
+            >
+              {pinning ? "고정 중..." : "확인"}
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "noticeLockSuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지사항 고정
+          </Modal.Header>
+          <Modal.Description>이 공지사항을 고정했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={() => setModalType(null)}>
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "noticeUnlock" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지사항 고정 해제
+          </Modal.Header>
+          <Modal.Description>
+            이 공지사항의 고정을 해제할까요? <br />
+            해제하면 최상단 고정 상태가 사라져요
+          </Modal.Description>
+          <Modal.ButtonLayout>
+            <Button
+              size="primary"
+              onClick={handleTogglePinNotice}
+              disabled={pinning}
+            >
+              {pinning ? "해제 중..." : "확인"}
+            </Button>
+            <Modal.Cancelled onClick={() => setModalType(null)} />
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {modalType === "noticeUnlockSuccess" && (
+        <Modal>
+          <Modal.Header onClick={() => setModalType(null)}>
+            공지사항 고정 해제
+          </Modal.Header>
+          <Modal.Description>이 공지사항의 고정을 해제했어요</Modal.Description>
+          <Modal.ButtonLayout>
+            <Button size="primary" onClick={() => setModalType(null)}>
+              확인
+            </Button>
+          </Modal.ButtonLayout>
+        </Modal>
+      )}
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
     </div>
   );
 }

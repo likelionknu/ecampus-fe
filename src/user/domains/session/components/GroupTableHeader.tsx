@@ -2,10 +2,13 @@ import TableHeaderLabel from "@/shared/components/table/TableHeaderLabel";
 
 function GroupTableHeader() {
   return (
-    <div className="ml-6 flex gap-10">
-      <TableHeaderLabel className="mr-3 text-center">기수</TableHeaderLabel>
-      <TableHeaderLabel className="mr-4 text-center">이름</TableHeaderLabel>
-      <TableHeaderLabel className="mr-2 text-center">파트</TableHeaderLabel>
+    <div
+      className="grid w-full items-center px-8"
+      style={{ gridTemplateColumns: "80px 120px 120px minmax(0,1fr)" }}
+    >
+      <TableHeaderLabel className="text-left">기수</TableHeaderLabel>
+      <TableHeaderLabel className="text-left">이름</TableHeaderLabel>
+      <TableHeaderLabel className="text-left">파트</TableHeaderLabel>
       <TableHeaderLabel className="text-left">이메일주소</TableHeaderLabel>
     </div>
   );

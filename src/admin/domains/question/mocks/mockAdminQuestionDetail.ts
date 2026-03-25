@@ -1,4 +1,7 @@
-import type { AdminQuestionComment, AdminQuestionDetail } from "../types/question";
+import type {
+  AdminQuestionComment,
+  AdminQuestionDetail,
+} from "../types/question";
 
 const QUESTION_BODY =
   "나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라나도몰라";
@@ -21,6 +24,7 @@ const mockComments: readonly AdminQuestionComment[] = [
 ];
 
 const baseAdminQuestionDetail = {
+  questionId: 1,
   title: "이거 도대체 무슨말이에요?",
   createdAt: "2026-02-10T11:30:00",
   createdBy: "전윤환",
@@ -32,13 +36,14 @@ const baseAdminQuestionDetail = {
 export const mockAdminQuestionDetail: AdminQuestionDetail = {
   ...baseAdminQuestionDetail,
   answeredAt: null,
-  status: "대기",
-  answer: QUESTION_BODY,
+  answeredBy: null,
+  status: "PENDING",
+  answer: null,
 };
 
 export const mockAdminQuestionManageDetail: AdminQuestionDetail = {
   ...baseAdminQuestionDetail,
   answeredAt: "2026-02-10T11:30:00",
-  status: "완료",
+  status: "COMPLETED",
   answer: "아직 답변을 기다리고 있어요",
 };

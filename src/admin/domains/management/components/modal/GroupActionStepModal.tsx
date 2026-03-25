@@ -1,14 +1,14 @@
 ﻿import Button from "@/shared/components/Button";
-import Modal from "@/shared/components/Modal";
-import type { ModalState } from "../../pages/AdminGroupPage";
+import Modal from "@/shared/components/modal/Modal";
 import { MODAL_CONFIG } from "./constants/groupActionModal.constants";
-export type {
+import type {
   GroupActionModalState,
   GroupActionType,
 } from "./types/groupActionModal.types";
+export type { GroupActionModalState, GroupActionType };
 
 interface GroupActionStepModalProps {
-  modalState: ModalState;
+  modalState: GroupActionModalState;
   onClose: () => void;
   onNext?: () => void;
 }
@@ -37,7 +37,7 @@ function GroupActionStepModal({
         >
           {isConfirm ? config.confirmLabel : "확인"}
         </Button>
-        {isConfirm && <Modal.Cancled onClick={onClose} />}
+        {isConfirm && <Modal.Cancelled onClick={onClose} />}
       </Modal.ButtonLayout>
     </Modal>
   );

@@ -14,7 +14,7 @@ function SessionMobileQuestionTableRows({
       {questions.map((question, index) => (
         <div
           key={`${question.id}-${question.createdUserName ?? "anonymous"}-${index}`}
-          className="bg-ec-box rounded-ec-10 max-w-87.5 p-5"
+          className="bg-ec-box rounded-ec-10 max-w-87.5 cursor-pointer p-5"
         >
           <div className="w-full">
             <div className="border-ec-outline-dark flex flex-col gap-2 border-b pb-5">
@@ -32,9 +32,11 @@ function SessionMobileQuestionTableRows({
               />
               <MobileItem
                 label="상태"
-                value={question.status}
+                value={question.status === "COMPLETED" ? "완료" : "대기"}
                 valueClassName={
-                  question.status === "완료" ? "text-ec-blue" : "text-ec-sub"
+                  question.status === "COMPLETED"
+                    ? "text-ec-blue"
+                    : "text-ec-sub"
                 }
               />
             </div>

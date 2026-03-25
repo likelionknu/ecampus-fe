@@ -6,6 +6,8 @@ interface TitleAction {
   label: string;
   buttonType?: ButtonVariant;
   onClick?: () => void;
+  isSubmitting?: boolean;
+  disabled?: boolean;
 }
 
 interface TitleSectionProps {
@@ -42,6 +44,8 @@ function TitleSection({ title, subText, actions }: TitleSectionProps) {
                 variant={action.buttonType ?? "primary"}
                 size="large"
                 onClick={action.onClick}
+                isLoading={action.isSubmitting}
+                disabled={action.disabled ?? action.isSubmitting}
               >
                 {action.label}
               </Button>

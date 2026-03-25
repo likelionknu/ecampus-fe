@@ -11,58 +11,55 @@ import AssignmentsTableHeader from "../components/AssignmentsTableHeader";
 import AssignmentsTableRow from "../components/AssignmentsTableRow";
 import ListBoxMobile from "../components/application/ListBoxMobile";
 import { AssignmentInfo } from "../components/application/AssignmentInfo";
+import { useEffect, useState } from "react";
+import { getAssignments } from "../apis/assignment";
+import { useNavigate, useParams } from "react-router-dom";
 
-const mockGroups = [
-  {
-    id: 1,
-    name: "기본 CRUD 과제를 안정적인 API로 개선하기",
-    endAt: "2026-02-14T00:38:00",
-    assignmentStatus: "SUBMITTED",
-    evaluate: "FAIL",
-  },
-  {
-    id: 2,
-    name: "REST API 설계 과제",
-    endAt: "2026-02-20T23:59:59",
-    assignmentStatus: "NOT_SUBMITTED",
-    evaluate: "FAIL",
-  },
-  {
-    id: 3,
-    name: "기본 CRUD 과제를 안정적인 API로 개선하기",
-    endAt: "2026-02-14T00:38:00",
-    assignmentStatus: "SUBMITTED",
-    evaluate: "PASS",
-  },
-  {
-    id: 4,
-    name: "REST API 설계 과제",
-    endAt: "2026-02-20T23:59:59",
-    assignmentStatus: "NOT_SUBMITTED",
-    evaluate: null,
-  },
-  {
-    id: 5,
-    name: "기본 CRUD 과제를 안정적인 API로 개선하기",
-    endAt: "2026-02-14T00:38:00",
-    assignmentStatus: "SUBMITTED",
-    evaluate: "PASS",
-  },
-  {
-    id: 6,
-    name: "REST API 설계 과제",
-    endAt: "2026-02-20T23:59:59",
-    assignmentStatus: "NOT_SUBMITTED",
-    evaluate: null,
-  },
-] as const;
+interface AssignmentRow {
+  id: number;
+  name: string;
+  endAt: string;
+  assignmentStatus: "NOT_SUBMITTED" | "SUBMITTED";
+  evaluate: "PASS" | "FAIL" | null;
+}
+
+interface AssignmentsPageState {
+  assignments: AssignmentRow[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
+const INITIAL_ASSIGNMENTS_PAGE_STATE: AssignmentsPageState = {
+  assignments: [],
+  page: 0,
+  size: 8,
+  totalElements: 0,
+  totalPages: 0,
+  hasNext: false,
+};
+
+const ASSIGNMENTS_PAGE_SIZE = 8;
 
 function UserSessionAssignments() {
-  const isLoading = true;
+  const [assignmentsPage, setAssignmentsPage] = useState<AssignmentsPageState>(
+    INITIAL_ASSIGNMENTS_PAGE_STATE,
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const isTablet = useMediaQuery({ maxWidth: 1024 });
   const isMobile = useMediaQuery({ maxWidth: 768 });
-  const itemNum = mockGroups.length;
-  const itemSumNum = 5;
+  const navigate = useNavigate();
+  const { sid } = useParams();
+  const sidNumber = sid ? Number(sid) : null;
+  const itemNum = assignmentsPage.totalElements;
+  const itemSumNum = ASSIGNMENTS_PAGE_SIZE;
+
+  const openAssignmentDetail = (aid: number) => {
+    navigate(`${aid}`);
+  };
 
   const ASSIGNMENT_STATUS_MAP: Record<string, string> = {
     NOT_SUBMITTED: "미제출",
@@ -73,15 +70,46 @@ function UserSessionAssignments() {
     FAIL: "실패",
   };
 
+  useEffect(() => {
+    if (sidNumber === null || Number.isNaN(sidNumber)) return;
+
+    const fetchAssignments = async () => {
+      setIsLoading(true);
+
+      try {
+        const res = await getAssignments({
+          sid: sidNumber,
+          page: currentPage - 1,
+          size: ASSIGNMENTS_PAGE_SIZE,
+        });
+        const responseData = res.data?.data ?? res.data;
+
+        setAssignmentsPage({
+          assignments: responseData?.content ?? [],
+          page: responseData?.number ?? 0,
+          size: responseData?.size ?? ASSIGNMENTS_PAGE_SIZE,
+          totalElements: responseData?.totalElements ?? 0,
+          totalPages: responseData?.totalPages ?? 0,
+          hasNext: !(responseData?.last ?? true),
+        });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAssignments();
+  }, [sidNumber, currentPage]);
   return (
-    <div className="flex w-full max-w-251 flex-col gap-5 px-8 pt-7">
-      <TitleSection title="과제" subText="내게 부여된 과제를 확인하세요" />
+    <div className="mx-auto mt-30 flex w-full max-w-251 flex-col gap-5 md:pt-7 xl:mt-0">
+      <TitleSection
+        title={`과제(${assignmentsPage.totalElements})`}
+        subText="내게 부여된 과제를 확인하세요"
+      />
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
-        {({ currentItems, startIndex }) => {
-          const pageAssignments = mockGroups.slice(
-            startIndex,
-            startIndex + currentItems.length,
-          );
+        {() => {
+          const pageAssignments = assignmentsPage.assignments;
           return (
             <>
               {!isTablet && (
@@ -90,11 +118,14 @@ function UserSessionAssignments() {
                 </PageNationMenu>
               )}
               {pageAssignments.length === 0 && !isLoading ? (
-                <TableEmptyState label="등록된 과제가 없어요" />
+                <TableEmptyState label="등록된 과제가 없어요." />
               ) : !isTablet ? (
                 <AssignmentsTableRow
                   isLoading={isLoading}
                   assignments={pageAssignments}
+                  onRowClick={(assignment) =>
+                    openAssignmentDetail(assignment.id)
+                  }
                 />
               ) : (
                 <div
@@ -124,6 +155,7 @@ function UserSessionAssignments() {
                         key={assignment.id}
                         title={assignment.name}
                         subText={`${formatDateTime(assignment.endAt)} · 제출 종료`}
+                        onClick={() => openAssignmentDetail(assignment.id)}
                       >
                         <AssignmentInfo
                           label="제출 상태"
@@ -140,7 +172,7 @@ function UserSessionAssignments() {
                   })}
                 </div>
               )}
-              <PageNationButton />
+              <PageNationButton onPageChange={(page) => setCurrentPage(page)} />
             </>
           );
         }}

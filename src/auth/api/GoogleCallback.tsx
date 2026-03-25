@@ -12,7 +12,7 @@ import type { ApiResponse, GoogleLoginResponseData } from "@auth/types/auth";
 import {
   getDefaultRouteByRole,
   useAuthSessionStore,
-} from "@auth/utils/authStore";
+} from "@/auth/stores/authStore";
 import { validateGoogleOAuthState } from "@auth/api/googleOAuth";
 
 const GoogleCallback = () => {

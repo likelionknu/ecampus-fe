@@ -16,15 +16,15 @@ function AdminQuestionMetaCard({ question }: AdminQuestionMetaCardProps) {
       label: "질문 등록일",
       value: formatKoreanDateTime24(question.createdAt),
     },
-    { label: "등록자", value: question.createdBy },
+    { label: "등록자", value: question.createdBy || "-" },
     {
       label: "질문 답변일",
       value: question.answeredAt
         ? formatKoreanDateTime24(question.answeredAt)
         : "-",
     },
-    { label: "답변자", value: question.answeredBy },
-    { label: "상태", value: question.status },
+    { label: "답변자", value: question.answeredBy ?? "-" },
+    { label: "상태", value: question.status === "COMPLETED" ? "완료" : "대기" },
   ];
 
   return (

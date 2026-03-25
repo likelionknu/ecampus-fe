@@ -6,142 +6,75 @@ import {
   PageNationFrame,
   PageNationMenu,
 } from "@/shared/components/PageNation";
-import SessionsTableRows from "../components/SessionsTableRows";
-import SessionHeader from "../components/SessionHeader";
-import type { AdminSessionRow, PagedResponse } from "../types";
-import { useCallback, useState } from "react";
+import SessionsTableRows from "../components/session/SessionsTableRows";
+import SessionHeader from "../components/session/SessionHeader";
+import type { AdminSessionRow } from "../types";
+import { useCallback, useEffect, useState } from "react";
 import CreateModal from "../components/modal/sessions/CreateModal";
 import ConfirmModal from "../components/modal/sessions/ConfirmModal";
 import DoneModal from "../components/modal/sessions/DoneModal";
 import type { CreateConfirmDoneModalStep } from "@/shared/types/ModalStep";
+import { createSession, getSessions } from "../apis/session";
+import {
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils/questionError";
+import ErrorModal from "@/shared/components/modal/ErrorModal";
 
-const mockSessions: PagedResponse<AdminSessionRow> = {
-  content: [
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "비활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "비활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "비활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "비활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "비활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "활성화",
-    },
-    {
-      id: 8,
-      name: "[14기] 아기사자 - 백엔드 파트",
-      creator: "황형진",
-      participantCount: 86,
-      fileCount: 12,
-      assignmentCount: 12,
-      status: "비활성화",
-    },
-  ],
-  totalElements: 10,
+interface SessionsPageState {
+  sessions: AdminSessionRow[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+  hasNext: boolean;
+}
+
+const INITIAL_SESSIONS_PAGE_STATE: SessionsPageState = {
+  sessions: [],
+  page: 0,
+  size: 8,
+  totalElements: 0,
+  totalPages: 0,
+  hasNext: false,
 };
 
 function AdminSessionsPage() {
-  const itemNum = mockSessions.totalElements;
-  const itemSumNum = 8;
-  const isLoading = true;
-  const [name, setName] = useState<string>("");
-  const [step, setStep] = useState<CreateConfirmDoneModalStep | null>(null);
+  const [sessionsPage, setSessionsPage] = useState<SessionsPageState>(
+    INITIAL_SESSIONS_PAGE_STATE,
+  );
+  const [refreshKey, setRefreshKey] = useState(0); // 세션 추가시 재조회
+  const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const [name, setName] = useState<string>(""); // 세션 추가 이름 상태
+  const [step, setStep] = useState<CreateConfirmDoneModalStep | null>(null); // 모달 단계
   const isTablet = useMediaQuery({ maxWidth: 1023 });
+  const itemNum = sessionsPage.totalElements;
+  const itemSumNum = sessionsPage.size;
 
+  // 모달 비활성화
   const handleClose = useCallback(() => {
     setStep(null);
 
     if (name) setName("");
   }, [name]);
+
+  const handleDone = () => {
+    setRefreshKey((prev) => prev + 1);
+    handleClose();
+  };
+
+  // 세션 추가
+  const handleCreateSession = async () => {
+    if (!name) return;
+
+    try {
+      await createSession({ name: name });
+      setStep("DONE");
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    }
+  };
 
   const renderStepModal = () => {
     switch (step) {
@@ -150,23 +83,60 @@ function AdminSessionsPage() {
           <CreateModal
             name={name}
             onChange={(e) => setName(e.target.value)}
-            onNext={() => setStep("CONFIRM")}
+            onClick={() => setStep("CONFIRM")}
             onClose={handleClose}
           />
         );
       case "CONFIRM":
         return (
-          <ConfirmModal onClose={handleClose} onNext={() => setStep("DONE")} />
+          <ConfirmModal onClose={handleClose} onClick={handleCreateSession} />
         );
       case "DONE":
-        return <DoneModal onClose={handleClose} />;
+        return <DoneModal onClose={handleDone} />;
       default:
         return null;
     }
   };
 
+  // 세션 조회
+  useEffect(() => {
+    const fetchSessions = async () => {
+      setIsLoading(true);
+
+      try {
+        const res = await getSessions();
+        const responseData = res.data?.data ?? res.data;
+
+        setSessionsPage({
+          sessions: Array.isArray(responseData?.content)
+            ? responseData.content
+            : [],
+          page: responseData?.number ?? 0,
+          size: responseData?.size ?? INITIAL_SESSIONS_PAGE_STATE.size,
+          totalElements: responseData?.totalElements ?? 0,
+          totalPages: responseData?.totalPages ?? 0,
+          hasNext: !(responseData?.last ?? true),
+        });
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchSessions();
+  }, [refreshKey]);
+
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-251.5 xl:px-0">
+      {errors && (
+        <ErrorModal
+          status={errors.status}
+          message={errors.message}
+          onClick={() => setErrors(null)}
+        />
+      )}
+
       {renderStepModal()}
 
       <TitleSection
@@ -182,7 +152,7 @@ function AdminSessionsPage() {
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {({ currentItems, startIndex }) => {
-          const pagedSessions = mockSessions.content.slice(
+          const pagedSessions = sessionsPage.sessions.slice(
             startIndex,
             startIndex + currentItems.length,
           );

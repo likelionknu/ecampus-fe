@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { useAuthSessionStore } from "@auth/stores/authStore";
 import NavLogo from "@shared/assets/NavLogo.png";
 import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";
@@ -56,13 +57,17 @@ const NavItems = ({
 const NavBar = () => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
+  const role = useAuthSessionStore((state) => state.session?.role);
+  const userName = useAuthSessionStore((state) => state.session?.name);
+  const profileUrl = useAuthSessionStore((state) => state.session?.profileUrl);
   const pathSegments = pathname.split("/").filter(Boolean);
-  const currentSection = pathSegments[1] ?? "";
+  const isAdmin = role?.toUpperCase() === "ADMIN";
 
-  const isSessionSelected = currentSection === "sessions";
-  const isNotificationSelected = currentSection === "notification";
-  const isQuestionSelected = currentSection === "questions";
-  const isAdminSelected = currentSection === "admin";
+  const isSessionSelected = pathname.startsWith("/user/sessions");
+  const isGroupSelected = pathname.startsWith("/user/list");
+  const isNotificationSelected = pathname.startsWith("/user/notification");
+  const isQuestionSelected = pathname.startsWith("/user/questions");
+  const isAdminSelected = pathSegments[0] === "admin";
 
   return (
     <div className="bg-ec-blue sticky top-0 flex h-screen min-h-screen w-21.5">
@@ -88,7 +93,8 @@ const NavBar = () => {
               iconSrc={NavGroup}
               iconAlt="NavGroup"
               label="그룹"
-              selected={false}
+              selected={isGroupSelected}
+              onClick={() => navigate("/user/list")}
             />
             <NavItems
               iconSrc={NavAlart}
@@ -104,23 +110,30 @@ const NavBar = () => {
               selected={isQuestionSelected}
               onClick={() => navigate("/user/questions")}
             />
-            <NavItems
-              iconSrc={NavAdmin}
-              iconAlt="NavAdmin"
-              label="관리자"
-              selected={isAdminSelected}
-              onClick={() => navigate("/admin")}
-            />
+            {isAdmin && (
+              <NavItems
+                iconSrc={NavAdmin}
+                iconAlt="NavAdmin"
+                label="관리자"
+                selected={isAdminSelected}
+                onClick={() => navigate("/admin")}
+              />
+            )}
           </div>
         </div>
-        <div className="flex h-17 w-17 flex-col items-center gap-1.25">
+        <div
+          className="flex h-17 w-17 cursor-pointer flex-col items-center gap-1.25"
+          onClick={() => {
+            navigate("/user/dashboard");
+          }}
+        >
           <img
             className="border-ec-outline h-7 w-7 rounded-full border"
             alt="NavUserProfileImg"
-            src={UserProfileImg}
+            src={profileUrl || UserProfileImg}
           />
           <div className="text-ec-gnb-white cursor-alias justify-start text-center text-xs font-medium">
-            황형진
+            {userName}
           </div>
         </div>
       </div>
