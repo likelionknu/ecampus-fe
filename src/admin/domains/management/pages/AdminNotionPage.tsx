@@ -139,7 +139,7 @@ const AdminNotionPage = () => {
             }}
           >
             <div className="text-ec-gnb-white text-center text-base font-medium">
-              새 자료 추가
+              새 공지사항 추가
             </div>
           </div>
         </div>
