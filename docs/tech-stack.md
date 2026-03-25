@@ -51,3 +51,4 @@ Last updated: 2026-03-25
 
 - Path aliases: `@`, `@auth`, `@admin`, `@user`, `@shared`
 - No dedicated test script is currently defined in `package.json`
+- Shared axios client (`src/shared/apis/index.ts`) includes token attach and token reissue retry interceptor

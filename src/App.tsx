@@ -7,8 +7,8 @@ import { AdminRoutes } from "@admin";
 import { GoogleCallback } from "@auth/api";
 import { BaseLayout } from "@shared/layouts";
 import { UserRoutes } from "@user";
-import { RequireAuth } from "./auth/components";
 import { lazy, Suspense, type ReactElement } from "react";
+import RequireAccess from "./auth/components/RequireAuth";
 
 const LoginPage = lazy(() =>
   import("@auth/pages").then((module) => ({
@@ -87,7 +87,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <BaseLayout />,
+    element: (
+      <RequireAccess>
+        <BaseLayout />
+      </RequireAccess>
+    ),
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
       ...UserRoutes,
@@ -96,9 +100,9 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <RequireAuth>
+      <RequireAccess requiredRole="ADMIN">
         <BaseLayout />
-      </RequireAuth>
+      </RequireAccess>
     ),
     children: [
       { index: true, element: <Navigate to="sessions" replace /> },
