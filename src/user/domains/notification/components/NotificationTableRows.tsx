@@ -17,6 +17,14 @@ function NotificationTableRows({
   const navigate = useNavigate();
 
   const handleNavigate = (notification: NotificationRow) => {
+    const isSession =
+      notification.assignmentId === null &&
+      notification.fileId === null &&
+      notification.questionId === null &&
+      notification.noticeId === null;
+
+    if (isSession) navigate(`/user/sessions/${notification.sessionId}`);
+
     // 공지사항
     if (notification.noticeId) navigate("/user/dashboard");
 
@@ -37,6 +45,7 @@ function NotificationTableRows({
       navigate(
         `/user/sessions/${notification.sessionId}/assignments/${notification.assignmentId}`,
       );
+    if (isSession) return;
     return;
   };
 
