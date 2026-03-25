@@ -7,51 +7,61 @@ const UserDashboardPage = lazy(() =>
     default: module.UserDashboardPage,
   })),
 );
+
 const UserSessionQuestionsPage = lazy(() =>
   import("./domains/session/pages/question").then((module) => ({
     default: module.UserSessionQuestionsPage,
   })),
 );
+
 const UserSessionQuestionCreatePage = lazy(() =>
   import("./domains/session/pages/question").then((module) => ({
     default: module.UserSessionQuestionCreatePage,
   })),
 );
+
 const UserSessionGroupPage = lazy(() =>
   import("./domains/session/pages").then((module) => ({
     default: module.UserSessionGroupPage,
   })),
 );
+
 const UserSessionSelect = lazy(() =>
   import("./domains/session/pages").then((module) => ({
     default: module.UserSessionSelect,
   })),
 );
+
 const UserSessionAssignments = lazy(() =>
   import("./domains/session/pages").then((module) => ({
     default: module.UserSessionAssignments,
   })),
 );
+
 const UserSessionAssignmentsView = lazy(() =>
   import("./domains/session/pages").then((module) => ({
     default: module.UserSessionAssignmentsView,
   })),
 );
+
 const UserSessionFilesPage = lazy(() =>
   import("./domains/session/pages").then((module) => ({
     default: module.UserSessionFilesPage,
   })),
 );
+
 const UserSessionFilesViewPage = lazy(() =>
   import("./domains/session/pages").then((module) => ({
     default: module.UserSessionFilesViewPage,
   })),
 );
+
 const UserListPage = lazy(() =>
   import("./domains/session/pages").then((module) => ({
     default: module.UserList,
   })),
 );
+
 const UserQuestionsPage = lazy(() =>
   import("./domains/question/pages").then((module) => ({
     default: module.UserQuestionsPage,
@@ -62,6 +72,7 @@ const UserQuestionDetailPage = lazy(() =>
     default: module.UserQuestionDetailPage,
   })),
 );
+
 const UserNotificationPage = lazy(() =>
   import("./domains/notification/pages").then((module) => ({
     default: module.UserNotificationPage,
