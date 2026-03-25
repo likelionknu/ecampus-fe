@@ -8,5 +8,5 @@ export interface GroupMemo {
   id: number;
   content: string;
   createdAt: string;
-  name: string;
+  grantedUser: string;
 }

@@ -14,7 +14,7 @@ function MemoItem({ item, isSubmitting, onClick }: MemoItemProps) {
       <div className="flex items-end justify-between">
         <span className="text-caption text-ec-sub">
           {item.createdAt ? formatKoreanDateTime12(item.createdAt) : "-"},{" "}
-          {item.name} 등록
+          {item.grantedUser} 등록
         </span>
         <button
           type="button"
