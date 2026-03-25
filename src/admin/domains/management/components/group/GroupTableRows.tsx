@@ -22,9 +22,11 @@ interface GroupMemoApiRow {
   id: number;
   content: string;
   createdAt: string;
-  grantedUser?: {
-    name?: string;
-  };
+  grantedUser?:
+    | {
+        name?: string;
+      }
+    | string;
 }
 
 interface SelectOption<TValue extends string> {
@@ -248,12 +250,19 @@ function GroupTableRows({
       const responseData: GroupMemoApiRow[] = Array.isArray(res.data?.data)
         ? res.data.data
         : [];
-      const mappedMemos: GroupMemo[] = responseData.map((memo) => ({
-        id: memo.id,
-        content: memo.content,
-        createdAt: memo.createdAt,
-        name: memo.grantedUser?.name ?? "",
-      }));
+      const mappedMemos: GroupMemo[] = responseData.map((memo) => {
+        const grantedUserName =
+          typeof memo.grantedUser === "string"
+            ? memo.grantedUser
+            : (memo.grantedUser?.name ?? "");
+
+        return {
+          id: memo.id,
+          content: memo.content,
+          createdAt: memo.createdAt,
+          grantedUser: grantedUserName,
+        };
+      });
 
       setMemos(mappedMemos);
     } catch (error) {
