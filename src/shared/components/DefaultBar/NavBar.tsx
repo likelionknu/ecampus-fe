@@ -7,6 +7,7 @@ import NavAlart from "@shared/assets/NavAlart.svg";
 import NavQuestion from "@shared/assets/NavQuestion.svg";
 import NavAdmin from "@shared/assets/NavAdmin.svg";
 import UserProfileImg from "@shared/assets/UserProfileImg.png";
+import Button from "../Button";
 
 interface NavItemsProps {
   iconSrc: string;
@@ -60,6 +61,7 @@ const NavBar = () => {
   const role = useAuthSessionStore((state) => state.session?.role);
   const userName = useAuthSessionStore((state) => state.session?.name);
   const profileUrl = useAuthSessionStore((state) => state.session?.profileUrl);
+  const clearSession = useAuthSessionStore((state) => state.clearSession);
   const pathSegments = pathname.split("/").filter(Boolean);
   const isAdmin = role?.toUpperCase() === "ADMIN";
 
@@ -68,6 +70,12 @@ const NavBar = () => {
   const isNotificationSelected = pathname.startsWith("/user/notification");
   const isQuestionSelected = pathname.startsWith("/user/questions");
   const isAdminSelected = pathSegments[0] === "admin";
+
+  const handleLogout = () => {
+    clearSession();
+    window.localStorage.removeItem("ecampus.auth.session");
+    navigate("/auth/login", { replace: true });
+  };
 
   return (
     <div className="bg-ec-blue sticky top-0 flex h-screen min-h-screen w-21.5">
@@ -121,19 +129,26 @@ const NavBar = () => {
             )}
           </div>
         </div>
-        <div
-          className="flex h-17 w-17 cursor-pointer flex-col items-center gap-1.25"
-          onClick={() => {
-            navigate("/user/dashboard");
-          }}
-        >
-          <img
-            className="border-ec-outline h-7 w-7 rounded-full border"
-            alt="NavUserProfileImg"
-            src={profileUrl || UserProfileImg}
-          />
-          <div className="text-ec-gnb-white cursor-alias justify-start text-center text-xs font-medium">
-            {userName}
+        <div className="group relative flex w-17 flex-col items-center">
+          <div
+            className="flex h-17 w-17 cursor-pointer flex-col items-center gap-1.25"
+            onClick={() => {
+              navigate("/user/dashboard");
+            }}
+          >
+            <img
+              className="border-ec-outline h-7 w-7 rounded-full border"
+              alt="NavUserProfileImg"
+              src={profileUrl || UserProfileImg}
+            />
+            <div className="text-ec-gnb-white cursor-alias justify-start text-center text-xs font-medium">
+              {userName}
+            </div>
+          </div>
+          <div className="invisible absolute bottom-full left-1/2 z-20 -translate-x-1/2 opacity-0 transition-opacity duration-150 group-hover:visible group-hover:opacity-100">
+            <Button size="modal" variant="danger" onClick={handleLogout}>
+              로그아웃
+            </Button>
           </div>
         </div>
       </div>

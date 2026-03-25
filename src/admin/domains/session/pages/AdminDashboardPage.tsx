@@ -1,12 +1,38 @@
-import { TitleSection, SerachBar, Button, SelectBox, PageNationButton, PageNationFrame, PageNationMenu, Input } from "@/shared/components";
+import {
+  TitleSection,
+  SerachBar,
+  Button,
+  SelectBox,
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+  Input,
+} from "@/shared/components";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { SessionInfoOverview, type SessionDashboardData, SelectedUser, DashboardHeader, DashboardTableRows, SessionActivateButton, SessionDeactivateButton } from "../components/dashboard";
+import {
+  SessionInfoOverview,
+  type SessionDashboardData,
+  SelectedUser,
+  DashboardHeader,
+  DashboardTableRows,
+  SessionActivateButton,
+  SessionDeactivateButton,
+} from "../components/dashboard";
 import { useMediaQuery } from "react-responsive";
 import { TableEmptyState } from "@/shared/components/table";
-import { ADMIN_DASHBOARD_PART_DEFAULT, SESSION_PART_OPTIONS } from "@/shared/constants";
+import {
+  ADMIN_DASHBOARD_PART_DEFAULT,
+  SESSION_PART_OPTIONS,
+} from "@/shared/constants";
 import type { AdminDashboardMemberRow, MemberState } from "../types";
-import { addMembers, editSessionInfo, getSessionInfo, getSessionMember, serachUser } from "../api";
+import {
+  addMembers,
+  editSessionInfo,
+  getSessionInfo,
+  getSessionMember,
+  serachUser,
+} from "../api";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import { ErrorModal, Modal } from "@/shared/components/modal";
 
@@ -237,7 +263,7 @@ function AdminDashboardPage() {
   }, [sid, refreshKey]);
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:mx-0 xl:max-w-280 xl:px-8">
+    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280 xl:px-8">
       {errors && (
         <ErrorModal
           status={errors.status}
