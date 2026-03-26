@@ -1,4 +1,4 @@
-import CloseImg from "../../assets/close.png";
+import CloseImg from "../../assets/close.svg?react";
 
 interface ModalProps {
   children?: React.ReactNode;
@@ -9,10 +9,8 @@ function ModalHeader({ children, onClick }: ModalProps) {
   return (
     <div className="text-ec-black flex max-h-6 items-center justify-between text-[16px] font-semibold">
       {children}
-      <img
-        src={CloseImg}
-        alt="닫기"
-        className="h-3 w-3 cursor-pointer"
+      <CloseImg
+        className="fill-ec-black h-3 w-3 cursor-pointer"
         onClick={onClick}
       />
     </div>

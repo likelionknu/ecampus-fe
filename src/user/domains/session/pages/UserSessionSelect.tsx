@@ -2,6 +2,7 @@ import TwoManIcon from "@user/domains/session/assets/TwoManIcon.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { SkeletonCell } from "@/shared/components/skeleton";
+import { useSessionStore } from "@/shared/stores/sessionStore";
 import { useNavigate } from "react-router-dom";
 
 interface SessionItemData {
@@ -18,6 +19,7 @@ interface SelectSessionItemProps {
   name: string;
   fileCount: number;
   assignmentCount: number;
+  onSelect: (name: string) => void;
 }
 
 const SelectSessionItem = ({
@@ -26,13 +28,17 @@ const SelectSessionItem = ({
   name,
   fileCount,
   assignmentCount,
+  onSelect,
 }: SelectSessionItemProps) => {
   const naviage = useNavigate();
 
   return (
     <div
       className="my-2.5 flex h-30.25 w-87.5 cursor-pointer flex-col lg:w-85 xl:my-0"
-      onClick={() => naviage(`/user/sessions/${id}/files`)}
+      onClick={() => {
+        onSelect(name);
+        naviage(`/user/sessions/${id}/files`);
+      }}
     >
       <div className="bg-ec-table-header rounded-tl-ec-10 rounded-tr-ec-10 flex h-9 w-32 items-center justify-center">
         <div className="flex w-full items-center justify-center gap-1.25">
@@ -60,6 +66,7 @@ const SelectSessionItem = ({
 };
 
 const UserSessionSelect = () => {
+  const setSessionName = useSessionStore((state) => state.setSessionName);
   const authData = JSON.parse(
     localStorage.getItem("ecampus.auth.session") || "null",
   );
@@ -135,6 +142,7 @@ const UserSessionSelect = () => {
               name={item.name}
               fileCount={item.fileCount}
               assignmentCount={item.assignmentCount}
+              onSelect={setSessionName}
             />
           ))}
         </div>

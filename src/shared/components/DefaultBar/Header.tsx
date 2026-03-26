@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useMatches, useNavigate } from "react-router-dom";
+import { useLocation, useMatches, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import DarkModeImg from "@shared/assets/DarkModeImg.png";
 import LightModeImg from "@shared/assets/LightModeImg.png";
@@ -7,6 +7,7 @@ import MobileHeaderIcon from "@shared/assets/MobileHeaderIcon.png";
 import MobileHeaderLogo from "@shared/assets/MobileHeaderLogo.png";
 import UserProfileImg from "@shared/assets/UserProfileImg.png";
 import xWhile from "@user/domains/dashboard/assets/xWhite.png";
+import { useSessionStore } from "@/shared/stores/sessionStore";
 
 type HeaderRouteHandle = {
   title?: string;
@@ -36,7 +37,9 @@ function Header() {
   const isTablet = useMediaQuery({ maxWidth: 1280 });
 
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const matches = useMatches();
+  const sessionName = useSessionStore((state) => state.sessionName);
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains("dark"),
   );
@@ -45,6 +48,13 @@ function Header() {
       .reverse()
       .map((match) => (match.handle as HeaderRouteHandle | undefined)?.title)
       .find((title) => typeof title === "string") ?? "eCampus";
+  const pathSegments = pathname.split("/").filter(Boolean);
+  const isSessionDetailPage =
+    pathSegments[0] === "user" &&
+    pathSegments[1] === "sessions" &&
+    /^\d+$/.test(pathSegments[2] ?? "");
+  const headerTitle =
+    isSessionDetailPage && sessionName ? sessionName : pageTitle;
 
   const handleToggleTheme = () => {
     setIsDark((prev) => {
@@ -79,7 +89,7 @@ function Header() {
                   src={MobileHeaderLogo}
                 />
                 <div className="text-ec-gnb-white line-clamp-1 justify-start text-base font-medium">
-                  {pageTitle}
+                  {headerTitle}
                 </div>
               </div>
               <img
@@ -144,7 +154,9 @@ function Header() {
       ) : (
         <div className="flex flex-col">
           <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8 dark:border-[#323232]">
-            <h1 className="typo-sub-title">{pageTitle}</h1>
+            <h1 className="typo-sub-title">
+              {headerTitle}
+            </h1>
             <button
               type="button"
               role="switch"
