@@ -23,7 +23,7 @@ function NotificationTableRows({
       notification.questionId === null &&
       notification.noticeId === null;
 
-    if (isSession) navigate(`/user/sessions/${notification.sessionId}`);
+    if (isSession) navigate(`/user/sessions/${notification.sessionId}/files`);
 
     // 공지사항
     if (notification.noticeId) navigate("/user/dashboard");
