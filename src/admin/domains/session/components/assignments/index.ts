@@ -8,5 +8,7 @@ export { default as AssignmentMetaCard } from "./AssignmentMetaCard";
 export * from "./AssignmentMetaCard";
 export { default as AssignmentStatusTable } from "./AssignmentStatusTable";
 export * from "./AssignmentStatusTable";
+export { default as AssignmentSubmitDetailModal } from "./AssignmentSubmitDetailModal";
+export * from "./AssignmentSubmitDetailModal";
 export { default as AssignmentUploadForm } from "./AssignmentUploadForm";
 export * from "./AssignmentUploadForm";

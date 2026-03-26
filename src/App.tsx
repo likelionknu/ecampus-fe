@@ -7,7 +7,6 @@ import { AdminRoutes } from "@admin";
 import { BaseLayout } from "@shared/layouts";
 import { UserRoutes } from "@user";
 import { lazy, Suspense, type ReactElement } from "react";
-import RequireAccess from "./auth/components/RequireAuth";
 
 const GoogleCallback = lazy(() =>
   import("@auth/api").then((module) => ({
@@ -96,9 +95,9 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: (
-      <RequireAccess>
-        <BaseLayout />
-      </RequireAccess>
+      // <RequireAccess>
+      <BaseLayout />
+      // </RequireAccess>
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
@@ -108,9 +107,9 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <RequireAccess requiredRole="ADMIN">
-        <BaseLayout />
-      </RequireAccess>
+      // <RequireAccess requiredRole="ADMIN">
+      <BaseLayout />
+      // </RequireAccess>
     ),
     children: [
       { index: true, element: <Navigate to="sessions" replace /> },
