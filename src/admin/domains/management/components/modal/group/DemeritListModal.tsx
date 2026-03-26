@@ -52,13 +52,15 @@ function DemeritListModal({
           </MemoBox>
         ) : (
           demerits.map((demerit, index) => (
-            <MemoBox key={`${demerit.id ?? "missing"}-${index}`}>
-              <DemeritItem
-                item={demerit}
-                isSubmitting={isSubmitting}
-                onClick={onDeleteDemerit}
-              />
-            </MemoBox>
+            <div className="flex max-h-100 flex-col overflow-y-scroll">
+              <MemoBox key={`${demerit.id ?? "missing"}-${index}`}>
+                <DemeritItem
+                  item={demerit}
+                  isSubmitting={isSubmitting}
+                  onClick={onDeleteDemerit}
+                />
+              </MemoBox>
+            </div>
           ))
         )}
       </div>
