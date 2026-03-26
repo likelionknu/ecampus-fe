@@ -11,6 +11,7 @@ export interface AdminAssignmentParticipant {
   evaluatedAt: string | null;
   assignmentStatus: AdminAssignmentStatus;
   evaluate: AdminAssignmentEvaluate;
+  submissionContent?: string | null;
 }
 
 export interface AdminAssignmentSubmitResponse {
@@ -23,6 +24,7 @@ export interface AdminAssignmentSubmitResponse {
   evaluatedAt: string | null;
   evaluate: AdminAssignmentEvaluate;
   submitted: boolean;
+  submissionContent?: string | null;
 }
 
 export interface AdminAssignmentSubmitsPageResponse {

@@ -3,9 +3,26 @@ import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Button, TitleSection } from "@/shared/components";
 import { ErrorModal, Modal } from "@/shared/components/modal";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
-import { AssignmentDeleteModal, AssignmentEditModal, AssignmentDescriptionSection, AssignmentMetaCard, AssignmentStatusTable } from "../components/assignments";
-import { getAdminAssignmentDetail, getAdminAssignmentSubmits } from "../api";
-import type { AdminAssignmentDetail, AdminAssignmentParticipantsPage } from "../types";
+import {
+  AssignmentDeleteModal,
+  AssignmentDescriptionSection,
+  AssignmentEditModal,
+  AssignmentMetaCard,
+  AssignmentStatusTable,
+  AssignmentSubmitDetailModal,
+} from "../components/assignments";
+import {
+  deleteAdminAssignmentSubmit,
+  getAdminAssignmentDetail,
+  getAdminAssignmentSubmits,
+  updateAdminAssignmentSubmitEvaluate,
+} from "../api";
+import type {
+  AdminAssignmentDetail,
+  AdminAssignmentEvaluate,
+  AdminAssignmentParticipant,
+  AdminAssignmentParticipantsPage,
+} from "../types";
 
 function parsePositiveInteger(value: string | null) {
   if (!value) {
@@ -38,6 +55,17 @@ const INITIAL_ASSIGNMENT_PARTICIPANTS_PAGE: AdminAssignmentParticipantsPage = {
   totalPages: 0,
 };
 
+function createCurrentDateTimeString() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  const hour = String(now.getHours()).padStart(2, "0");
+  const minute = String(now.getMinutes()).padStart(2, "0");
+
+  return `${year}-${month}-${day}T${hour}:${minute}:00`;
+}
+
 function AdminSessionAssignmentsView() {
   const navigate = useNavigate();
   const { aid, sid } = useParams();
@@ -58,6 +86,10 @@ function AdminSessionAssignmentsView() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleteSuccessModalOpen, setIsDeleteSuccessModalOpen] =
     useState(false);
+  const [isParticipantActionPending, setIsParticipantActionPending] =
+    useState(false);
+  const [selectedParticipant, setSelectedParticipant] =
+    useState<AdminAssignmentParticipant | null>(null);
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
 
   useEffect(() => {
@@ -160,11 +192,116 @@ function AdminSessionAssignmentsView() {
   const handleDeleteSuccessConfirm = () => {
     setIsDeleteSuccessModalOpen(false);
     navigate(
-      sessionId ? `/admin/sessions/${sessionId}/assignments` : "/admin/sessions",
+      sessionId
+        ? `/admin/sessions/${sessionId}/assignments`
+        : "/admin/sessions",
       {
         replace: true,
       },
     );
+  };
+
+  const handleParticipantEvaluate = (evaluate: AdminAssignmentEvaluate) => {
+    if (!selectedParticipant || !evaluate || isParticipantActionPending) {
+      return;
+    }
+
+    const targetParticipant = selectedParticipant;
+    const evaluatedAt = createCurrentDateTimeString();
+
+    setIsParticipantActionPending(true);
+    setErrors(null);
+
+    void (async () => {
+      try {
+        await updateAdminAssignmentSubmitEvaluate({
+          sid: targetParticipant.submitId,
+          evaluate,
+        });
+
+        setParticipantsPage((prev) => ({
+          ...prev,
+          content: prev.content.map((participant) =>
+            participant.submitId === targetParticipant.submitId
+              ? { ...participant, evaluate, evaluatedAt }
+              : participant,
+          ),
+        }));
+
+        setSelectedParticipant((prev) =>
+          prev?.submitId === targetParticipant.submitId
+            ? { ...prev, evaluate, evaluatedAt }
+            : prev,
+        );
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setIsParticipantActionPending(false);
+      }
+    })();
+  };
+
+  const handleCancelParticipantAssignment = () => {
+    if (!selectedParticipant || isParticipantActionPending) {
+      return;
+    }
+
+    const targetParticipant = selectedParticipant;
+
+    setIsParticipantActionPending(true);
+    setErrors(null);
+
+    void (async () => {
+      try {
+        await deleteAdminAssignmentSubmit({
+          sid: targetParticipant.submitId,
+        });
+
+        setParticipantsPage((prev) => {
+          const nextContent = prev.content.filter(
+            (participant) =>
+              participant.submitId !== targetParticipant.submitId,
+          );
+          const nextTotalElements = Math.max(prev.totalElements - 1, 0);
+
+          return {
+            ...prev,
+            content: nextContent,
+            empty: nextContent.length === 0,
+            totalElements: nextTotalElements,
+            totalPages:
+              nextTotalElements === 0
+                ? 0
+                : Math.ceil(nextTotalElements / Math.max(prev.size, 1)),
+          };
+        });
+
+        setAssignment((prev) => {
+          if (!prev) {
+            return prev;
+          }
+
+          return {
+            ...prev,
+            participantCount: Math.max(prev.participantCount - 1, 0),
+            submittedCount:
+              targetParticipant.assignmentStatus === "SUBMITTED"
+                ? Math.max(prev.submittedCount - 1, 0)
+                : prev.submittedCount,
+            notSubmittedCount:
+              targetParticipant.assignmentStatus === "NOT_SUBMITTED"
+                ? Math.max(prev.notSubmittedCount - 1, 0)
+                : prev.notSubmittedCount,
+          };
+        });
+
+        setSelectedParticipant(null);
+      } catch (error) {
+        setErrors(getCommonErrorState(error));
+      } finally {
+        setIsParticipantActionPending(false);
+      }
+    })();
   };
 
   const renderContent = () => {
@@ -204,6 +341,7 @@ function AdminSessionAssignmentsView() {
           pageSize={participantsPage.size}
           isLoading={isParticipantsLoading}
           onPageChange={handlePageChange}
+          onParticipantClick={setSelectedParticipant}
         />
       </>
     );
@@ -243,6 +381,16 @@ function AdminSessionAssignmentsView() {
             </Button>
           </Modal.ButtonLayout>
         </Modal>
+      )}
+      {selectedParticipant && (
+        <AssignmentSubmitDetailModal
+          participant={selectedParticipant}
+          onClose={() => setSelectedParticipant(null)}
+          onApprove={() => handleParticipantEvaluate("PASS")}
+          onReject={() => handleParticipantEvaluate("FAIL")}
+          onCancelAssignment={handleCancelParticipantAssignment}
+          isActionPending={isParticipantActionPending}
+        />
       )}
       {errors && (
         <ErrorModal

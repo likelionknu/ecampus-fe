@@ -1,3 +1,4 @@
+import type { KeyboardEvent as ReactKeyboardEvent } from "react";
 import { SkeletonCell } from "@/shared/components/skeleton";
 import { TableEmptyState, TableHeaderLabel } from "@/shared/components/table";
 import { formatKoreanDateTime24 } from "@/shared/utils";
@@ -53,12 +54,46 @@ function AssignmentStatusTableHeader() {
 interface AssignmentStatusRowProps {
   participant: AdminAssignmentParticipant;
   index: number;
+  onClick?: (participant: AdminAssignmentParticipant) => void;
 }
 
-function AssignmentStatusRow({ participant, index }: AssignmentStatusRowProps) {
+function AssignmentStatusRow({
+  participant,
+  index,
+  onClick,
+}: AssignmentStatusRowProps) {
+  const isClickable = !!onClick;
+
+  const handleClick = () => {
+    if (!isClickable) {
+      return;
+    }
+
+    onClick(participant);
+  };
+
+  const handleKeyDown = (event: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (!isClickable) {
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      onClick(participant);
+    }
+  };
+
   return (
     <div
-      className={`${TABLE_ROW_CLASS} ${index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"}`}
+      className={`${TABLE_ROW_CLASS} ${
+        index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
+      } ${
+        isClickable ? "cursor-pointer transition-opacity hover:opacity-90" : ""
+      }`}
+      role={isClickable ? "button" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
     >
       <div
         className={TABLE_GRID_CLASS}
@@ -211,6 +246,7 @@ interface AssignmentStatusTableProps {
   pageSize: number;
   isLoading?: boolean;
   onPageChange: (page: number) => void;
+  onParticipantClick?: (participant: AdminAssignmentParticipant) => void;
 }
 
 function AssignmentStatusTable({
@@ -221,6 +257,7 @@ function AssignmentStatusTable({
   pageSize,
   isLoading = false,
   onPageChange,
+  onParticipantClick,
 }: AssignmentStatusTableProps) {
   return (
     <section className="flex flex-col gap-2">
@@ -242,6 +279,7 @@ function AssignmentStatusTable({
                     key={participant.submitId}
                     participant={participant}
                     index={index}
+                    onClick={onParticipantClick}
                   />
                 ))
               )}
