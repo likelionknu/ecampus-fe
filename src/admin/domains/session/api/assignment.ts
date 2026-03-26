@@ -1,6 +1,13 @@
 import axios from "axios";
 import { api } from "@/shared/apis";
-import type { AdminAssignmentDetail, AdminAssignmentDetailResponse, AdminAssignmentParticipant, AdminAssignmentParticipantsPage, AdminAssignmentSubmitsPageResponse } from "../types";
+import type {
+  AdminAssignmentDetail,
+  AdminAssignmentDetailResponse,
+  AdminAssignmentEvaluate,
+  AdminAssignmentParticipant,
+  AdminAssignmentParticipantsPage,
+  AdminAssignmentSubmitsPageResponse,
+} from "../types";
 
 interface SessionApiErrorPayload {
   code: string | null;
@@ -25,6 +32,15 @@ export interface UpdateAdminAssignmentRequest {
   endAt: string;
   name: string;
   description: string;
+}
+
+export interface UpdateAdminAssignmentSubmitEvaluateRequest {
+  sid: number;
+  evaluate: Exclude<AdminAssignmentEvaluate, null>;
+}
+
+export interface DeleteAdminAssignmentSubmitRequest {
+  sid: number;
 }
 
 function mapAdminAssignmentDetail(
@@ -93,6 +109,10 @@ const DEFAULT_CREATE_SESSION_ASSIGNMENT_ERROR_MESSAGE =
   "과제 등록 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
 const DEFAULT_UPDATE_ADMIN_ASSIGNMENT_ERROR_MESSAGE =
   "과제 수정 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
+const DEFAULT_UPDATE_ADMIN_ASSIGNMENT_SUBMIT_EVALUATE_ERROR_MESSAGE =
+  "과제 검토 상태 변경 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
+const DEFAULT_DELETE_ADMIN_ASSIGNMENT_SUBMIT_ERROR_MESSAGE =
+  "과제 부여 취소 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
 const DEFAULT_DELETE_ADMIN_ASSIGNMENT_ERROR_MESSAGE =
   "과제 삭제 중 오류가 발생했어요. 잠시 후 다시 시도해주세요.";
 
@@ -119,6 +139,30 @@ export async function updateAdminAssignment({
   return response.data.data
     ? mapAdminAssignmentDetail(response.data.data)
     : null;
+}
+
+export async function updateAdminAssignmentSubmitEvaluate({
+  sid,
+  evaluate,
+}: UpdateAdminAssignmentSubmitEvaluateRequest) {
+  const response = await api.patch<SessionApiResponse<null>>(
+    `/v1/admin/assignments/${sid}/submits`,
+    {
+      evaluate,
+    },
+  );
+
+  return response.data;
+}
+
+export async function deleteAdminAssignmentSubmit({
+  sid,
+}: DeleteAdminAssignmentSubmitRequest) {
+  const response = await api.delete<SessionApiResponse<null>>(
+    `/v1/admin/assignments/${sid}/submits`,
+  );
+
+  return response.data;
 }
 
 export async function deleteAdminAssignment({ aid }: { aid: number }) {
@@ -193,6 +237,22 @@ export function getUpdateAdminAssignmentErrorMessage(error: unknown) {
   return getSessionAssignmentErrorMessage(
     error,
     DEFAULT_UPDATE_ADMIN_ASSIGNMENT_ERROR_MESSAGE,
+  );
+}
+
+export function getUpdateAdminAssignmentSubmitEvaluateErrorMessage(
+  error: unknown,
+) {
+  return getSessionAssignmentErrorMessage(
+    error,
+    DEFAULT_UPDATE_ADMIN_ASSIGNMENT_SUBMIT_EVALUATE_ERROR_MESSAGE,
+  );
+}
+
+export function getDeleteAdminAssignmentSubmitErrorMessage(error: unknown) {
+  return getSessionAssignmentErrorMessage(
+    error,
+    DEFAULT_DELETE_ADMIN_ASSIGNMENT_SUBMIT_ERROR_MESSAGE,
   );
 }
 
