@@ -130,7 +130,8 @@ function AdminGroupPage() {
     WHITELIST_PART_PLACEHOLDER,
   );
   const [selectedWhitelistCourseLabel, setSelectedWhitelistCourseLabel] =
-    useState(WHITELIST_COURSE_PLACEHOLDER);  const [lists, setLists] = useState<ListState[]>([]);
+    useState(WHITELIST_COURSE_PLACEHOLDER);
+  const [lists, setLists] = useState<ListState[]>([]);
   const isTablet = useMediaQuery({ maxWidth: 1023 });
   const itemNum = membersPage.totalElements;
   const itemSumNum = GROUP_PAGE_SIZE;
@@ -372,7 +373,7 @@ function AdminGroupPage() {
 
           <div className="mt-7">
             <span className="text-body-2 text-ec-black">추가 된 사용자</span>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid max-h-100 grid-cols-2 gap-4 overflow-y-scroll">
               {lists.map((list) => (
                 <WhitelistItem
                   item={list}
