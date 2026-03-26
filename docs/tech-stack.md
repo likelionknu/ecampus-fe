@@ -1,36 +1,41 @@
 # Tech Stack
 
-Last updated: 2026-03-25
+Last updated: 2026-03-26
 
-## Core Runtime
+## Core
 
-- Node.js environment + npm ecosystem
-- React `19.2.0`
-- TypeScript `5.9.x`
-- Vite `7.3.x` (bundler and dev server)
+- Runtime: Node.js + npm
+- Language: TypeScript `5.9.x`
+- UI: React `19.2.0`
+- Build/Dev Server: Vite `7.3.x`
 
-## Frontend
+## Routing and State
 
-- Routing: `react-router-dom@7.13.1`
-- State management: `zustand@5.0.12` (persist + localStorage)
+- Router: `react-router-dom@7.13.1`
+- Global auth state: `zustand@5.0.12` + `zustand/middleware(persist)`
+
+## Networking
+
 - HTTP client: `axios@1.13.5`
-- Responsive utilities: `react-responsive@10.0.1`
+- Shared client: `src/shared/apis/index.ts`
+- Request interceptor: access token 자동 첨부
+- Response interceptor: `401` / `C401*` 오류 시 refresh-token 재발급 후 요청 재시도
 
 ## UI and Styling
 
 - Tailwind CSS `4.2.x`
 - `@tailwindcss/typography`
-- SVG to React component: `vite-plugin-svgr`
-- Animation: `@lottiefiles/dotlottie-react`
+- SVG 컴포넌트 변환: `vite-plugin-svgr`
+- 반응형 유틸: `react-responsive`
+- Lottie: `@lottiefiles/dotlottie-react`
 
-## Content Utilities
+## Markdown and Content
 
-- Markdown rendering: `react-markdown`
-- GFM support: `remark-gfm`
-- Code highlighting: `rehype-highlight`, `highlight.js`
-- Input optimization: `lodash.debounce`
+- Markdown 렌더링: `react-markdown`
+- GFM 지원: `remark-gfm`
+- 코드 하이라이팅: `rehype-highlight`, `highlight.js`
 
-## Developer Tooling
+## Quality and Formatting
 
 - ESLint `9.x`
 - `typescript-eslint@8.x`
@@ -39,16 +44,26 @@ Last updated: 2026-03-25
 - Prettier `3.x`
 - `prettier-plugin-tailwindcss`
 
-## Scripts
+## Build Configuration
 
-- Dev server: `npm run dev`
-- Production build: `npm run build`
-- Lint: `npm run lint`
-- Format: `npm run format`
-- Format check: `npm run format:check`
+- Path alias: `@`, `@auth/*`, `@admin/*`, `@user/*`, `@shared/*`
+- Vite plugins: `@vitejs/plugin-react`, `vite-plugin-svgr`, `@tailwindcss/vite`
 
-## Project Notes
+## Environment Variables
 
-- Path aliases: `@`, `@auth`, `@admin`, `@user`, `@shared`
-- No dedicated test script is currently defined in `package.json`
-- Shared axios client (`src/shared/apis/index.ts`) includes token attach and token reissue retry interceptor
+- `VITE_BASE_API_URL`
+- `VITE_GOOGLE_CLIENT_ID`
+- `VITE_GOOGLE_REDIRECT_URI`
+
+## npm Scripts
+
+- `npm run dev`
+- `npm run build`
+- `npm run preview`
+- `npm run lint`
+- `npm run format`
+- `npm run format:check`
+
+## Notes
+
+- 테스트 스크립트는 현재 `package.json`에 정의되어 있지 않습니다.
