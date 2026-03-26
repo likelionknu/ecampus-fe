@@ -343,7 +343,7 @@ export const NotionSpecificModal = ({
             : ""}
         </div>
         <div className="outline-ec-outline mt-4.5 mb-2.5 h-0 w-153.5 outline-1 outline-offset-[-0.50px]" />
-        <div className="text-ec-black text-sm font-medium whitespace-pre-wrap">
+        <div className="text-ec-black h-130 overflow-y-scroll text-sm font-medium whitespace-pre-wrap">
           {NotionSpecificModalData?.content ?? ""}
         </div>
       </div>
