@@ -120,7 +120,7 @@ const UserSessionSelect = () => {
             내가 추가된 세션만 확인할 수 있어요
           </div>
         </div>
-        <div className="flex w-full flex-wrap justify-between pt-8.25 md:w-187.5 lg:w-full xl:gap-11.75">
+        <div className="grid w-full grid-cols-3 pt-8.25 md:w-187.5 lg:w-full xl:gap-11.75">
           {loading && (
             <>
               <SkeletonCell className="h-32 w-80" rounded="rounded-ec-10" />

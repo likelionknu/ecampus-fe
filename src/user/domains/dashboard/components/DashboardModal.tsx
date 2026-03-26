@@ -3,6 +3,7 @@ import xWhite from "@user/domains/dashboard/assets/xWhite.png";
 import xBlack from "@user/domains/dashboard/assets/xBlack.png";
 import axios from "axios";
 import { formatKoreanDateTime12 } from "@/shared/utils";
+import { MarkdownRender } from "@/admin/domains/session/components/markdown";
 
 // --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
 const authData = JSON.parse(
@@ -343,8 +344,8 @@ export const NotionSpecificModal = ({
             : ""}
         </div>
         <div className="outline-ec-outline mt-4.5 mb-2.5 h-0 w-153.5 outline-1 outline-offset-[-0.50px]" />
-        <div className="text-ec-black h-130 overflow-y-scroll text-sm font-medium whitespace-pre-wrap">
-          {NotionSpecificModalData?.content ?? ""}
+        <div className="text-ec-black h-130 overflow-y-scroll text-sm font-medium">
+          <MarkdownRender content={NotionSpecificModalData?.content ?? ""} />
         </div>
       </div>
     </DashboardModal>
