@@ -275,7 +275,8 @@ function UserDashBoardPage() {
                   {dashboardData?.name}
                 </div>
                 <div className="text-ec-sub justify-start text-sm font-medium">
-                  {dashboardData?.course}기 아기사자
+                  {dashboardData?.course}기{" "}
+                  {dashboardData?.part === "OPERATOR" ? "운영진" : "아기사자"}
                 </div>
               </div>
             </>
