@@ -272,6 +272,7 @@ api.interceptors.response.use(
     return response;
   },
   async (error: AxiosError<ApiErrorResponse>) => {
+    console.log("인터셉터");
     const originalRequest = error?.config as RetryableRequestConfig | undefined;
 
     const isReissueRequest =
@@ -291,8 +292,10 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
+      console.log("재시도");
       try {
         const tokens = await reissueAccessToken();
+        console.log("재시도 시작");
 
         // 새 토큰으로 헤더 업데이트 후 원래 요청 재시도
         const headers = AxiosHeaders.from(originalRequest.headers);
@@ -301,6 +304,7 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch (refreshError) {
+        console.log("재시도 시작 실패");
         return Promise.reject(refreshError);
       }
     }
