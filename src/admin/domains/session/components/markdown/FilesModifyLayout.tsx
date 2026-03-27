@@ -1,18 +1,18 @@
-import { useRef, useState } from "react";
+import { useRef, useState, type Dispatch, type SetStateAction } from "react";
 import { useScrollSync } from "../../hooks";
 import { Button, Input } from "@/shared/components";
 import MarkdownEditor from "./MarkdownEditor";
 import MarkdownPreview from "./MarkdownPreview";
 import { Modal, ErrorModal } from "@/shared/components/modal";
 import { useNavigate, useParams } from "react-router-dom";
-import { modifySessionFile } from "../../api";
+import { getPresignedUrl, modifySessionFile } from "../../api";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 
 interface Props {
   title: string;
   content: string;
   setTitle: (v: string) => void;
-  setContent: (v: string) => void;
+  setContent: Dispatch<SetStateAction<string>>;
 }
 
 export default function FilesModifyLayout({
@@ -32,6 +32,30 @@ export default function FilesModifyLayout({
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const { sid, fid } = useParams<{ sid: string; fid: string }>();
   const navigate = useNavigate();
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      const res = await getPresignedUrl({
+        fileName: file.name,
+        contentType: file.type,
+      });
+      const { uploadUrl, fileUrl } = res.data.data;
+      const uploadResponse = await fetch(uploadUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": file.type,
+        },
+        body: file,
+      });
+      if (!uploadResponse.ok) {
+        throw new Error("Presigned URL upload failed");
+      }
+      setContent((prev) => `${prev}\n![image](${fileUrl})\n`);
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+      throw error;
+    }
+  };
 
   const handleModify = async () => {
     if (!sid || !fid) return;
@@ -69,6 +93,7 @@ export default function FilesModifyLayout({
             ref={editorRef}
             content={content}
             onChange={setContent}
+            onImageUpload={handleImageUpload}
           />
         </div>
         <div className="w-125.25">
