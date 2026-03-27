@@ -1,8 +1,5 @@
-import {
-  // markdownComponents,
-  MarkdownPreview,
-} from "@/admin/domains/session/components/markdown";
-// import ReactMarkdown from "react-markdown";
+import { markdownComponents } from "@/admin/domains/session/components/markdown";
+import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSpecificFile } from "../apis";
@@ -54,8 +51,7 @@ function UserSessionFilesViewPage() {
       <div className="text-ec-black text-title font-semibold md:text-3xl">
         {name}
       </div>
-      <MarkdownPreview content={content} />
-      {/* <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown> */}
+      <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
     </div>
   );
 }
