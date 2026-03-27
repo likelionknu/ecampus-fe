@@ -51,17 +51,17 @@ export const markdownComponents: Components = {
       Boolean(className?.includes("language-")) || codeText.includes("\n");
 
     return isBlockCode ? (
-      <code className="before:content-none after:content-none text-sm">
+      <code className="text-sm before:content-none after:content-none">
         {codeText}
       </code>
     ) : (
-      <code className="bg-ec-red text-ec-white before:content-none after:content-none rounded px-1.5 py-0.5 font-mono text-[0.875em]">
+      <code className="bg-ec-red text-ec-white rounded px-1.5 py-0.5 font-mono text-[0.875em] before:content-none after:content-none">
         {codeText}
       </code>
     );
   },
   pre: ({ children }) => (
-    <pre className="bg-ec-black text-ec-white mb-4 overflow-x-auto rounded-lg p-4">
+    <pre className="dark:bg-ec-black bg-ec-outline dark:text-ec-white text-ec-black mb-4 overflow-x-auto rounded-lg p-4">
       {children}
     </pre>
   ),
