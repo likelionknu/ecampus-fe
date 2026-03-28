@@ -43,20 +43,27 @@ export const markdownComponents: Components = {
       className="rounded-ec-10 border-ec-outline my-6 border"
     />
   ),
-  code: ({ children, className }) => {
-    let codeText = String(children);
-    codeText = codeText.replace(/`/g, "");
+  code: ({ children, className, ...props }) => {
+    // let codeText = String(children);
+    // codeText = codeText.replace(/`/g, "");
 
-    const isBlockCode =
-      Boolean(className?.includes("language-")) || codeText.includes("\n");
+    const isBlockCode = Boolean(className?.includes("language-"));
+    // || (typeof children === "string" && children.includes("\n"));
+    // codeText.includes("\n");
 
     return isBlockCode ? (
-      <code className="text-sm before:content-none after:content-none">
-        {codeText}
+      <code
+        className={`text-sm before:content-none after:content-none ${className || ""}`}
+        {...props}
+      >
+        {children}
       </code>
     ) : (
-      <code className="bg-ec-red text-ec-white rounded px-1.5 py-0.5 font-mono text-[0.875em] before:content-none after:content-none">
-        {codeText}
+      <code
+        className={`bg-ec-red text-ec-white rounded px-1.5 py-0.5 font-mono text-[0.875em] before:content-none after:content-none ${className || ""}`}
+        {...props}
+      >
+        {children}
       </code>
     );
   },
