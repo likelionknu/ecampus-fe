@@ -7,6 +7,7 @@ import type {
   AdminAssignmentParticipant,
   AdminAssignmentParticipantsPage,
   AdminAssignmentSubmitsPageResponse,
+  AdminAssignmentSubmitUserDetailResponse,
 } from "../types";
 
 interface SessionApiErrorPayload {
@@ -88,6 +89,23 @@ function mapAdminAssignmentParticipantsPage(
     size: data.size,
     totalElements: data.totalElements,
     totalPages: data.totalPages,
+  };
+}
+
+function mapAdminAssignmentSubmitUserDetail(
+  data: AdminAssignmentSubmitUserDetailResponse,
+): AdminAssignmentParticipant {
+  return {
+    submitId: data.submitId,
+    course: data.course,
+    part: data.part,
+    name: data.name,
+    assignedAt: data.startAt,
+    submittedAt: data.submittedAt,
+    evaluatedAt: data.evaluatedAt,
+    assignmentStatus: data.submitted ? "SUBMITTED" : "NOT_SUBMITTED",
+    evaluate: data.assignmentEvaluate,
+    submissionContent: data.content,
   };
 }
 
@@ -196,6 +214,20 @@ export async function getAdminAssignmentSubmits({
 
   return response.data.data
     ? mapAdminAssignmentParticipantsPage(response.data.data)
+    : null;
+}
+
+export async function getAdminAssignmentSubmitUserDetail({
+  submitId,
+}: {
+  submitId: number;
+}) {
+  const response = await api.get<
+    SessionApiResponse<AdminAssignmentSubmitUserDetailResponse>
+  >(`/v1/admin/assignments/${submitId}/submits/users`);
+
+  return response.data.data
+    ? mapAdminAssignmentSubmitUserDetail(response.data.data)
     : null;
 }
 

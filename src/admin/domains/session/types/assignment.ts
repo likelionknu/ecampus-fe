@@ -27,6 +27,19 @@ export interface AdminAssignmentSubmitResponse {
   submissionContent?: string | null;
 }
 
+export interface AdminAssignmentSubmitUserDetailResponse {
+  submitId: number;
+  course: number;
+  part: string;
+  name: string;
+  startAt: string;
+  submittedAt: string | null;
+  evaluatedAt: string | null;
+  assignmentEvaluate: AdminAssignmentEvaluate;
+  content: string | null;
+  submitted: boolean;
+}
+
 export interface AdminAssignmentSubmitsPageResponse {
   content: AdminAssignmentSubmitResponse[];
   empty: boolean;

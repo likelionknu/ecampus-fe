@@ -82,6 +82,7 @@ interface AssignmentSubmitDetailModalProps {
   onReject: () => void;
   onCancelAssignment: () => void;
   isActionPending?: boolean;
+  isDetailLoading?: boolean;
 }
 
 function AssignmentSubmitDetailModal({
@@ -91,6 +92,7 @@ function AssignmentSubmitDetailModal({
   onReject,
   onCancelAssignment,
   isActionPending = false,
+  isDetailLoading = false,
 }: AssignmentSubmitDetailModalProps) {
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
@@ -111,32 +113,37 @@ function AssignmentSubmitDetailModal({
     };
   }, [onClose]);
 
-  const submissionContent = participant.submissionContent?.trim() ?? "";
+  const rawSubmissionContent = participant.submissionContent;
+  const submissionContent =
+    typeof rawSubmissionContent === "string"
+      ? rawSubmissionContent.trim()
+      : "";
   const isSubmissionLink = /^https?:\/\//i.test(submissionContent);
   const isSubmittedParticipant = participant.assignmentStatus === "SUBMITTED";
   const detailRows = [
     {
+      label: "제출 ID",
+      value: participant.submitId,
+      valueClassName: "text-ec-sub",
+    },
+    {
       label: "기수",
       value: `${participant.course}기`,
-      topClassName: "top-0",
       valueClassName: "text-ec-sub",
     },
     {
       label: "파트",
       value: formatPart(participant.part),
-      topClassName: "top-[27px]",
       valueClassName: "text-ec-sub",
     },
     {
       label: "이름",
       value: participant.name,
-      topClassName: "top-[54px]",
       valueClassName: "text-ec-sub",
     },
     {
       label: "할당일",
       value: formatCompactDateTime(participant.assignedAt),
-      topClassName: "top-[81px]",
       valueClassName: "text-ec-sub",
     },
     {
@@ -144,7 +151,6 @@ function AssignmentSubmitDetailModal({
       value: participant.submittedAt
         ? formatCompactDateTime(participant.submittedAt)
         : "-",
-      topClassName: "top-[108px]",
       valueClassName: "text-ec-sub",
     },
     {
@@ -152,22 +158,19 @@ function AssignmentSubmitDetailModal({
       value: participant.evaluatedAt
         ? formatCompactDateTime(participant.evaluatedAt)
         : "-",
-      topClassName: "top-[135px]",
       valueClassName: "text-ec-sub",
     },
     {
-      label: "상태",
+      label: "제출 상태",
       value: formatAssignmentStatus(participant.assignmentStatus),
-      topClassName: "top-[162px]",
       valueClassName:
         participant.assignmentStatus === "SUBMITTED"
           ? "text-ec-blue"
           : "text-ec-red",
     },
     {
-      label: "평가",
+      label: "평가 상태",
       value: formatEvaluateStatus(participant.evaluate),
-      topClassName: "top-[189px]",
       valueClassName:
         participant.evaluate === "PASS"
           ? "text-ec-blue"
@@ -197,7 +200,7 @@ function AssignmentSubmitDetailModal({
             <ActionButton
               className="bg-ec-blue"
               onClick={onApprove}
-              disabled={isActionPending}
+              disabled={isActionPending || isDetailLoading}
             >
               성공으로 검토
             </ActionButton>
@@ -206,7 +209,7 @@ function AssignmentSubmitDetailModal({
             <ActionButton
               className="bg-ec-red"
               onClick={onReject}
-              disabled={isActionPending}
+              disabled={isActionPending || isDetailLoading}
             >
               실패로 검토
             </ActionButton>
@@ -214,38 +217,38 @@ function AssignmentSubmitDetailModal({
           <ActionButton
             className="bg-ec-red"
             onClick={onCancelAssignment}
-            disabled={isActionPending}
+            disabled={isActionPending || isDetailLoading}
           >
             사용자 과제 부여 취소
           </ActionButton>
         </div>
 
-        <div className="bg-ec-box rounded-ec-10 mt-7 h-60.75 w-full px-12 py-3">
-          <div className="relative h-52 w-full">
+        <div className="bg-ec-box rounded-ec-10 mt-7 w-full px-12 py-5">
+          <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-y-3">
             {detailRows.map((row) => (
-              <div
-                key={`label-${row.label}`}
-                className={`font-pretendard absolute left-0 ${row.topClassName} text-ec-black justify-start text-xs font-medium`}
-              >
-                {row.label}
+              <div key={row.label} className="contents">
+                <div className="text-ec-black font-pretendard text-xs font-medium">
+                  {row.label}
+                </div>
+                <DetailStatusValue
+                  className={`font-pretendard min-w-0 text-xs ${row.valueClassName}`}
+                >
+                  {row.value}
+                </DetailStatusValue>
               </div>
-            ))}
-            {detailRows.map((row) => (
-              <DetailStatusValue
-                key={`value-${row.label}`}
-                className={`font-pretendard absolute left-15 ${row.topClassName} max-w-[calc(100%-60px)] justify-start text-xs ${row.valueClassName}`}
-              >
-                {row.value}
-              </DetailStatusValue>
             ))}
           </div>
         </div>
 
         <div className="mt-2.5">
           <h2 className="text-ec-black text-[16px] font-semibold">제출 내용</h2>
-          <div className="bg-ec-box rounded-ec-10 mt-2.75 flex h-11.5 w-full items-center px-7">
+          <div className="bg-ec-box rounded-ec-10 mt-2.75 flex min-h-11.5 w-full items-start px-7 py-4">
             <div className="text-ec-black font-pretendard w-138.5 max-w-full justify-start text-xs leading-5 font-medium break-all">
-              {submissionContent ? (
+              {isDetailLoading ? (
+                <span className="text-ec-sub">제출 내용을 불러오는 중이에요.</span>
+              ) : rawSubmissionContent === undefined ? (
+                <span className="text-ec-sub">제출 내용을 불러오지 못했어요.</span>
+              ) : submissionContent ? (
                 isSubmissionLink ? (
                   <a
                     href={submissionContent}
