@@ -2,6 +2,7 @@ import { SkeletonCell } from "@/shared/components/skeleton";
 import type { AdminSessionRow } from "../../types";
 import { SESSIONS_TABLE_COLUMNS } from "../../constants";
 import { useNavigate } from "react-router-dom";
+import { useSessionStore } from "@/shared/stores/sessionStore";
 
 interface SessionsTableRowsProps {
   isLoading: boolean;
@@ -10,6 +11,7 @@ interface SessionsTableRowsProps {
 
 function SessionsTableRows({ isLoading, sessions }: SessionsTableRowsProps) {
   const navigate = useNavigate();
+  const setSessionName = useSessionStore((state) => state.setSessionName);
 
   return (
     <div className="rounded-ec-10 flex w-full flex-col overflow-hidden">
@@ -40,9 +42,10 @@ function SessionsTableRows({ isLoading, sessions }: SessionsTableRowsProps) {
           className={`text-body-2 flex cursor-pointer items-center px-6 py-4 ${
             index % 2 === 1 ? "bg-ec-box" : "bg-ec-white"
           }`}
-          onClick={() =>
-            navigate(`/admin/sessions/${session.sessionId}/dashboard`)
-          }
+          onClick={() => {
+            setSessionName(session.name);
+            navigate(`/admin/sessions/${session.sessionId}/dashboard`);
+          }}
         >
           <div
             className="grid w-full min-w-0 items-center gap-3"
