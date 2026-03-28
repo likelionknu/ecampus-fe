@@ -154,9 +154,7 @@ function Header() {
       ) : (
         <div className="flex flex-col">
           <header className="border-ec-outline sticky top-0 flex h-20 w-full items-center justify-between border-b-2 py-6.75 pr-29.25 pl-8 dark:border-[#323232]">
-            <h1 className="typo-sub-title">
-              {headerTitle}
-            </h1>
+            <h1 className="typo-sub-title">{headerTitle}</h1>
             <button
               type="button"
               role="switch"

@@ -137,7 +137,7 @@ const adminRoutes: RouteObject[] = [
   {
     path: "sessions/:sid",
     element: <SessionTabLayout tabType="adminDashboard" />,
-    handle: { title: "세션 관리 / [14기] 아기사자 - 백엔드 파트" },
+    handle: { title: "세션 관리" },
     children: [
       { path: "dashboard", element: withSuspense(<AdminDashboardPage />) },
       { path: "assignments", element: withSuspense(<TaskManagementPage />) },
