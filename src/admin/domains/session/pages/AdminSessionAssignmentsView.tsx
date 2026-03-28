@@ -14,6 +14,7 @@ import {
 import {
   deleteAdminAssignmentSubmit,
   getAdminAssignmentDetail,
+  getAdminAssignmentSubmitUserDetail,
   getAdminAssignmentSubmits,
   updateAdminAssignmentSubmitEvaluate,
 } from "../api";
@@ -87,6 +88,8 @@ function AdminSessionAssignmentsView() {
   const [isDeleteSuccessModalOpen, setIsDeleteSuccessModalOpen] =
     useState(false);
   const [isParticipantActionPending, setIsParticipantActionPending] =
+    useState(false);
+  const [isParticipantDetailLoading, setIsParticipantDetailLoading] =
     useState(false);
   const [selectedParticipant, setSelectedParticipant] =
     useState<AdminAssignmentParticipant | null>(null);
@@ -182,6 +185,52 @@ function AdminSessionAssignmentsView() {
     };
   }, [assignmentId, currentPage]);
 
+  useEffect(() => {
+    if (!selectedParticipant) {
+      setIsParticipantDetailLoading(false);
+      return;
+    }
+
+    let isMounted = true;
+    const targetSubmitId = selectedParticipant.submitId;
+
+    setIsParticipantDetailLoading(true);
+
+    void (async () => {
+      try {
+        const participantDetail = await getAdminAssignmentSubmitUserDetail({
+          submitId: targetSubmitId,
+        });
+
+        if (!isMounted) {
+          return;
+        }
+
+        setSelectedParticipant((prev) => {
+          if (!prev || prev.submitId !== targetSubmitId) {
+            return prev;
+          }
+
+          return participantDetail ?? { ...prev, submissionContent: null };
+        });
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        setErrors(getCommonErrorState(error));
+      } finally {
+        if (isMounted) {
+          setIsParticipantDetailLoading(false);
+        }
+      }
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [selectedParticipant?.submitId]);
+
   const handlePageChange = (page: number) => {
     const nextSearchParams = new URLSearchParams(searchParams);
 
@@ -201,8 +250,20 @@ function AdminSessionAssignmentsView() {
     );
   };
 
+  const handleParticipantClick = (participant: AdminAssignmentParticipant) => {
+    setSelectedParticipant({
+      ...participant,
+      submissionContent: undefined,
+    });
+  };
+
   const handleParticipantEvaluate = (evaluate: AdminAssignmentEvaluate) => {
-    if (!selectedParticipant || !evaluate || isParticipantActionPending) {
+    if (
+      !selectedParticipant ||
+      !evaluate ||
+      isParticipantActionPending ||
+      isParticipantDetailLoading
+    ) {
       return;
     }
 
@@ -242,7 +303,11 @@ function AdminSessionAssignmentsView() {
   };
 
   const handleCancelParticipantAssignment = () => {
-    if (!selectedParticipant || isParticipantActionPending) {
+    if (
+      !selectedParticipant ||
+      isParticipantActionPending ||
+      isParticipantDetailLoading
+    ) {
       return;
     }
 
@@ -341,7 +406,7 @@ function AdminSessionAssignmentsView() {
           pageSize={participantsPage.size}
           isLoading={isParticipantsLoading}
           onPageChange={handlePageChange}
-          onParticipantClick={setSelectedParticipant}
+          onParticipantClick={handleParticipantClick}
         />
       </>
     );
@@ -390,6 +455,7 @@ function AdminSessionAssignmentsView() {
           onReject={() => handleParticipantEvaluate("FAIL")}
           onCancelAssignment={handleCancelParticipantAssignment}
           isActionPending={isParticipantActionPending}
+          isDetailLoading={isParticipantDetailLoading}
         />
       )}
       {errors && (
