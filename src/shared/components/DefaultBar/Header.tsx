@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation, useMatches, useNavigate } from "react-router-dom";
+import { useMatches, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import DarkModeImg from "@shared/assets/DarkModeImg.png";
 import LightModeImg from "@shared/assets/LightModeImg.png";
@@ -37,7 +37,6 @@ function Header() {
   const isTablet = useMediaQuery({ maxWidth: 1280 });
 
   const navigate = useNavigate();
-  const { pathname } = useLocation();
   const matches = useMatches();
   const sessionName = useSessionStore((state) => state.sessionName);
   const [isDark, setIsDark] = useState(() =>
@@ -48,13 +47,8 @@ function Header() {
       .reverse()
       .map((match) => (match.handle as HeaderRouteHandle | undefined)?.title)
       .find((title) => typeof title === "string") ?? "eCampus";
-  const pathSegments = pathname.split("/").filter(Boolean);
-  const isSessionDetailPage =
-    pathSegments[0] === "user" &&
-    pathSegments[1] === "sessions" &&
-    /^\d+$/.test(pathSegments[2] ?? "");
-  const headerTitle =
-    isSessionDetailPage && sessionName ? sessionName : pageTitle;
+
+  const headerTitle = sessionName ? sessionName : pageTitle;
 
   const handleToggleTheme = () => {
     setIsDark((prev) => {
