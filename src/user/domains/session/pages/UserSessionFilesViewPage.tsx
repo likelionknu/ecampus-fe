@@ -3,6 +3,11 @@ import ReactMarkdown from "react-markdown";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getSpecificFile } from "../apis";
+import remarkGfm from "remark-gfm";
+// import rehypeHighlight from "rehype-highlight";
+
+const REMARK_PLUGINS = [remarkGfm];
+// const CODE_BLOCK_REGEX = /```[\s\S]*?```|`[^`\n]+`/;
 
 function UserSessionFilesViewPage() {
   const { fileId: fileIdParam } = useParams();
@@ -13,6 +18,12 @@ function UserSessionFilesViewPage() {
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // const hasCode = useMemo(() => CODE_BLOCK_REGEX.test(content), [content]);
+  // const rehypePlugins = useMemo(
+  //   () => (hasCode ? [rehypeHighlight] : []),
+  //   [hasCode],
+  // );
 
   useEffect(() => {
     if (!isValidFileId || fileId === null) {
@@ -51,7 +62,13 @@ function UserSessionFilesViewPage() {
       <div className="text-ec-black text-title font-semibold md:text-3xl">
         {name}
       </div>
-      <ReactMarkdown components={markdownComponents}>{content}</ReactMarkdown>
+      <ReactMarkdown
+        remarkPlugins={REMARK_PLUGINS}
+        // rehypePlugins={rehypePlugins}
+        components={markdownComponents}
+      >
+        {content}
+      </ReactMarkdown>
     </div>
   );
 }
