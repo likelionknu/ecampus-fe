@@ -8,52 +8,22 @@ import { BaseLayout } from "@shared/layouts";
 import { UserRoutes } from "@user";
 import { lazy, Suspense, type ReactElement } from "react";
 
-const GoogleCallback = lazy(() =>
-  import("@auth/api").then((module) => ({
-    default: module.GoogleCallback,
-  })),
-);
+const GoogleCallback = lazy(() => import("@auth/api/GoogleCallback"));
 
-const LoginPage = lazy(() =>
-  import("@auth/pages").then((module) => ({
-    default: module.LoginPage,
-  })),
-);
+const LoginPage = lazy(() => import("@auth/pages/LoginPage"));
 
-const LoginErrorPage = lazy(() =>
-  import("@auth/pages").then((module) => ({
-    default: module.LoginErrorPage,
-  })),
-);
+const LoginErrorPage = lazy(() => import("@auth/pages/LoginErrorPage"));
 
-const ErrorPage = lazy(() =>
-  import("@shared/pages").then((module) => ({
-    default: module.ErrorPage,
-  })),
-);
+const ErrorPage = lazy(() => import("@shared/pages/ErrorPage"));
 
-const MaintenancePage = lazy(() =>
-  import("@shared/pages").then((module) => ({
-    default: module.MaintenancePage,
-  })),
-);
+const MaintenancePage = lazy(() => import("@shared/pages/MaintenancePage"));
 
-const PreparingPage = lazy(() =>
-  import("@shared/pages").then((module) => ({
-    default: module.PreparingPage,
-  })),
-);
+const PreparingPage = lazy(() => import("@shared/pages/PreparingPage"));
 
-const PrivacyPolicyPage = lazy(() =>
-  import("@shared/pages").then((module) => ({
-    default: module.PrivacyPolicyPage,
-  })),
-);
+const PrivacyPolicyPage = lazy(() => import("@shared/pages/PrivacyPolicyPage"));
 
-const ScreenSizeErrorPage = lazy(() =>
-  import("@shared/pages").then((module) => ({
-    default: module.ScreenSizeErrorPage,
-  })),
+const ScreenSizeErrorPage = lazy(
+  () => import("@shared/pages/ScreenSizeErrorPage"),
 );
 
 const withSuspense = (element: ReactElement) => (
