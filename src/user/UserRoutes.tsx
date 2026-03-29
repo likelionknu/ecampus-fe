@@ -2,81 +2,54 @@ import { lazy, Suspense, type ReactElement } from "react";
 import type { RouteObject } from "react-router-dom";
 import { SessionTabLayout } from "@shared/layouts";
 
-const UserDashboardPage = lazy(() =>
-  import("@/user/domains/dashboard/pages").then((module) => ({
-    default: module.UserDashboardPage,
-  })),
+const UserDashboardPage = lazy(
+  () => import("@/user/domains/dashboard/pages/UserDashboardPage"),
 );
 
-const UserSessionQuestionsPage = lazy(() =>
-  import("./domains/session/pages/question").then((module) => ({
-    default: module.UserSessionQuestionsPage,
-  })),
+const UserSessionQuestionsPage = lazy(
+  () => import("./domains/session/pages/question/UserSessionQuestionsPage"),
 );
 
-const UserSessionQuestionCreatePage = lazy(() =>
-  import("./domains/session/pages/question").then((module) => ({
-    default: module.UserSessionQuestionCreatePage,
-  })),
+const UserSessionQuestionCreatePage = lazy(
+  () =>
+    import("./domains/session/pages/question/UserSessionQuestionCreatePage"),
 );
 
-const UserSessionGroupPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.UserSessionGroupPage,
-  })),
+const UserSessionGroupPage = lazy(
+  () => import("./domains/session/pages/UserSessionGroupPage"),
 );
 
-const UserSessionSelect = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.UserSessionSelect,
-  })),
+const UserSessionSelect = lazy(
+  () => import("./domains/session/pages/UserSessionSelect"),
 );
 
-const UserSessionAssignments = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.UserSessionAssignments,
-  })),
+const UserSessionAssignments = lazy(
+  () => import("./domains/session/pages/UserSessionAssignments"),
 );
 
-const UserSessionAssignmentsView = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.UserSessionAssignmentsView,
-  })),
+const UserSessionAssignmentsView = lazy(
+  () => import("./domains/session/pages/UserSessionAssignmentsView"),
 );
 
-const UserSessionFilesPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.UserSessionFilesPage,
-  })),
+const UserSessionFilesPage = lazy(
+  () => import("./domains/session/pages/UserSessionFilesPage"),
 );
 
-const UserSessionFilesViewPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.UserSessionFilesViewPage,
-  })),
+const UserSessionFilesViewPage = lazy(
+  () => import("./domains/session/pages/UserSessionFilesViewPage"),
 );
 
-const UserListPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.UserList,
-  })),
+const UserListPage = lazy(() => import("./domains/session/pages/UserList"));
+
+const UserQuestionsPage = lazy(
+  () => import("./domains/question/pages/UserQuestionsPage"),
+);
+const UserQuestionDetailPage = lazy(
+  () => import("./shared/pages/UserQuestionDetailPage"),
 );
 
-const UserQuestionsPage = lazy(() =>
-  import("./domains/question/pages").then((module) => ({
-    default: module.UserQuestionsPage,
-  })),
-);
-const UserQuestionDetailPage = lazy(() =>
-  import("./shared/pages").then((module) => ({
-    default: module.UserQuestionDetailPage,
-  })),
-);
-
-const UserNotificationPage = lazy(() =>
-  import("./domains/notification/pages").then((module) => ({
-    default: module.UserNotificationPage,
-  })),
+const UserNotificationPage = lazy(
+  () => import("./domains/notification/pages/UserNotificationPage"),
 );
 
 const withSuspense = (element: ReactElement) => (

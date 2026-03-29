@@ -2,106 +2,76 @@
 import type { RouteObject } from "react-router-dom";
 import { SessionTabLayout } from "@/shared/layouts";
 
-const AdminSessionsPage = lazy(() =>
-  import("./domains/management/pages").then((module) => ({
-    default: module.AdminSessionsPage,
-  })),
+const AdminSessionsPage = lazy(
+  () => import("./domains/management/pages/AdminSessionsPage"),
 );
 
-const AdminGroupPage = lazy(() =>
-  import("./domains/management/pages").then((module) => ({
-    default: module.AdminGroupPage,
-  })),
+const AdminGroupPage = lazy(
+  //  () => import("./domains/management/pages/AdminSessionsPage")
+  () =>
+    import("./domains/management/pages").then((module) => ({
+      default: module.AdminGroupPage,
+    })),
 );
 
-const AdminQuestionPage = lazy(() =>
-  import("./domains/management/pages").then((module) => ({
-    default: module.AdminQuestionPage,
-  })),
+const AdminQuestionPage = lazy(
+  () => import("./domains/management/pages/AdminQuestionPage"),
 );
 
-const AdminNotionPage = lazy(() =>
-  import("./domains/management/pages").then((module) => ({
-    default: module.AdminNotionPage,
-  })),
+const AdminNotionPage = lazy(
+  () => import("./domains/management/pages/AdminNotionPage"),
 );
 
-const NoticeUploadPage = lazy(() =>
-  import("./domains/management/pages").then((module) => ({
-    default: module.NoticeUploadPage,
-  })),
+const NoticeUploadPage = lazy(
+  () => import("./domains/management/pages/NoticeUploadPage"),
 );
 
-const NoticeViewPage = lazy(() =>
-  import("./domains/management/pages").then((module) => ({
-    default: module.NoticeViewPage,
-  })),
+const NoticeViewPage = lazy(
+  () => import("./domains/management/pages/NoticeViewPage"),
 );
 
-const NoticeModifyPage = lazy(() =>
-  import("./domains/management/pages").then((module) => ({
-    default: module.NoticeModifyPage,
-  })),
+const NoticeModifyPage = lazy(
+  () => import("./domains/management/pages/NoticeModifyPage"),
 );
 
-const DataManagementPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.DataManagementPage,
-  })),
+const DataManagementPage = lazy(
+  () => import("./domains/session/pages/DataManagementPage"),
 );
 
-const TaskManagementPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.TaskManagementPage,
-  })),
+const TaskManagementPage = lazy(
+  () => import("./domains/session/pages/TaskManagementPage"),
 );
 
-const FilesViewPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.FilesViewPage,
-  })),
+const FilesViewPage = lazy(
+  () => import("./domains/session/pages/FilesViewPage"),
 );
 
-const FilesUploadPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.FilesUploadPage,
-  })),
+const FilesUploadPage = lazy(
+  () => import("./domains/session/pages/FilesUploadPage"),
 );
 
-const FilesModifyPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.FilesModifyPage,
-  })),
+const FilesModifyPage = lazy(
+  () => import("./domains/session/pages/FilesModifyPage"),
 );
 
-const AdminDashboardPage = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.AdminDashboardPage,
-  })),
+const AdminDashboardPage = lazy(
+  () => import("./domains/session/pages/AdminDashboardPage"),
 );
 
-const AdminSessionAssignmentsView = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.AdminSessionAssignmentsView,
-  })),
+const AdminSessionAssignmentsView = lazy(
+  () => import("./domains/session/pages/AdminSessionAssignmentsView"),
 );
 
-const AdminSessionAssignmentUpload = lazy(() =>
-  import("./domains/session/pages").then((module) => ({
-    default: module.AdminSessionAssignmentUpload,
-  })),
+const AdminSessionAssignmentUpload = lazy(
+  () => import("./domains/session/pages/AdminSessionAssignmentUpload"),
 );
 
-const AdminQuestionView = lazy(() =>
-  import("./domains/question/pages").then((module) => ({
-    default: module.AdminQuestionView,
-  })),
+const AdminQuestionView = lazy(
+  () => import("./domains/question/pages/AdminQuestionView"),
 );
 
-const AdminQuestionManageView = lazy(() =>
-  import("./domains/question/pages").then((module) => ({
-    default: module.AdminQuestionManageView,
-  })),
+const AdminQuestionManageView = lazy(
+  () => import("./domains/question/pages/AdminQuestionManageView"),
 );
 
 const withSuspense = (element: ReactElement) => (
