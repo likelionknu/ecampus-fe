@@ -50,10 +50,9 @@ function Header() {
       .find((title) => typeof title === "string") ?? "eCampus";
   const pathSegments = pathname.split("/").filter(Boolean);
   const isSessionDetailPage =
-    pathSegments[0] === "user" ||
-    (pathSegments[0] === "admin" &&
-      pathSegments[1] === "sessions" &&
-      /^\d+$/.test(pathSegments[2] ?? ""));
+    (pathSegments[0] === "user" || pathSegments[0] === "admin") &&
+    pathSegments[1] === "sessions" &&
+    /^\d+$/.test(pathSegments[2] ?? "");
   const headerTitle =
     isSessionDetailPage && sessionName ? sessionName : pageTitle;
 
