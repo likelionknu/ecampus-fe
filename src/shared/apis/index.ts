@@ -119,6 +119,7 @@ const reissueAccessToken = async (): Promise<SessionTokens> => {
     const { refreshToken } = getStoredSessionTokens();
     if (!refreshToken) throw new Error("No refresh token");
 
+    console.log("재발급 api");
     const response = await axios.post<ReissueApiResponse>(
       "/v1/auth/reissue",
       { refresh_token: refreshToken },
@@ -291,7 +292,9 @@ api.interceptors.response.use(
     ) {
       originalRequest._retry = true;
 
+      console.log("401");
       try {
+        console.log("재발급 시도");
         const tokens = await reissueAccessToken();
 
         // 새 토큰으로 헤더 업데이트 후 원래 요청 재시도
