@@ -10,17 +10,16 @@
 
     /* Bundler mode */
     "moduleResolution": "bundler",
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"],
-      "@shared": ["src/shared/index.ts"],
-      "@shared/*": ["src/shared/*"],
-      "@user": ["src/user/index.ts"],
-      "@user/*": ["src/user/*"],
-      "@admin": ["src/admin/index.ts"],
-      "@admin/*": ["src/admin/*"],
-      "@auth": ["src/auth/index.ts"],
-      "@auth/*": ["src/auth/*"]
+      "@/*": ["./src/*"],
+      "@shared": ["./src/shared/index.ts"],
+      "@shared/*": ["./src/shared/*"],
+      "@user": ["./src/user/index.ts"],
+      "@user/*": ["./src/user/*"],
+      "@admin": ["./src/admin/index.ts"],
+      "@admin/*": ["./src/admin/*"],
+      "@auth": ["./src/auth/index.ts"],
+      "@auth/*": ["./src/auth/*"]
     },
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
