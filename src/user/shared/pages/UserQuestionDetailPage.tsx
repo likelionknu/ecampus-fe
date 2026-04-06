@@ -2,13 +2,23 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { TextBox, TitleSection, Button } from "@/shared/components";
 import { CommentInput } from "@/shared/components/comment";
-import { formatKoreanDateTime24, getCommonErrorState, type CommonErrorState } from "@/shared/utils";
-import { QuestionContentSection, QuestionMetaRow } from "@/user/domains/session/components/question";
+import {
+  formatKoreanDateTime24,
+  getCommonErrorState,
+  type CommonErrorState,
+} from "@/shared/utils";
+import {
+  QuestionContentSection,
+  QuestionMetaRow,
+} from "@/user/domains/session/components/question";
 import { QuestionMetaRowSkeleton } from "@/user/domains/session/components/skeleton";
 import { useMediaQuery } from "react-responsive";
 import { Modal, ErrorModal } from "@/shared/components/modal";
 import { deleteSessionQuestions, getSessionQuestion } from "../apis";
-import { CommnentSection as CommentSection, MobileCommentSection } from "../components";
+import {
+  CommentSection as CommentSection,
+  MobileCommentSection,
+} from "../components";
 import type { SessionQuestionDetailRow } from "@/user/domains/session/types";
 
 type ModalState = "CONFIRM" | "DONE" | null;
@@ -59,7 +69,7 @@ function UserQuestionDetailPage() {
   const { questionId, sessionId } = useParams(); // 질문/세션 id
   const navigate = useNavigate();
   // 질문 내용 상태
-  const [qeustionDetail, setQuestionDetail] =
+  const [questionDetail, setQuestionDetail] =
     useState<SessionQuestionDetailRow>(INITIAL_QUESTION_DETAIL_STATE);
   // 상단 메타 데이터 상태
   const [questionsMeta, setQuestionsMeta] = useState<QuestionMetaRow[]>(
@@ -127,7 +137,7 @@ function UserQuestionDetailPage() {
 
   // 질문 상세 정보 조회
   useEffect(() => {
-    const fetchQeustionDeatil = async () => {
+    const fetchQuestionDetail = async () => {
       setIsLoading(true);
       const { qid, sid } = { qid: Number(questionId), sid: Number(sessionId) };
 
@@ -147,10 +157,10 @@ function UserQuestionDetailPage() {
       }
     };
 
-    fetchQeustionDeatil();
+    fetchQuestionDetail();
   }, [questionId, sessionId]);
 
-  const isMyQuestion = qeustionDetail.isMyQuestion; // 내 질문 여부
+  const isMyQuestion = questionDetail.isMyQuestion; // 내 질문 여부
 
   return (
     <div
@@ -169,7 +179,7 @@ function UserQuestionDetailPage() {
 
       <div className="flex flex-col gap-5">
         <TitleSection
-          title={qeustionDetail.title}
+          title={questionDetail.title}
           {...(isMyQuestion
             ? {
                 actions: [
@@ -212,10 +222,10 @@ function UserQuestionDetailPage() {
           </div>
         </TextBox>
 
-        <QuestionContentSection label="질문" content={qeustionDetail.content} />
+        <QuestionContentSection label="질문" content={questionDetail.content} />
         <QuestionContentSection
           label="답변"
-          content={qeustionDetail.answer ?? "아직 등록된 답변이 없어요."}
+          content={questionDetail.answer ?? "아직 등록된 답변이 없어요."}
         />
         {/* 댓글 섹션 */}
         <div className="flex flex-col gap-2">

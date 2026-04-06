@@ -1,12 +1,28 @@
 ﻿import { useMediaQuery } from "react-responsive";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { PageNationButton, PageNationFrame, PageNationMenu, TitleSection, Button } from "@/shared/components";
+import {
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+  TitleSection,
+  Button,
+} from "@/shared/components";
 import { TableEmptyState } from "@/shared/components/table";
-import { MobileNotificationTableRows as MobileNotifitcationTableRows, NotificationTableHeader, NotificationTableRows } from "../components";
+import {
+  MobileNotificationTableRows as MobileNotifitcationTableRows,
+  NotificationTableHeader,
+  NotificationTableRows,
+} from "../components";
 import type { NotificationRow } from "../types";
 import { Modal, ErrorModal } from "@/shared/components/modal";
 import type { ConfirmDoneModalPhase } from "@/shared/types";
-import { deleteAllNotification, deleteReadNotification, getNotification, readAllNotification, readNotification } from "../apis";
+import {
+  deleteAllNotification,
+  deleteReadNotification,
+  getNotification,
+  readAllNotification,
+  readNotification,
+} from "../apis";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 
 type ActionType = "MARK_ALL_READ" | "DELETE_ALL" | "DELETE_READ";
@@ -125,6 +141,7 @@ function UserNotificationPage() {
     }
   }, []);
 
+  // 알림 조회
   const fetchNotifications = useCallback(
     async (targetPage: number): Promise<NotificationPageState> => {
       setIsLoading(true);
