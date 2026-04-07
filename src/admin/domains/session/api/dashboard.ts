@@ -8,8 +8,18 @@ export const getSessionInfo = async ({ sid }: { sid: number }) => {
 };
 
 // 세션 사용자 조회
-export const getSessionMember = async ({ sid }: { sid: number }) => {
-  const res = await api.get(`/v1/admin/sessions/${sid}/users`);
+export const getSessionMember = async ({
+  sid,
+  page = 0,
+  size = 8,
+}: {
+  sid: number;
+  page?: number;
+  size?: number;
+}) => {
+  const res = await api.get(`/v1/admin/sessions/${sid}/users`, {
+    params: { page, size },
+  });
 
   return res;
 };
