@@ -95,7 +95,8 @@ function AdminDashboardPage() {
   const [membersPage, setMembersPage] = useState<SessionMembersPageState>(
     INITIAL_SESSION_MEMBERS_PAGE_STATE,
   );
-  const itemSumNum = membersPage.size;
+  const itemSumNum = INITIAL_SESSION_MEMBERS_PAGE_STATE.size;
+  const [currentPage, setCurrentPage] = useState(1);
   const [refreshKey, setRefreshKey] = useState(0); // 재조회 키
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
@@ -236,12 +237,28 @@ function AdminDashboardPage() {
     // 사용자 정보
     const fetchMember = async () => {
       try {
-        const res = await getSessionMember({ sid: Number(sid) });
+        const res = await getSessionMember({
+          sid: Number(sid),
+          page: currentPage - 1,
+          size: itemSumNum,
+        });
         const responseData = res.data?.data ?? res.data;
 
         if (!alive) return;
 
-        setMembersPage(responseData);
+        setMembersPage({
+          content: Array.isArray(responseData?.content)
+            ? responseData.content
+            : [],
+          page: responseData?.number ?? responseData?.page ?? 0,
+          size: responseData?.size ?? itemSumNum,
+          totalElements: responseData?.totalElements ?? 0,
+          totalPages: responseData?.totalPages ?? 0,
+          hasNext:
+            typeof responseData?.hasNext === "boolean"
+              ? responseData.hasNext
+              : !(responseData?.last ?? true),
+        });
       } catch (error) {
         if (!alive) return;
         setErrors(getCommonErrorState(error));
@@ -260,7 +277,18 @@ function AdminDashboardPage() {
     return () => {
       alive = false;
     };
-  }, [sid, refreshKey]);
+  }, [sid, refreshKey, currentPage, itemSumNum]);
+
+  useEffect(() => {
+    if (membersPage.totalPages === 0 && currentPage !== 1) {
+      setCurrentPage(1);
+      return;
+    }
+
+    if (membersPage.totalPages > 0 && currentPage > membersPage.totalPages) {
+      setCurrentPage(membersPage.totalPages);
+    }
+  }, [currentPage, membersPage.totalPages]);
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-280 xl:px-8">
@@ -368,12 +396,12 @@ function AdminDashboardPage() {
         </div>
 
         <div className="mt-5">
-          <PageNationFrame itemNum={membersPage.size} itemSumNum={itemSumNum}>
-            {({ currentItems, startIndex }) => {
-              const pagedMembers = membersPage.content.slice(
-                startIndex,
-                startIndex + currentItems.length,
-              );
+          <PageNationFrame
+            itemNum={membersPage.totalElements}
+            itemSumNum={itemSumNum}
+          >
+            {() => {
+              const pagedMembers = membersPage.content;
 
               return (
                 <>
@@ -394,7 +422,7 @@ function AdminDashboardPage() {
                     />
                   )}
 
-                  <PageNationButton />
+                  <PageNationButton onPageChange={setCurrentPage} />
                 </>
               );
             }}
