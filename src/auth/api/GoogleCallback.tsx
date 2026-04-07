@@ -1,10 +1,18 @@
 import { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { LoginLoadingPage } from "@auth/pages";
-import { AuthFlowError, buildLoginErrorPath, createAuthErrorInfo, getGoogleOAuthErrorMessage, normalizeAuthError } from "@auth/utils";
+import {
+  AuthFlowError,
+  buildLoginErrorPath,
+  createAuthErrorInfo,
+  getGoogleOAuthErrorMessage,
+  normalizeAuthError,
+} from "@auth/utils";
 import type { ApiResponse, GoogleLoginResponseData } from "@auth/types";
 import { getDefaultRouteByRole, useAuthSessionStore } from "@/auth/stores";
 import { validateGoogleOAuthState } from "@auth/api/googleOAuth";
+
+const PLATFORM = "LOCAL";
 
 const GoogleCallback = () => {
   const navigate = useNavigate();
@@ -39,7 +47,7 @@ const GoogleCallback = () => {
         validateGoogleOAuthState(state);
         const encodedCode = encodeURIComponent(code);
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/auth/login?code=${encodedCode}`,
+          `${import.meta.env.VITE_BASE_API_URL}/v1/auth/login?code=${encodedCode}&platform=${PLATFORM}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
