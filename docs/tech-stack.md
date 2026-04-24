@@ -1,61 +1,69 @@
 # Tech Stack
 
-Last updated: 2026-03-26
+Last updated: 2026-04-17
 
-## Core
+## 1) Core
 
-- Runtime: Node.js + npm
-- Language: TypeScript `5.9.x`
-- UI: React `19.2.0`
-- Build/Dev Server: Vite `7.3.x`
+- Runtime/Package Manager: Node.js + npm
+- Language: TypeScript `~5.9.3`
+- UI Library: React `^19.2.0`, React DOM `^19.2.0`
+- Build Tool: Vite `^7.3.1`
 
-## Routing and State
+## 2) Routing/State
 
-- Router: `react-router-dom@7.13.1`
-- Global auth state: `zustand@5.0.12` + `zustand/middleware(persist)`
+- Router: `react-router-dom@^7.13.1`
+- Global Auth State: `zustand@^5.0.12` + `zustand/middleware(persist)`
 
-## Networking
+## 3) Networking
 
-- HTTP client: `axios@1.13.5`
-- Shared client: `src/shared/apis/index.ts`
-- Request interceptor: access token 자동 첨부
-- Response interceptor: `401` / `C401*` 오류 시 refresh-token 재발급 후 요청 재시도
+- HTTP Client: `axios@^1.13.5`
+- Shared Client Entry: `src/shared/apis/index.ts`
+- 주요 동작:
+- 요청 시 access token 자동 주입
+- `401` 응답 시 refresh token 기반 재발급 후 요청 재시도
+- 재발급 실패 시 세션 제거 및 로그인 페이지 이동
 
-## UI and Styling
+## 4) UI/Styling
 
-- Tailwind CSS `4.2.x`
-- `@tailwindcss/typography`
-- SVG 컴포넌트 변환: `vite-plugin-svgr`
-- 반응형 유틸: `react-responsive`
-- Lottie: `@lottiefiles/dotlottie-react`
+- Tailwind CSS `^4.2.1`
+- Tailwind Vite Plugin: `@tailwindcss/vite@^4.2.1`
+- Tailwind Typography: `@tailwindcss/typography@^0.5.19`
+- SVG to React Component: `vite-plugin-svgr@^4.5.0`
+- 반응형 처리: `react-responsive@^10.0.1`
+- 애니메이션: `@lottiefiles/dotlottie-react@^0.18.3`
 
-## Markdown and Content
+## 5) Markdown/콘텐츠 렌더링
 
-- Markdown 렌더링: `react-markdown`
-- GFM 지원: `remark-gfm`
-- 코드 하이라이팅: `rehype-highlight`, `highlight.js`
+- Markdown Renderer: `react-markdown@^10.1.0`
+- GitHub Flavored Markdown: `remark-gfm@^4.0.1`
+- 코드 하이라이트: `rehype-highlight@^7.0.2`, `highlight.js@^11.11.1`
 
-## Quality and Formatting
+## 6) 품질 도구
 
-- ESLint `9.x`
-- `typescript-eslint@8.x`
-- `eslint-plugin-react-hooks`
-- `eslint-plugin-react-refresh`
-- Prettier `3.x`
-- `prettier-plugin-tailwindcss`
+- ESLint `^9.39.1`
+- TypeScript ESLint `^8.48.0`
+- `eslint-plugin-react-hooks@^7.0.1`
+- `eslint-plugin-react-refresh@^0.4.24`
+- Prettier `^3.8.1`
+- `prettier-plugin-tailwindcss@^0.7.2`
 
-## Build Configuration
+## 7) Build/Path Alias
 
-- Path alias: `@`, `@auth/*`, `@admin/*`, `@user/*`, `@shared/*`
-- Vite plugins: `@vitejs/plugin-react`, `vite-plugin-svgr`, `@tailwindcss/vite`
+- Vite Plugin: `@vitejs/plugin-react@^5.1.1`
+- 별칭(alias):
+- `@` -> `src`
+- `@auth` -> `src/auth`
+- `@admin` -> `src/admin`
+- `@user` -> `src/user`
+- `@shared` -> `src/shared`
 
-## Environment Variables
+## 8) Environment Variables
 
 - `VITE_BASE_API_URL`
 - `VITE_GOOGLE_CLIENT_ID`
 - `VITE_GOOGLE_REDIRECT_URI`
 
-## npm Scripts
+## 9) npm Scripts
 
 - `npm run dev`
 - `npm run build`
@@ -64,6 +72,6 @@ Last updated: 2026-03-26
 - `npm run format`
 - `npm run format:check`
 
-## Notes
+## 10) 비고
 
-- 테스트 스크립트는 현재 `package.json`에 정의되어 있지 않습니다.
+- `npm test` 스크립트는 현재 정의되어 있지 않습니다.

@@ -1,10 +1,10 @@
-﻿# Folder Architecture
+# Folder Architecture
 
-This document reflects the current `src` structure and routing ownership.
+현재 문서는 `src` 실제 구조 및 라우팅 코드(`App.tsx`, `user/UserRoutes.tsx`, `admin/AdminRoutes.tsx`)를 기준으로 작성되었습니다.
 
-Last updated: 2026-03-25
+Last updated: 2026-04-17
 
-## 1) High-level Structure
+## 1) 최상위 구조
 
 ```txt
 src/
@@ -16,9 +16,11 @@ src/
       management/
       question/
       session/
+      dashboard/   # 현재 비어 있는 도메인 폴더
     shared/
   auth/
     api/
+    assets/
     components/
     pages/
     stores/
@@ -26,12 +28,18 @@ src/
     utils/
   user/
     UserRoutes.tsx
+    assets/
     domains/
       dashboard/
       notification/
       question/
       session/
     shared/
+      apis/
+      components/
+      pages/
+      types/
+    utils/
   shared/
     apis/
     assets/
@@ -39,18 +47,20 @@ src/
     constants/
     hooks/
     layouts/
+    mocks/
     pages/
+    stores/
     types/
     utils/
 ```
 
-## 2) Routing Ownership
+## 2) 라우팅 소유 파일
 
-- `src/App.tsx`: global routes and entry points
-- `src/user/UserRoutes.tsx`: user area routes
-- `src/admin/AdminRoutes.tsx`: admin area routes
+- 전역 라우트: `src/App.tsx`
+- 사용자 라우트: `src/user/UserRoutes.tsx`
+- 관리자 라우트: `src/admin/AdminRoutes.tsx`
 
-### Global (`src/App.tsx`)
+## 3) 전역 라우팅 (`src/App.tsx`)
 
 - `/` -> `GoogleCallback`
 - `/auth/login`, `/auth/login-error`
@@ -59,38 +69,45 @@ src/
 - `/admin/*` -> `RequireAccess(requiredRole="ADMIN")` + `BaseLayout` + `AdminRoutes`
 - `*` -> `ErrorPage`
 
-### User (`src/user/UserRoutes.tsx`)
+## 4) 사용자 라우팅 (`src/user/UserRoutes.tsx`)
 
-- base: `dashboard`, `sessions`, `notification`, `questions`, `list`
-- detail: `questions/:questionId/:sessionId`
-- session tab: `sessions/:sid/files`, `files/:fileId`, `assignments`, `assignments/:assignmentId`, `groups`, `questions`, `questions/new`
+- 기본 탭: `dashboard`, `sessions`, `notification`, `questions`, `list`
+- 질문 상세: `questions/:questionId/:sessionId`
+- 세션 탭(`sessions/:sid`):
+- `files`, `files/:fileId`
+- `assignments`, `assignments/:assignmentId`
+- `groups`
+- `questions`, `questions/new`
 
-### Admin (`src/admin/AdminRoutes.tsx`)
+## 5) 관리자 라우팅 (`src/admin/AdminRoutes.tsx`)
 
-- management tab: `sessions`, `groups`, `questions`, `questions/detail`, `questions/manage`, `notices`, `notices/upload`, `notices/:nid`, `notices/:nid/modify`
-- session tab: `sessions/:sid/dashboard`, `assignments`, `assignments/upload`, `assignments/:aid`, `files`, `files/upload`, `files/:fid`, `files/:fid/modify`
+- 관리 탭:
+- `sessions`, `groups`, `questions`
+- `questions/detail`, `questions/manage`
+- `notices`, `notices/upload`, `notices/:nid`, `notices/:nid/modify`
+- 세션 탭(`sessions/:sid`):
+- `dashboard`
+- `assignments`, `assignments/upload`, `assignments/:aid`
+- `files`, `files/upload`, `files/:fid`, `files/:fid/modify`
 
-## 3) Auth Flow Notes
+## 6) 인증/세션 흐름
 
-- Auth session is persisted in `localStorage` key: `ecampus.auth.session`
-- Store source of truth: `src/auth/stores/authStore.ts`
-- Route guard component: `src/auth/components/RequireAuth.tsx` (`RequireAccess`)
-- Axios instance: `src/shared/apis/index.ts`
-- Token errors (`401`, `C401*`) trigger refresh-token reissue and retry in interceptor
-- Reissue fails -> clear session and redirect to `/auth/login`
+- 인증 저장소 키: `ecampus.auth.session` (`localStorage`)
+- 세션 상태 저장: `src/auth/stores/authStore.ts` (`zustand` + `persist`)
+- 접근 제어: `src/auth/components/RequireAuth.tsx` (`RequireAccess`)
+- API 클라이언트: `src/shared/apis/index.ts`
+- 동작 요약:
+- 요청 인터셉터에서 access token 자동 주입
+- 응답 `401` 또는 토큰 만료 상황에서 `/v1/auth/reissue`로 재발급 시도
+- 재발급 실패 시 세션 제거 후 `/auth/login`으로 이동
 
-### Empty Storage Behavior
+## 7) 유지보수 체크리스트
 
-- There is no `/auth/loading` route in router config.
-- Current loading screen component is `LoginLoadingPage`.
-- It is rendered inside `GoogleCallback` (route: `/`) while processing OAuth callback.
-- If callback params/session are missing, `GoogleCallback` navigates to `/auth/login`.
+라우팅 경로, 접근 정책, 인증 흐름을 수정할 때 아래 파일을 함께 업데이트합니다.
 
-## 4) Maintenance Checklist
-
-- When route path or policy changes, update these files first:
 - `src/App.tsx`
 - `src/user/UserRoutes.tsx`
 - `src/admin/AdminRoutes.tsx`
 - `src/auth/components/RequireAuth.tsx`
+- `src/auth/stores/authStore.ts`
 - `src/shared/apis/index.ts`
