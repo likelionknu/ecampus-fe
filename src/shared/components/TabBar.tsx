@@ -1,7 +1,7 @@
 import { NavLink, useLocation } from "react-router-dom";
 import ArrorwIcon from "../assets/arrow.svg?react";
 import { useMediaQuery } from "react-responsive";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 interface TabItem {
   label: string;
@@ -14,10 +14,13 @@ function TabBar({ items }: { items: TabItem[] }) {
   const isMobile = useMediaQuery({ maxWidth: 639 });
   const [toggle, setToggle] = useState<boolean>(false);
 
-  const activeItem =
-    items.find((item) =>
-      item.end ? pathname === item.path : pathname.startsWith(item.path),
-    ) ?? items[0];
+  const activeItem = useMemo(
+    () =>
+      items.find((item) =>
+        item.end ? pathname === item.path : pathname.startsWith(item.path),
+      ) ?? items[0],
+    [items, pathname],
+  );
 
   const isTabListVisible = !isMobile || toggle;
 
