@@ -8,6 +8,7 @@ import NavQuestion from "@shared/assets/NavQuestion.svg";
 import NavAdmin from "@shared/assets/NavAdmin.svg";
 import UserProfileImg from "@shared/assets/UserProfileImg.png";
 import Button from "../Button";
+import { useMemo } from "react";
 
 interface NavItemsProps {
   iconSrc: string;
@@ -62,7 +63,11 @@ const NavBar = () => {
   const userName = useAuthSessionStore((state) => state.session?.name);
   const profileUrl = useAuthSessionStore((state) => state.session?.profileUrl);
   const clearSession = useAuthSessionStore((state) => state.clearSession);
-  const pathSegments = pathname.split("/").filter(Boolean);
+
+  const pathSegments = useMemo(
+    () => pathname.split("/").filter(Boolean),
+    [pathname],
+  );
   const isAdmin = role?.toUpperCase() === "ADMIN";
 
   const isSessionSelected = pathname.startsWith("/user/sessions");

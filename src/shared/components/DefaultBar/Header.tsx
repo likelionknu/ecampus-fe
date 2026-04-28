@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useLocation, useMatches, useNavigate } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
 import DarkModeImg from "@shared/assets/DarkModeImg.png";
@@ -43,12 +43,21 @@ function Header() {
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains("dark"),
   );
-  const pageTitle =
-    [...matches]
-      .reverse()
-      .map((match) => (match.handle as HeaderRouteHandle | undefined)?.title)
-      .find((title) => typeof title === "string") ?? "eCampus";
-  const pathSegments = pathname.split("/").filter(Boolean);
+
+  const pageTitle = useMemo(() => {
+    for (let i = matches.length - 1; i >= 0; i -= 1) {
+      const title = (matches[i].handle as HeaderRouteHandle | undefined)?.title;
+
+      if (typeof title === "string") return title;
+    }
+
+    return "eCampus";
+  }, [matches]);
+
+  const pathSegments = useMemo(
+    () => pathname.split("/").filter(Boolean),
+    [pathname],
+  );
   const isSessionDetailPage =
     (pathSegments[0] === "user" || pathSegments[0] === "admin") &&
     pathSegments[1] === "sessions" &&
