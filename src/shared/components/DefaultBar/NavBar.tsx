@@ -70,10 +70,15 @@ const NavBar = () => {
   );
   const isAdmin = role?.toUpperCase() === "ADMIN";
 
-  const isSessionSelected = pathname.startsWith("/user/sessions");
-  const isGroupSelected = pathname.startsWith("/user/list");
-  const isNotificationSelected = pathname.startsWith("/user/notification");
-  const isQuestionSelected = pathname.startsWith("/user/questions");
+  const selected = useMemo(() => {
+    return {
+      isSessionSelected: pathname.startsWith("/user/sessions"),
+      isGroupSelected: pathname.startsWith("/user/list"),
+      isNotificationSelected: pathname.startsWith("/user/notification"),
+      isQuestionSelected: pathname.startsWith("/user/questions"),
+    };
+  }, [pathname]);
+
   const isAdminSelected = pathSegments[0] === "admin";
 
   const handleLogout = () => {
@@ -99,28 +104,28 @@ const NavBar = () => {
               iconSrc={NavSession}
               iconAlt="NavSession"
               label="세션"
-              selected={isSessionSelected}
+              selected={selected.isSessionSelected}
               onClick={() => navigate("/user/sessions")}
             />
             <NavItems
               iconSrc={NavGroup}
               iconAlt="NavGroup"
               label="그룹"
-              selected={isGroupSelected}
+              selected={selected.isGroupSelected}
               onClick={() => navigate("/user/list")}
             />
             <NavItems
               iconSrc={NavAlart}
               iconAlt="NavAlart"
               label="알림"
-              selected={isNotificationSelected}
+              selected={selected.isNotificationSelected}
               onClick={() => navigate("/user/notification")}
             />
             <NavItems
               iconSrc={NavQuestion}
               iconAlt="NavQuestion"
               label="질문"
-              selected={isQuestionSelected}
+              selected={selected.isQuestionSelected}
               onClick={() => navigate("/user/questions")}
             />
             {isAdmin && (
