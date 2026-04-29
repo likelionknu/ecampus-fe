@@ -97,16 +97,6 @@ function clearStoredSession() {
   window.localStorage.removeItem(AUTH_STORAGE_KEY);
 }
 
-// function moveToLoginPage() {
-//   if (typeof window === "undefined") {
-//     return;
-//   }
-
-//   if (window.location.pathname !== "/auth/login") {
-//     window.location.assign("/auth/login");
-//   }
-// }
-
 let refreshPromise: Promise<SessionTokens> | null = null;
 
 const reissueAccessToken = async (): Promise<SessionTokens> => {
@@ -153,12 +143,6 @@ const reissueAccessToken = async (): Promise<SessionTokens> => {
       console.error("Session expired:", refreshError);
       clearStoredSession();
 
-      if (typeof window !== "undefined") {
-        window.alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-        if (window.location.pathname !== "/auth/login") {
-          window.location.assign("/auth/login");
-        }
-      }
       throw refreshError;
     })
     .finally(() => {
@@ -168,75 +152,6 @@ const reissueAccessToken = async (): Promise<SessionTokens> => {
 
   return refreshPromise;
 };
-
-// function isTokenError(error: AxiosError<ApiErrorResponse>) {
-//   const status = error.response?.status;
-//   const code = error.response?.data?.error?.code;
-
-//   // const originalRequest = error?.config as
-//   //   | (typeof error.config & { _retry?: boolean })
-//   //   | undefined;
-
-//   // const isReissueRequest =
-//   //   typeof originalRequest?.url === "string" &&
-//   //   originalRequest.url.includes("/v1/auth/reissue");
-
-//   return (
-//     status === 401 || (typeof code === "string" && code.startsWith("C401"))
-//     // || (!originalRequest?._retry && !isReissueRequest)
-//   );
-// }
-
-// async function requestReissueWithRefreshToken(refreshToken: string) {
-//   const response = await axios.post<ReissueApiResponse>(
-//     "/v1/auth/reissue",
-//     {
-//       refresh_token: refreshToken,
-//     },
-//     {
-//       baseURL: BASE_API_URL,
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     },
-//   );
-//   const nextAccessToken = response.data?.data?.access_token;
-//   const nextRefreshToken = response.data?.data?.refresh_token;
-
-//   if (!nextAccessToken || !nextRefreshToken) {
-//     throw new Error(
-//       response.data?.error?.message ??
-//         "토큰 재발급 응답에 access_token/refresh_token이 없습니다.",
-//     );
-//   }
-
-//   return {
-//     accessToken: nextAccessToken,
-//     refreshToken: nextRefreshToken,
-//   };
-// }
-
-// let refreshRequest: Promise<SessionTokens> | null = null;
-
-// async function refreshTokens() {
-//   if (refreshRequest) {
-//     return refreshRequest;
-//   }
-
-//   const { refreshToken } = getStoredSessionTokens();
-
-//   if (!refreshToken) {
-//     throw new Error("저장된 refresh_token이 없습니다.");
-//   }
-
-//   refreshRequest = requestReissueWithRefreshToken(refreshToken);
-
-//   try {
-//     return await refreshRequest;
-//   } finally {
-//     refreshRequest = null;
-//   }
-// }
 
 export const api = axios.create({
   baseURL: BASE_API_URL,
@@ -308,39 +223,3 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-// api.interceptors.response.use(
-//   (response) => response,
-//   async (error: AxiosError<ApiErrorResponse>) => {
-//     const originalConfig = error.config as RetryableRequestConfig | undefined;
-
-//     if (!originalConfig) {
-//       return Promise.reject(error);
-//     }
-
-//     const requestUrl = originalConfig.url ?? "";
-//     const isReissueRequest = requestUrl.includes("/v1/auth/reissue");
-
-//     if (isReissueRequest || originalConfig._retry || !isTokenError(error)) {
-//       return Promise.reject(error);
-//     }
-
-//     originalConfig._retry = true;
-
-//     try {
-//       const tokens = await refreshTokens();
-
-//       setStoredSessionTokens(tokens);
-//       const headers = AxiosHeaders.from(originalConfig.headers);
-
-//       headers.set("Authorization", `Bearer ${tokens.accessToken}`);
-//       originalConfig.headers = headers;
-
-//       return api(originalConfig);
-//     } catch {
-//       clearStoredSession();
-//       moveToLoginPage();
-//       return Promise.reject(error);
-//     }
-//   },
-// );
