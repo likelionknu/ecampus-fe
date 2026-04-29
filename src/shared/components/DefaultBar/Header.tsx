@@ -5,9 +5,9 @@ import DarkModeImg from "@shared/assets/DarkModeImg.png";
 import LightModeImg from "@shared/assets/LightModeImg.png";
 import MobileHeaderIcon from "@shared/assets/MobileHeaderIcon.png";
 import MobileHeaderLogo from "@shared/assets/MobileHeaderLogo.png";
-import UserProfileImg from "@shared/assets/UserProfileImg.png";
 import xWhile from "@user/domains/dashboard/assets/xWhite.png";
 import { useSessionStore } from "@/shared/stores/sessionStore";
+import { useAuthSessionStore } from "@/auth/stores";
 
 type HeaderRouteHandle = {
   title?: string;
@@ -39,7 +39,11 @@ function Header() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();
+  const role = useAuthSessionStore((state) => state.session?.role);
+  const userName = useAuthSessionStore((state) => state.session?.name);
+  const profileUrl = useAuthSessionStore((state) => state.session?.profileUrl);
   const sessionName = useSessionStore((state) => state.sessionName);
+  const isAdmin = role?.toUpperCase() === "ADMINE";
   const [isDark, setIsDark] = useState(() =>
     document.documentElement.classList.contains("dark"),
   );
@@ -90,12 +94,13 @@ function Header() {
             onClick={() => setIsMobileMenuOpen(false)}
           />
           <div className="bg-ec-blue fixed top-0 left-0 z-60 flex h-16.25 w-full items-center justify-center">
-            <div className="flex w-full items-center justify-between px-10.5 py-4.75">
+            <div className="flex w-full items-center justify-between px-8 py-4.75">
               <div className="flex items-center gap-2.5">
                 <img
-                  className="h-3.5 w-2.5"
+                  className="4 w-2.5"
                   alt="MobileHeaderLogo"
                   src={MobileHeaderLogo}
+                  onClick={() => navigate("/user/dashboard")}
                 />
                 <div className="text-ec-gnb-white line-clamp-1 justify-start text-base font-medium">
                   {headerTitle}
@@ -127,7 +132,7 @@ function Header() {
               />
               <HeaderRouterButton
                 label="그룹"
-                to="/user/sessions/group"
+                to="/user/list"
                 onClick={(to) => {
                   navigate(to);
                   setIsMobileMenuOpen(false);
@@ -149,12 +154,26 @@ function Header() {
                   setIsMobileMenuOpen(false);
                 }}
               />
+              {isAdmin && (
+                <HeaderRouterButton
+                  label="관리자"
+                  to="/admin/sessions"
+                  onClick={(to) => {
+                    navigate(to);
+                    setIsMobileMenuOpen(false);
+                  }}
+                />
+              )}
               <div className="flex items-center gap-2.5">
                 <div className="h-4 w-4 rounded-full bg-zinc-300">
-                  <img src={UserProfileImg} alt="" className="" />
+                  <img
+                    src={profileUrl}
+                    alt="프로필 이미지"
+                    className="rounded-[50%]"
+                  />
                 </div>
                 <div className="text-ec-table-topic line-clamp-1 justify-start text-base font-medium">
-                  황형진
+                  {userName}
                 </div>
               </div>
             </div>
