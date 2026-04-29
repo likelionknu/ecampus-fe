@@ -64,7 +64,7 @@ const router = createBrowserRouter([
       </RequireAccess>
     ),
     children: [
-      { index: true, element: <Navigate to="dashboard" replace /> },
+      { index: true, element: <Navigate to="/user/dashboard" replace /> },
       ...UserRoutes,
     ],
   },
@@ -76,7 +76,7 @@ const router = createBrowserRouter([
       </RequireAccess>
     ),
     children: [
-      { index: true, element: <Navigate to="sessions" replace /> },
+      { index: true, element: <Navigate to="/admin/sessions" replace /> },
       ...AdminRoutes,
     ],
   },

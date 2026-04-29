@@ -134,7 +134,7 @@ const NavBar = () => {
                 iconAlt="NavAdmin"
                 label="관리자"
                 selected={isAdminSelected}
-                onClick={() => navigate("/admin")}
+                onClick={() => navigate("/admin/sessions")}
               />
             )}
           </div>

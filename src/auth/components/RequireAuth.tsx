@@ -1,4 +1,3 @@
-// RequireAccess.tsx
 import { Navigate } from "react-router-dom";
 import { useAuthSessionStore } from "@/auth/stores";
 
