@@ -7,10 +7,7 @@ import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils";
-import {
-  QuestionContentSection,
-  QuestionMetaRow,
-} from "@/user/domains/session/components/question";
+
 import { QuestionMetaRowSkeleton } from "@/user/domains/session/components/skeleton";
 import { useMediaQuery } from "react-responsive";
 import { Modal, ErrorModal } from "@/shared/components/modal";
@@ -18,8 +15,10 @@ import { deleteSessionQuestions, getSessionQuestion } from "../apis";
 import {
   CommentSection as CommentSection,
   MobileCommentSection,
+  SessionQuestionContentSection,
 } from "../components";
 import type { SessionQuestionDetailRow } from "@/user/domains/session/types";
+import QuestionMetaRow from "@/shared/components/QuestionMetaRow";
 
 type ModalState = "CONFIRM" | "DONE" | null;
 type QuestionMetaRow = {
@@ -222,8 +221,11 @@ function UserQuestionDetailPage() {
           </div>
         </TextBox>
 
-        <QuestionContentSection label="질문" content={questionDetail.content} />
-        <QuestionContentSection
+        <SessionQuestionContentSection
+          label="질문"
+          content={questionDetail.content}
+        />
+        <SessionQuestionContentSection
           label="답변"
           content={questionDetail.answer ?? "아직 등록된 답변이 없어요."}
         />

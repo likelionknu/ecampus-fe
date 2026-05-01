@@ -1,24 +1,24 @@
-import { Modal, ErrorModal } from "@/shared/components/modal";
-import { useCallback, useState, type ChangeEvent, type ReactNode } from "react";
+import { ErrorModal } from "@/shared/components/modal";
+import { useCallback, useState, type ChangeEvent } from "react";
 import { useMediaQuery } from "react-responsive";
 import { Button, TitleSection } from "@/shared/components";
 import type { CreateConfirmErrorModalStep } from "@/shared/types";
 import { BoxLayout } from "@/user/shared/components";
-import { SessionQuestionWarning } from "../../components/question";
+import {
+  SessionQuestionCreateModal,
+  SessionQuestionWarning,
+} from "../../components/question";
 import type { CreateQuestion } from "../../types";
 import { postSessionQuestions } from "../../apis";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import { useNavigate, useParams } from "react-router-dom";
+import BoxTitle from "../../components/question/BoxTitle";
 
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
   value: string;
   onChange: (e: ChangeEvent<T>) => void;
 }
-
-const BoxWrapper = ({ children }: { children: ReactNode }) => {
-  return <div className="flex justify-between">{children}</div>;
-};
 
 const InputField = ({
   placeholder,
@@ -51,23 +51,6 @@ const TextAreaField = ({
       className="bg-ec-table-header rounded-ec-10 min-h-71 w-full resize-none px-7 py-4 text-[14px] placeholder:text-[14px] xl:text-[16px] xl:placeholder:text-[16px]"
     />
   );
-};
-
-const MODAL_CONFIG: Record<
-  CreateConfirmErrorModalStep,
-  {
-    description: string;
-  }
-> = {
-  CREATE: {
-    description: "새로운 질문 게시글을 업로드할까요?",
-  },
-  CONFIRM: {
-    description: "새로운 질문 게시글을 업로드했어요",
-  },
-  ERROR: {
-    description: "요청을 다시 확인해주세요",
-  },
 };
 
 function UserSessionQuestionCreatePage() {
@@ -108,33 +91,6 @@ function UserSessionQuestionCreatePage() {
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
-      {step && (
-        <Modal>
-          <Modal.Header
-            onClick={step === "CREATE" ? handleClose : handleSuccess}
-          >
-            새 질문 등록
-          </Modal.Header>
-          <Modal.Description>
-            {MODAL_CONFIG[step].description}
-          </Modal.Description>
-          <Modal.ButtonLayout>
-            <Button
-              size="modal"
-              variant="primary"
-              onClick={step === "CREATE" ? handleConfirm : handleSuccess}
-            >
-              확인
-            </Button>
-            {step === "CREATE" && (
-              <Modal.Cancelled
-                onClick={step === "CREATE" ? handleClose : handleSuccess}
-              />
-            )}
-          </Modal.ButtonLayout>
-        </Modal>
-      )}
-
       {errors && (
         <ErrorModal
           status={errors.status}
@@ -143,16 +99,24 @@ function UserSessionQuestionCreatePage() {
         />
       )}
 
+      <SessionQuestionCreateModal
+        step={step}
+        handleClose={handleClose}
+        handleSuccess={handleSuccess}
+        handleConfirm={handleConfirm}
+      />
+
       <TitleSection title="새 질문 등록" />
       <SessionQuestionWarning />
 
       <BoxLayout>
-        <BoxWrapper>
-          <span className="text-body-1 text-ec-black">제목</span>
-          <span className="text-caption text-ec-sub">
-            {!isMobile && `${80 - createQuestion.title.length}자 남음`}
-          </span>
-        </BoxWrapper>
+        <BoxTitle
+          title="제목"
+          maxLength={80}
+          currentLength={createQuestion.title.length}
+          isMobile={isMobile}
+        />
+
         <InputField
           placeholder="제목을 입력해주세요."
           value={createQuestion.title}
@@ -163,12 +127,12 @@ function UserSessionQuestionCreatePage() {
       </BoxLayout>
 
       <BoxLayout>
-        <BoxWrapper>
-          <span className="text-body-1 text-ec-black">질문</span>
-          <span className="text-caption text-ec-sub">
-            {!isMobile && `${900 - createQuestion.content.length}자 남음`}
-          </span>
-        </BoxWrapper>
+        <BoxTitle
+          title="질문"
+          maxLength={900}
+          currentLength={createQuestion.content.length}
+          isMobile={isMobile}
+        />
         <TextAreaField
           placeholder="질문 내용을 입력해주세요."
           value={createQuestion.content}

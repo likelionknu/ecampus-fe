@@ -1,7 +1,9 @@
 import { useMediaQuery } from "react-responsive";
 import { Button, TextBox, TitleSection } from "@/shared/components";
-import { AssignmentsMetaRow as AssignmentMetaRow, AssignmentContentSection } from "../components";
-import { QuestionContentSection } from "../components/question";
+import {
+  AssignmentsMetaRow as AssignmentMetaRow,
+  AssignmentContentSection,
+} from "../components";
 import { useEffect, useState } from "react";
 import { postAssignmentSubmission } from "../apis";
 import { useParams } from "react-router-dom";
@@ -9,6 +11,7 @@ import { Modal, ErrorModal } from "@/shared/components/modal";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import { useAssignmentDetail } from "../hooks";
 import { createAssignmentMetaRows } from "../utils";
+import { SessionQuestionContentSection } from "@/user/shared/components";
 
 function UserSessionAssignmentsView() {
   const isTablet = useMediaQuery({ maxWidth: 1024 });
@@ -88,7 +91,10 @@ function UserSessionAssignmentsView() {
           ))}
         </div>
       </TextBox>
-      <QuestionContentSection label="설명" content={assignment.description} />
+      <SessionQuestionContentSection
+        label="설명"
+        content={assignment.description}
+      />
       <AssignmentContentSection
         label="제출"
         content={content}

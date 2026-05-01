@@ -1,7 +1,16 @@
 ﻿import { useNavigate, useParams } from "react-router-dom";
 import { TableEmptyState } from "@/shared/components/table";
-import { PageNationButton, PageNationFrame, PageNationMenu, TitleSection } from "@/shared/components";
-import { SessionQuestionTableHeader, SessionQuestionTableRows, SessionMobileQuestionTableRows } from "../../components/question";
+import {
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+  TitleSection,
+} from "@/shared/components";
+import {
+  SessionQuestionTableHeader,
+  SessionQuestionTableRows,
+  SessionMobileQuestionTableRows,
+} from "../../components/question";
 import type { SessionQuestionRow } from "../../types";
 import { useMediaQuery } from "react-responsive";
 import { useCallback, useEffect, useState } from "react";

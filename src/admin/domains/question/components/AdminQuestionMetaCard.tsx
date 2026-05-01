@@ -1,7 +1,7 @@
 import { TextBox } from "@/shared/components";
 import { formatKoreanDateTime24 } from "@/shared/utils";
-import { QuestionMetaRow } from "@/user/domains/session/components/question";
 import type { AdminQuestionDetail } from "../types";
+import QuestionMetaRow from "@/shared/components/QuestionMetaRow";
 
 interface AdminQuestionMetaCardProps {
   question: Pick<
