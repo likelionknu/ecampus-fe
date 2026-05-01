@@ -10,7 +10,7 @@ function MobileNotifitcationTableRows({
   notifications,
 }: MobileNotifitcationTableRowsProps) {
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex w-full flex-col gap-3">
       {notifications.map((notification) => (
         <div
           key={notification.id}

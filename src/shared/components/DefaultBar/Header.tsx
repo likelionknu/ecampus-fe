@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import { useLocation, useMatches, useNavigate } from "react-router-dom";
-import { useMediaQuery } from "react-responsive";
 import DarkModeImg from "@shared/assets/DarkModeImg.png";
 import LightModeImg from "@shared/assets/LightModeImg.png";
 import MobileHeaderIcon from "@shared/assets/MobileHeaderIcon.png";
@@ -33,9 +32,7 @@ function HeaderRouterButton({ label, to, onClick }: HeaderRouterButtonProps) {
   );
 }
 
-function Header() {
-  const isTablet = useMediaQuery({ maxWidth: 1280 });
-
+function Header({ isTablet }: { isTablet: boolean }) {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();

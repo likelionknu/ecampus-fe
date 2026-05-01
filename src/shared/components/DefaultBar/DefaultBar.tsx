@@ -13,14 +13,16 @@ const DefaultBar = ({ children }: DefaultBarProps) => {
     <>
       {isTablet ? (
         <div className="flex min-h-screen">
-          <Header />
-          <div className="flex h-full w-full justify-start">{children}</div>
+          <Header isTablet={isTablet} />
+          <div className="mt-16 flex h-full w-full justify-start xl:mt-0">
+            {children}
+          </div>
         </div>
       ) : (
         <div className="flex h-full min-h-screen">
           <NavBar />
           <main className="flex flex-1 flex-col">
-            <Header />
+            <Header isTablet={isTablet} />
             <div className="flex h-full w-full justify-start">{children}</div>
           </main>
         </div>
