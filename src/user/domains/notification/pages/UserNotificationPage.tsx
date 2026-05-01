@@ -5,7 +5,6 @@ import {
   PageNationFrame,
   PageNationMenu,
   TitleSection,
-  Button,
 } from "@/shared/components";
 import { TableEmptyState } from "@/shared/components/table";
 import {
@@ -13,8 +12,8 @@ import {
   NotificationTableHeader,
   NotificationTableRows,
 } from "../components";
-import type { NotificationRow } from "../types";
-import { Modal, ErrorModal } from "@/shared/components/modal";
+import type { NotificationRow } from "../types/NotificationRow";
+import { ErrorModal } from "@/shared/components/modal";
 import type { ConfirmDoneModalPhase } from "@/shared/types";
 import {
   deleteAllNotification,
@@ -22,10 +21,11 @@ import {
   getNotification,
   readAllNotification,
   readNotification,
-} from "../apis";
+} from "../apis/notification";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
+import NotificationModal from "../components/NotificationModal";
+import type { ActionType } from "../types/ModalAction";
 
-type ActionType = "MARK_ALL_READ" | "DELETE_ALL" | "DELETE_READ";
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
 
 interface NotificationPageState {
@@ -46,46 +46,11 @@ const INITIAL_NOTIFICATION_PAGE_STATE: NotificationPageState = {
   hasNext: false,
 };
 
-const MODAL_CONFIG: Record<
-  ActionType,
-  {
-    title: string;
-    confirmMessage: string;
-    doneMessage: string;
-    confirmLabel: string;
-    confirmVariant: "primary" | "danger";
-  }
-> = {
-  MARK_ALL_READ: {
-    title: "모두 읽음으로 표시",
-    confirmMessage:
-      "수신한 모든 알림을 읽음으로 표시할까요?\n이 작업은 되돌릴 수 없어요.",
-    doneMessage: "수신한 모든 알림을 읽음으로 표시했어요.",
-    confirmLabel: "확인",
-    confirmVariant: "primary",
-  },
-  DELETE_ALL: {
-    title: "모든 알림 지우기",
-    confirmMessage: "수신한 모든 알림을 지울까요?\n이 작업은 되돌릴 수 없어요.",
-    doneMessage: "수신한 모든 알림을 지웠어요.",
-    confirmLabel: "삭제",
-    confirmVariant: "danger",
-  },
-  DELETE_READ: {
-    title: "읽은 알림 지우기",
-    confirmMessage: "읽은 알림을 모두 지울까요?\n이 작업은 되돌릴 수 없어요.",
-    doneMessage: "읽은 모든 알림을 지웠어요.",
-    confirmLabel: "삭제",
-    confirmVariant: "danger",
-  },
-};
-
 function UserNotificationPage() {
   // api 응답(데이터, 페이지네이션)
   const [notificationPage, setNotificationPage] =
     useState<NotificationPageState>(INITIAL_NOTIFICATION_PAGE_STATE);
   const [currentPage, setCurrentPage] = useState(1);
-
   // 모달 활성화
   const [modalState, setModalState] = useState<ModalState>(null);
   // 로딩
@@ -141,6 +106,31 @@ function UserNotificationPage() {
     }
   }, []);
 
+  // 모달 확인
+  const handleConfirm = async () => {
+    if (!modalState || isSubmitting) return;
+
+    setIsSubmitting(true);
+
+    try {
+      await runAction(modalState.action);
+
+      let next = await fetchNotifications(currentPage);
+
+      if (currentPage > 1 && next.notifications.length === 0) {
+        const correctedPage = currentPage - 1;
+        setCurrentPage(correctedPage);
+        next = await fetchNotifications(correctedPage);
+      }
+
+      setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
+    } catch (error) {
+      setErrors(getCommonErrorState(error));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   // 알림 조회
   const fetchNotifications = useCallback(
     async (targetPage: number): Promise<NotificationPageState> => {
@@ -176,31 +166,6 @@ function UserNotificationPage() {
     [itemSumNum],
   );
 
-  // 모달 확인
-  const handleConfirm = async () => {
-    if (!modalState || isSubmitting) return;
-
-    setIsSubmitting(true);
-
-    try {
-      await runAction(modalState.action);
-
-      let next = await fetchNotifications(currentPage);
-
-      if (currentPage > 1 && next.notifications.length === 0) {
-        const correctedPage = currentPage - 1;
-        setCurrentPage(correctedPage);
-        next = await fetchNotifications(correctedPage);
-      }
-
-      setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
-    } catch (error) {
-      setErrors(getCommonErrorState(error));
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   // 알림 개별 읽음
   const handleRead = async (notification: NotificationRow) => {
     if (notification.read) return;
@@ -212,37 +177,6 @@ function UserNotificationPage() {
     }
   };
 
-  // 모달
-  const renderStepModal = () => {
-    if (!modalState) return null;
-
-    const config = MODAL_CONFIG[modalState.action];
-    const isConfirm = modalState.phase === "CONFIRM";
-
-    return (
-      <Modal>
-        <Modal.Header onClick={handleClose}>{config.title}</Modal.Header>
-        <Modal.Description>
-          {isConfirm ? config.confirmMessage : config.doneMessage}
-        </Modal.Description>
-        <Modal.ButtonLayout>
-          <Button
-            size="modal"
-            variant={isConfirm ? config.confirmVariant : "primary"}
-            onClick={isConfirm ? handleConfirm : handleClose}
-            isLoading={isConfirm && isSubmitting}
-            disabled={isConfirm && isSubmitting}
-          >
-            {isConfirm ? config.confirmLabel : "확인"}
-          </Button>
-          {isConfirm ? (
-            <Modal.Cancelled onClick={isSubmitting ? undefined : handleClose} />
-          ) : null}
-        </Modal.ButtonLayout>
-      </Modal>
-    );
-  };
-
   // 알림 조회
   useEffect(() => {
     fetchNotifications(currentPage).catch(() => {
@@ -252,6 +186,7 @@ function UserNotificationPage() {
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-280">
+      {/* 에러 모달 */}
       {errors && (
         <ErrorModal
           status={errors.status}
@@ -262,7 +197,13 @@ function UserNotificationPage() {
         />
       )}
 
-      {renderStepModal()}
+      {/* 모달 */}
+      <NotificationModal
+        modalState={modalState}
+        isSubmitting={isSubmitting}
+        handleClose={handleClose}
+        handleConfirm={handleConfirm}
+      />
 
       <TitleSection
         title="알림"

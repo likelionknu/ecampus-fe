@@ -1,6 +1,6 @@
 import { formatDaysAgo } from "@/shared/utils";
 import { MobileItem } from "@/user/shared/components";
-import type { NotificationRow } from "../types";
+import type { NotificationRow } from "../types/NotificationRow";
 
 interface MobileNotifitcationTableRowsProps {
   notifications: NotificationRow[];
@@ -28,7 +28,10 @@ function MobileNotifitcationTableRows({
                 notification.read ? "text-ec-red" : "text-ec-blue"
               }
             />
-            <MobileItem label="수신일" value={formatDaysAgo(notification.createdAt)} />
+            <MobileItem
+              label="수신일"
+              value={formatDaysAgo(notification.createdAt)}
+            />
           </div>
         </div>
       ))}
