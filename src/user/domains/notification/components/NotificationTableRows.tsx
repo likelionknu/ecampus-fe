@@ -1,6 +1,6 @@
 import { SkeletonCell } from "@/shared/components/skeleton";
 import { formatDaysAgo } from "@/shared/utils";
-import type { NotificationRow } from "../types";
+import type { NotificationRow } from "../types/NotificationRow";
 import { useNavigate } from "react-router-dom";
 
 interface NotificationTableRowsProps {
