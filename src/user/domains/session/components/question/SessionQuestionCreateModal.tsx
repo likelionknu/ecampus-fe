@@ -4,6 +4,7 @@ import type { CreateConfirmErrorModalStep } from "@/shared/types";
 
 interface SessionQuestionCreateModalProps {
   step: CreateConfirmErrorModalStep | null;
+  isSubmitting: boolean;
   handleClose: () => void;
   handleSuccess: () => void;
   handleConfirm: () => void;
@@ -27,11 +28,12 @@ const MODAL_CONFIG: Record<
 
 function SessionQuestionCreatModal({
   step,
+  isSubmitting,
   handleClose,
   handleSuccess,
   handleConfirm,
 }: SessionQuestionCreateModalProps) {
-  if (!step) return null;
+  if (!step) return;
 
   return (
     <Modal>
@@ -42,6 +44,7 @@ function SessionQuestionCreatModal({
       <Modal.ButtonLayout>
         <Button
           size="modal"
+          isLoading={isSubmitting}
           variant="primary"
           onClick={step === "CREATE" ? handleConfirm : handleSuccess}
         >

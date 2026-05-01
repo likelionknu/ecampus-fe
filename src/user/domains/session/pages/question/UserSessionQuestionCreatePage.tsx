@@ -61,13 +61,16 @@ function UserSessionQuestionCreatePage() {
     content: "",
   });
   const [step, setStep] = useState<CreateConfirmErrorModalStep | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   // 모달 비활성화
   const handleClose = useCallback(() => {
+    if (isSubmitting) return;
+
     setStep(null);
-  }, []);
+  }, [isSubmitting]);
 
   // 요청 성공 후 이동
   const handleSuccess = useCallback(() => {
@@ -76,7 +79,11 @@ function UserSessionQuestionCreatePage() {
   }, [navigate]);
 
   const handleConfirm = async () => {
+    if (isSubmitting) return;
+    if (!createQuestion.title.trim() || !createQuestion.content.trim()) return;
+
     try {
+      setIsSubmitting(true);
       await postSessionQuestions({
         sid: Number(sid),
         payload: createQuestion,
@@ -86,6 +93,8 @@ function UserSessionQuestionCreatePage() {
     } catch (error) {
       setStep(null);
       setErrors(getCommonErrorState(error));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -101,6 +110,7 @@ function UserSessionQuestionCreatePage() {
 
       <SessionQuestionCreateModal
         step={step}
+        isSubmitting={isSubmitting}
         handleClose={handleClose}
         handleSuccess={handleSuccess}
         handleConfirm={handleConfirm}
@@ -121,7 +131,7 @@ function UserSessionQuestionCreatePage() {
           placeholder="제목을 입력해주세요."
           value={createQuestion.title}
           onChange={(e) => {
-            setCreateQuestion({ ...createQuestion, title: e.target.value });
+            setCreateQuestion((prev) => ({ ...prev, title: e.target.value }));
           }}
         />
       </BoxLayout>
@@ -137,7 +147,7 @@ function UserSessionQuestionCreatePage() {
           placeholder="질문 내용을 입력해주세요."
           value={createQuestion.content}
           onChange={(e) => {
-            setCreateQuestion({ ...createQuestion, content: e.target.value });
+            setCreateQuestion((prev) => ({ ...prev, content: e.target.value }));
           }}
         />
       </BoxLayout>
@@ -146,6 +156,18 @@ function UserSessionQuestionCreatePage() {
         <Button
           size="large"
           onClick={() => {
+            if (
+              !createQuestion.title.trim() ||
+              !createQuestion.content.trim()
+            ) {
+              setErrors({
+                status: "미입력 항목",
+                message: "모든 항목을 입력해주세요.",
+              });
+
+              return;
+            }
+
             setStep("CREATE");
           }}
         >

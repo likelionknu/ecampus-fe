@@ -106,7 +106,7 @@ function UserQuestionDetailPage() {
 
   // 삭제 확인 모달
   const renderStepModal = () => {
-    if (!modalState) return null;
+    if (!modalState) return;
 
     const isConfirm = modalState === "CONFIRM";
 

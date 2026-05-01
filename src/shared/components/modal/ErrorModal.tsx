@@ -10,7 +10,7 @@ interface ErrorModalProps {
 function ErrorModal({ status, message, onClick }: ErrorModalProps) {
   return (
     <Modal>
-      <Modal.Header onClick={onClick}>Error {status}</Modal.Header>
+      <Modal.Header onClick={onClick}>에러 : {status}</Modal.Header>
       <Modal.Description>{message}</Modal.Description>
       <Modal.ButtonLayout>
         <Button size="modal" variant="primary" onClick={onClick}>
