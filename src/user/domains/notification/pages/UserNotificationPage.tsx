@@ -1,5 +1,11 @@
-﻿import { useMediaQuery } from "react-responsive";
-import { useCallback, useEffect, useMemo, useState } from "react";
+﻿import { useCallback, useMemo, useState } from "react";
+import { useMediaQuery } from "react-responsive";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   PageNationButton,
   PageNationFrame,
@@ -11,6 +17,7 @@ import {
   MobileNotificationTableRows as MobileNotifitcationTableRows,
   NotificationTableHeader,
   NotificationTableRows,
+  NotificationModal,
 } from "../components";
 import type { NotificationRow } from "../types/NotificationRow";
 import { ErrorModal } from "@/shared/components/modal";
@@ -23,7 +30,6 @@ import {
   readNotification,
 } from "../apis/notification";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
-import NotificationModal from "../components/NotificationModal";
 import type { ActionType } from "../types/ModalAction";
 
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
@@ -37,52 +43,78 @@ interface NotificationPageState {
   hasNext: boolean;
 }
 
+const PAGE_SIZE = 8;
+
 const INITIAL_NOTIFICATION_PAGE_STATE: NotificationPageState = {
   notifications: [],
   page: 0,
-  size: 8,
+  size: PAGE_SIZE,
   totalElements: 0,
   totalPages: 0,
   hasNext: false,
 };
 
+const TITLE_ACTIONS = [
+  {
+    label: "모두 읽음으로 표시",
+    buttonType: "primary" as const,
+    action: "MARK_ALL_READ" as const,
+  },
+  {
+    label: "모든 알림 지우기",
+    buttonType: "danger" as const,
+    action: "DELETE_ALL" as const,
+  },
+  {
+    label: "읽은 알림 지우기",
+    buttonType: "danger" as const,
+    action: "DELETE_READ" as const,
+  },
+];
+
+// 쿼리 키 생성, 페이지와 사이즈를 통하여 식별 가능
+const notificationQueryKey = (page: number, size: number) =>
+  ["notifications", page, size] as const;
+
+// 알림 조회
+const fetchNotifications = async (
+  targetPage: number,
+  size: number,
+): Promise<NotificationPageState> => {
+  const res = await getNotification({
+    page: targetPage - 1,
+    size,
+  });
+
+  const responseData = res.data?.data;
+
+  return {
+    notifications: Array.isArray(responseData?.notifications)
+      ? responseData.notifications
+      : [],
+    page: responseData?.page ?? 0,
+    size: responseData?.size ?? size,
+    totalElements: responseData?.totalElements ?? 0,
+    totalPages: responseData?.totalPages ?? 0,
+    hasNext: responseData?.hasNext ?? false,
+  };
+};
+
 function UserNotificationPage() {
-  // api 응답(데이터, 페이지네이션)
-  const [notificationPage, setNotificationPage] =
-    useState<NotificationPageState>(INITIAL_NOTIFICATION_PAGE_STATE);
+  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
-  // 모달 활성화
   const [modalState, setModalState] = useState<ModalState>(null);
-  // 로딩
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
-  const itemNum = notificationPage.totalElements;
-  const itemSumNum = INITIAL_NOTIFICATION_PAGE_STATE.size;
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   const titleActions = useMemo(
-    () => [
-      {
-        label: "모두 읽음으로 표시",
-        buttonType: "primary" as const,
-        onClick: () =>
-          setModalState({ action: "MARK_ALL_READ", phase: "CONFIRM" }),
-      },
-      {
-        label: "모든 알림 지우기",
-        buttonType: "danger" as const,
-        onClick: () =>
-          setModalState({ action: "DELETE_ALL", phase: "CONFIRM" }),
-      },
-      {
-        label: "읽은 알림 지우기",
-        buttonType: "danger" as const,
-        onClick: () =>
-          setModalState({ action: "DELETE_READ", phase: "CONFIRM" }),
-      },
-    ],
-    [],
+    () =>
+      TITLE_ACTIONS.map(({ action, ...rest }) => ({
+        ...rest,
+        onClick: () => setModalState({ action, phase: "CONFIRM" }),
+      })),
+
+    [setModalState],
   );
 
   // 모달 비활성화
@@ -90,99 +122,104 @@ function UserNotificationPage() {
     setModalState(null);
   }, []);
 
-  const runAction = useCallback(async (action: ActionType) => {
-    switch (action) {
-      case "MARK_ALL_READ":
-        await readAllNotification();
-        break;
-      case "DELETE_ALL":
-        await deleteAllNotification();
-        break;
-      case "DELETE_READ":
-        await deleteReadNotification();
-        break;
-      default:
-        break;
-    }
-  }, []);
+  const {
+    // 보통 data로 받는 것을 notificationPage로 변경
+    data: notificationPage = INITIAL_NOTIFICATION_PAGE_STATE,
+    isLoading,
+    isFetching,
+  } = useQuery({
+    queryKey: notificationQueryKey(currentPage, PAGE_SIZE), // 쿼리 키 생성
+    queryFn: () => fetchNotifications(currentPage, PAGE_SIZE), // 실제 데이터 패칭
+    placeholderData: keepPreviousData, // 이전 데이터 유지
+  });
+
+  const actionMutation = useMutation({
+    mutationFn: async (action: ActionType) => {
+      switch (action) {
+        case "MARK_ALL_READ":
+          await readAllNotification();
+          break;
+        case "DELETE_ALL":
+          await deleteAllNotification();
+          break;
+        case "DELETE_READ":
+          await deleteReadNotification();
+          break;
+        default:
+          break;
+      }
+    },
+  });
 
   // 모달 확인
   const handleConfirm = async () => {
-    if (!modalState || isSubmitting) return;
-
-    setIsSubmitting(true);
+    if (!modalState || actionMutation.isPending) return;
 
     try {
-      await runAction(modalState.action);
+      await actionMutation.mutateAsync(modalState.action); // 모달 액션 실행
+      // 쿼리 무효화 및 최신화 준비
+      await queryClient.invalidateQueries({
+        queryKey: ["notifications"],
+      });
 
-      let next = await fetchNotifications(currentPage);
+      // 새 데이터 패칭
+      let next = await queryClient.fetchQuery({
+        queryKey: notificationQueryKey(currentPage, PAGE_SIZE),
+        queryFn: () => fetchNotifications(currentPage, PAGE_SIZE),
+      });
 
-      if (currentPage > 1 && next.notifications.length === 0) {
-        const correctedPage = currentPage - 1;
+      if (currentPage > 1 && next.totalPages < currentPage) {
+        const correctedPage = Math.max(next.totalPages, 1);
         setCurrentPage(correctedPage);
-        next = await fetchNotifications(correctedPage);
+
+        next = await queryClient.fetchQuery({
+          queryKey: notificationQueryKey(correctedPage, PAGE_SIZE),
+          queryFn: () => fetchNotifications(correctedPage, PAGE_SIZE),
+        });
       }
 
       setModalState((prev) => (prev ? { ...prev, phase: "DONE" } : prev));
     } catch (error) {
       setErrors(getCommonErrorState(error));
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
-  // 알림 조회
-  const fetchNotifications = useCallback(
-    async (targetPage: number): Promise<NotificationPageState> => {
-      setIsLoading(true);
-
-      try {
-        const res = await getNotification({
-          page: targetPage - 1,
-          size: itemSumNum,
-        });
-        const responseData = res.data?.data;
-
-        const nextState: NotificationPageState = {
-          notifications: Array.isArray(responseData?.notifications)
-            ? responseData.notifications
-            : [],
-          page: responseData?.page ?? 0,
-          size: responseData?.size ?? itemSumNum,
-          totalElements: responseData?.totalElements ?? 0,
-          totalPages: responseData?.totalPages ?? 0,
-          hasNext: responseData?.hasNext ?? false,
-        };
-
-        setNotificationPage(nextState);
-        return nextState;
-      } catch (error) {
-        setErrors(getCommonErrorState(error));
-        throw error;
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [itemSumNum],
-  );
-
   // 알림 개별 읽음
+  const readMutation = useMutation({
+    mutationFn: async (notificationId: number) => {
+      await readNotification({ nid: notificationId });
+    },
+  });
+
   const handleRead = async (notification: NotificationRow) => {
-    if (notification.read) return;
+    if (notification.read || readMutation.isPending) return;
 
     try {
-      await readNotification({ nid: notification.id });
+      await readMutation.mutateAsync(notification.id);
+
+      queryClient.setQueryData<NotificationPageState>(
+        notificationQueryKey(currentPage, PAGE_SIZE),
+        (prev) => {
+          if (!prev) return;
+
+          return {
+            ...prev,
+            notifications: prev.notifications.map((item) =>
+              item.id === notification.id ? { ...item, read: true } : item,
+            ),
+          };
+        },
+      );
     } catch (error) {
       setErrors(getCommonErrorState(error));
     }
   };
 
-  // 알림 조회
-  useEffect(() => {
-    fetchNotifications(currentPage).catch(() => {
-      // 에러는 fetchNotifications 내부에서 처리
-    });
-  }, [currentPage, fetchNotifications]);
+  const itemNum = notificationPage.totalElements;
+  const itemSumNum = notificationPage.size || 0;
+  const pagedNotifications = notificationPage.notifications;
+  const isEmpty = pagedNotifications.length === 0;
+  const showLoading = isLoading || isFetching;
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-280">
@@ -200,7 +237,7 @@ function UserNotificationPage() {
       {/* 모달 */}
       <NotificationModal
         modalState={modalState}
-        isSubmitting={isSubmitting}
+        isSubmitting={actionMutation.isPending}
         handleClose={handleClose}
         handleConfirm={handleConfirm}
       />
@@ -213,9 +250,6 @@ function UserNotificationPage() {
 
       <PageNationFrame itemNum={itemNum} itemSumNum={itemSumNum}>
         {() => {
-          const pagedNotifications = notificationPage.notifications;
-          const isEmpty = pagedNotifications.length === 0;
-
           return (
             <>
               {!isMobile && (
@@ -224,7 +258,7 @@ function UserNotificationPage() {
                 </PageNationMenu>
               )}
 
-              {isEmpty && !isLoading ? (
+              {isEmpty && !showLoading ? (
                 <TableEmptyState label="받은 알림이 없어요" />
               ) : isMobile ? (
                 <MobileNotifitcationTableRows
@@ -232,7 +266,7 @@ function UserNotificationPage() {
                 />
               ) : (
                 <NotificationTableRows
-                  isLoading={isLoading}
+                  isLoading={showLoading}
                   onRowClick={handleRead}
                   notifications={pagedNotifications}
                 />
