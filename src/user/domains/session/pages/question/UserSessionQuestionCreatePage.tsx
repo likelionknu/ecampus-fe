@@ -1,18 +1,18 @@
-import { ErrorModal } from "@/shared/components/modal";
 import { useCallback, useState, type ChangeEvent } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { ErrorModal } from "@/shared/components/modal";
 import { Button, TitleSection } from "@/shared/components";
 import type { CreateConfirmErrorModalStep } from "@/shared/types";
 import { BoxLayout } from "@/user/shared/components";
 import {
+  BoxTitle,
   SessionQuestionCreateModal,
   SessionQuestionWarning,
 } from "../../components/question";
 import type { CreateQuestion } from "../../types";
 import { postSessionQuestions } from "../../apis";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
-import { useNavigate, useParams } from "react-router-dom";
-import BoxTitle from "../../components/question/BoxTitle";
 
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
