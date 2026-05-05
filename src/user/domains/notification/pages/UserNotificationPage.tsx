@@ -31,6 +31,7 @@ import {
 } from "../apis/notification";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import type { ActionType } from "../types/ModalAction";
+import { PAGE_SIZE } from "@/shared/constants";
 
 type ModalState = { action: ActionType; phase: ConfirmDoneModalPhase } | null;
 
@@ -42,8 +43,6 @@ interface NotificationPageState {
   totalPages: number;
   hasNext: boolean;
 }
-
-const PAGE_SIZE = 8;
 
 const INITIAL_NOTIFICATION_PAGE_STATE: NotificationPageState = {
   notifications: [],
