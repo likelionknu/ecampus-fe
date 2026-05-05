@@ -99,7 +99,7 @@ function UserSessionQuestionCreatePage() {
   };
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
+    <div className="text-ec-black mx-auto mt-12 flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
       {errors && (
         <ErrorModal
           status={errors.status}

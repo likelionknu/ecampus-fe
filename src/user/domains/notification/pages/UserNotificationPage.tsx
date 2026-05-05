@@ -92,7 +92,7 @@ const fetchNotifications = async (
       ? responseData.notifications
       : [],
     page: responseData?.page ?? 0,
-    size: responseData?.size ?? size,
+    size: PAGE_SIZE,
     totalElements: responseData?.totalElements ?? 0,
     totalPages: responseData?.totalPages ?? 0,
     hasNext: responseData?.hasNext ?? false,
@@ -215,7 +215,7 @@ function UserNotificationPage() {
   };
 
   const itemNum = notificationPage.totalElements;
-  const itemSumNum = notificationPage.size || 0;
+  const itemSumNum = PAGE_SIZE;
   const pagedNotifications = notificationPage.notifications;
   const isEmpty = pagedNotifications.length === 0;
   const showLoading = isLoading || isFetching;

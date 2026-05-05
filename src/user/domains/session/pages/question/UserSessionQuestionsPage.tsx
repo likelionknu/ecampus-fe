@@ -93,7 +93,7 @@ function UserSessionQuestionsPage() {
   }, [currentPage, sessionId, isValidSessionsId]);
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 md:max-w-187.5 xl:max-w-251 xl:px-0">
+    <div className="text-ec-black mx-auto mt-12 flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 md:max-w-187.5 xl:max-w-251 xl:px-0">
       {errors && (
         <ErrorModal
           status={errors.status}
