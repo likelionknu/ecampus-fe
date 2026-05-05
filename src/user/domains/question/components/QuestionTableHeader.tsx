@@ -1,5 +1,5 @@
 import { TableHeaderLabel } from "@/shared/components/table";
-import { QUESTION_TABLE_COLUMNS } from "../constants";
+import { QUESTION_TABLE_COLUMNS } from "../constants/questionTable";
 
 function QuestionTableHeader() {
   return (

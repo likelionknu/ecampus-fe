@@ -1,15 +1,15 @@
 import { TextBox } from "@/shared/components";
 import { BoxLayout } from "@/user/shared/components";
 
-interface QustionContentSectionProps {
+interface SessionQustionContentSectionProps {
   label: string;
   content: string;
 }
 
-function QuestionContentSection({
+function SessionQuestionContentSection({
   label,
   content,
-}: QustionContentSectionProps) {
+}: SessionQustionContentSectionProps) {
   return (
     <BoxLayout>
       <span className="text-body-2 text-ec-sub">{label}</span>
@@ -18,4 +18,4 @@ function QuestionContentSection({
   );
 }
 
-export default QuestionContentSection;
+export default SessionQuestionContentSection;

@@ -3,7 +3,7 @@ import { formatKoreanDateTime12 } from "@/shared/utils";
 import type { SessionQuestionRow } from "../../session/types";
 import { useNavigate } from "react-router-dom";
 import { formatQuestionStatus, isCompletedQuestionStatus } from "@/user/utils";
-import { QUESTION_TABLE_COLUMNS } from "../constants";
+import { QUESTION_TABLE_COLUMNS } from "../constants/questionTable";
 
 interface QuestionTableRowsProps {
   isLoading: boolean;

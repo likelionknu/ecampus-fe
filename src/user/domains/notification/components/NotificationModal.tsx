@@ -49,7 +49,7 @@ function NotificationModal({
   handleConfirm,
   isSubmitting,
 }: NotificationModalProps) {
-  if (!modalState) return null;
+  if (!modalState) return;
 
   const config = MODAL_CONFIG[modalState.action];
   const isConfirm = modalState.phase === "CONFIRM";

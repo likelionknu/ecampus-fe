@@ -1,24 +1,24 @@
-import { Modal, ErrorModal } from "@/shared/components/modal";
-import { useCallback, useState, type ChangeEvent, type ReactNode } from "react";
+import { useCallback, useState, type ChangeEvent } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useMediaQuery } from "react-responsive";
+import { ErrorModal } from "@/shared/components/modal";
 import { Button, TitleSection } from "@/shared/components";
 import type { CreateConfirmErrorModalStep } from "@/shared/types";
 import { BoxLayout } from "@/user/shared/components";
-import { SessionQuestionWarning } from "../../components/question";
+import {
+  BoxTitle,
+  SessionQuestionCreateModal,
+  SessionQuestionWarning,
+} from "../../components/question";
 import type { CreateQuestion } from "../../types";
 import { postSessionQuestions } from "../../apis";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
-import { useNavigate, useParams } from "react-router-dom";
 
 interface FieldProps<T extends HTMLInputElement | HTMLTextAreaElement> {
   placeholder: string;
   value: string;
   onChange: (e: ChangeEvent<T>) => void;
 }
-
-const BoxWrapper = ({ children }: { children: ReactNode }) => {
-  return <div className="flex justify-between">{children}</div>;
-};
 
 const InputField = ({
   placeholder,
@@ -53,23 +53,6 @@ const TextAreaField = ({
   );
 };
 
-const MODAL_CONFIG: Record<
-  CreateConfirmErrorModalStep,
-  {
-    description: string;
-  }
-> = {
-  CREATE: {
-    description: "새로운 질문 게시글을 업로드할까요?",
-  },
-  CONFIRM: {
-    description: "새로운 질문 게시글을 업로드했어요",
-  },
-  ERROR: {
-    description: "요청을 다시 확인해주세요",
-  },
-};
-
 function UserSessionQuestionCreatePage() {
   const { sid } = useParams();
   const navigate = useNavigate();
@@ -78,13 +61,16 @@ function UserSessionQuestionCreatePage() {
     content: "",
   });
   const [step, setStep] = useState<CreateConfirmErrorModalStep | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<CommonErrorState | null>(null);
   const isMobile = useMediaQuery({ maxWidth: 479 });
 
   // 모달 비활성화
   const handleClose = useCallback(() => {
+    if (isSubmitting) return;
+
     setStep(null);
-  }, []);
+  }, [isSubmitting]);
 
   // 요청 성공 후 이동
   const handleSuccess = useCallback(() => {
@@ -93,7 +79,11 @@ function UserSessionQuestionCreatePage() {
   }, [navigate]);
 
   const handleConfirm = async () => {
+    if (isSubmitting) return;
+    if (!createQuestion.title.trim() || !createQuestion.content.trim()) return;
+
     try {
+      setIsSubmitting(true);
       await postSessionQuestions({
         sid: Number(sid),
         payload: createQuestion,
@@ -103,38 +93,13 @@ function UserSessionQuestionCreatePage() {
     } catch (error) {
       setStep(null);
       setErrors(getCommonErrorState(error));
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
-      {step && (
-        <Modal>
-          <Modal.Header
-            onClick={step === "CREATE" ? handleClose : handleSuccess}
-          >
-            새 질문 등록
-          </Modal.Header>
-          <Modal.Description>
-            {MODAL_CONFIG[step].description}
-          </Modal.Description>
-          <Modal.ButtonLayout>
-            <Button
-              size="modal"
-              variant="primary"
-              onClick={step === "CREATE" ? handleConfirm : handleSuccess}
-            >
-              확인
-            </Button>
-            {step === "CREATE" && (
-              <Modal.Cancelled
-                onClick={step === "CREATE" ? handleClose : handleSuccess}
-              />
-            )}
-          </Modal.ButtonLayout>
-        </Modal>
-      )}
-
+    <div className="text-ec-black mx-auto mt-12 flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 md:px-8 lg:px-0 xl:max-w-251">
       {errors && (
         <ErrorModal
           status={errors.status}
@@ -143,37 +108,46 @@ function UserSessionQuestionCreatePage() {
         />
       )}
 
+      <SessionQuestionCreateModal
+        step={step}
+        isSubmitting={isSubmitting}
+        handleClose={handleClose}
+        handleSuccess={handleSuccess}
+        handleConfirm={handleConfirm}
+      />
+
       <TitleSection title="새 질문 등록" />
       <SessionQuestionWarning />
 
       <BoxLayout>
-        <BoxWrapper>
-          <span className="text-body-1 text-ec-black">제목</span>
-          <span className="text-caption text-ec-sub">
-            {!isMobile && `${80 - createQuestion.title.length}자 남음`}
-          </span>
-        </BoxWrapper>
+        <BoxTitle
+          title="제목"
+          maxLength={80}
+          currentLength={createQuestion.title.length}
+          isMobile={isMobile}
+        />
+
         <InputField
           placeholder="제목을 입력해주세요."
           value={createQuestion.title}
           onChange={(e) => {
-            setCreateQuestion({ ...createQuestion, title: e.target.value });
+            setCreateQuestion((prev) => ({ ...prev, title: e.target.value }));
           }}
         />
       </BoxLayout>
 
       <BoxLayout>
-        <BoxWrapper>
-          <span className="text-body-1 text-ec-black">질문</span>
-          <span className="text-caption text-ec-sub">
-            {!isMobile && `${900 - createQuestion.content.length}자 남음`}
-          </span>
-        </BoxWrapper>
+        <BoxTitle
+          title="질문"
+          maxLength={900}
+          currentLength={createQuestion.content.length}
+          isMobile={isMobile}
+        />
         <TextAreaField
           placeholder="질문 내용을 입력해주세요."
           value={createQuestion.content}
           onChange={(e) => {
-            setCreateQuestion({ ...createQuestion, content: e.target.value });
+            setCreateQuestion((prev) => ({ ...prev, content: e.target.value }));
           }}
         />
       </BoxLayout>
@@ -182,6 +156,18 @@ function UserSessionQuestionCreatePage() {
         <Button
           size="large"
           onClick={() => {
+            if (
+              !createQuestion.title.trim() ||
+              !createQuestion.content.trim()
+            ) {
+              setErrors({
+                status: "미입력 항목",
+                message: "모든 항목을 입력해주세요.",
+              });
+
+              return;
+            }
+
             setStep("CREATE");
           }}
         >
