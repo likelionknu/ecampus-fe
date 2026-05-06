@@ -7,7 +7,6 @@ import {
   getCommonErrorState,
   type CommonErrorState,
 } from "@/shared/utils";
-
 import { QuestionMetaRowSkeleton } from "@/user/domains/session/components/skeleton";
 import { useMediaQuery } from "react-responsive";
 import { Modal, ErrorModal } from "@/shared/components/modal";
@@ -26,7 +25,13 @@ type QuestionMetaRow = {
   value: string;
 };
 
-const skeletonRows = ["질문 등록일", "등록자", "답변 등록일", "답변자", "상태"];
+const SKELETON_ROWS = [
+  "질문 등록일",
+  "등록자",
+  "답변 등록일",
+  "답변자",
+  "상태",
+];
 
 const INITIAL_QUESTION_DETAIL_STATE: SessionQuestionDetailRow = {
   answer: null,
@@ -197,7 +202,7 @@ function UserQuestionDetailPage() {
         <TextBox px={!isMobile} py={!isMobile}>
           <div className="flex flex-col gap-0 xl:gap-2">
             {isLoading
-              ? skeletonRows.map((row) => (
+              ? SKELETON_ROWS.map((row) => (
                   <QuestionMetaRowSkeleton key={row} label={row} />
                 ))
               : questionsMeta.map((row, index) => (

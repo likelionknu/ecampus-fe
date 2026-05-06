@@ -10,6 +10,7 @@ export interface SessionQuestionRow {
   id: number;
   isMyQuestion: boolean;
   sessionId: number;
+  sessionName: string;
   status: "PENDING" | "COMPLETED";
   title: string;
 }
