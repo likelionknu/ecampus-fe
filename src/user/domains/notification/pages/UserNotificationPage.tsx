@@ -116,11 +116,6 @@ function UserNotificationPage() {
     [setModalState],
   );
 
-  // 모달 비활성화
-  const handleClose = useCallback(() => {
-    setModalState(null);
-  }, []);
-
   const {
     // 보통 data로 받는 것을 notificationPage로 변경
     data: notificationPage = INITIAL_NOTIFICATION_PAGE_STATE,
@@ -131,6 +126,11 @@ function UserNotificationPage() {
     queryFn: () => fetchNotifications(currentPage, PAGE_SIZE), // 실제 데이터 패칭
     placeholderData: keepPreviousData, // 이전 데이터 유지
   });
+
+  // 모달 비활성화
+  const handleClose = useCallback(() => {
+    setModalState(null);
+  }, []);
 
   const actionMutation = useMutation({
     mutationFn: async (action: ActionType) => {

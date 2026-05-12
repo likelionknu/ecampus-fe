@@ -58,7 +58,7 @@ const withSuspense = (element: ReactElement) => (
   <Suspense fallback={null}>{element}</Suspense>
 );
 
-const adminRoutes: RouteObject[] = [
+const AdminRoutes: RouteObject[] = [
   {
     element: <SessionTabLayout tabType="adminManagement" />,
     children: [
@@ -107,4 +107,4 @@ const adminRoutes: RouteObject[] = [
   },
 ];
 
-export default adminRoutes;
+export default AdminRoutes;
