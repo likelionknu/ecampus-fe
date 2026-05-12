@@ -1,15 +1,16 @@
 ﻿import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { TextBox, TitleSection, Button } from "@/shared/components";
+import { TextBox, TitleSection } from "@/shared/components";
 import { CommentInput } from "@/shared/components/comment";
 import {
   formatKoreanDateTime24,
   getCommonErrorState,
+  parsePositiveIntegerParam,
   type CommonErrorState,
 } from "@/shared/utils";
 import { QuestionMetaRowSkeleton } from "@/user/domains/session/components/skeleton";
 import { useMediaQuery } from "react-responsive";
-import { Modal, ErrorModal } from "@/shared/components/modal";
+import { ErrorModal } from "@/shared/components/modal";
 import { deleteSessionQuestions, getSessionQuestion } from "../apis";
 import {
   CommentSection as CommentSection,
@@ -18,6 +19,7 @@ import {
 } from "../components";
 import type { SessionQuestionDetailRow } from "@/user/domains/session/types";
 import QuestionMetaRow from "@/shared/components/QuestionMetaRow";
+import QuestionDetailModal from "../components/QuestionDetailModal";
 
 type ModalState = "CONFIRM" | "DONE" | null;
 type QuestionMetaRow = {
@@ -70,20 +72,20 @@ const createQuestionMetaRows = (
 ];
 
 function UserQuestionDetailPage() {
-  const { questionId, sessionId } = useParams(); // 질문/세션 id
+  const { questionId: questionIdParam, sessionId: sessionIdParam } =
+    useParams(); // 질문/세션 id
+  const questionId = parsePositiveIntegerParam(questionIdParam);
+  const sessionId = parsePositiveIntegerParam(sessionIdParam);
   const navigate = useNavigate();
   // 질문 내용 상태
   const [questionDetail, setQuestionDetail] =
     useState<SessionQuestionDetailRow>(INITIAL_QUESTION_DETAIL_STATE);
-  // 상단 메타 데이터 상태
-  const [questionsMeta, setQuestionsMeta] = useState<QuestionMetaRow[]>(
-    createQuestionMetaRows(INITIAL_QUESTION_DETAIL_STATE),
-  );
   const [modalState, setModalState] = useState<ModalState>(null); // 모달 상태
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
   const [refreshKey, setRefreshKey] = useState(0); // 등록/삭제 후 질문 재조회
   const [commentCount, setCommentCount] = useState(0); // 댓글 개수
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태
+  const questionsMeta = createQuestionMetaRows(questionDetail);
 
   const isMobile = useMediaQuery({ maxWidth: 479 }); // 모바일 반응형 분기 처리
 
@@ -109,36 +111,6 @@ function UserQuestionDetailPage() {
     }
   };
 
-  // 삭제 확인 모달
-  const renderStepModal = () => {
-    if (!modalState) return;
-
-    const isConfirm = modalState === "CONFIRM";
-
-    return (
-      <Modal>
-        <Modal.Header onClick={isConfirm ? handleClose : handleSuccess}>
-          질문 삭제
-        </Modal.Header>
-        <Modal.Description>
-          {isConfirm
-            ? "질문을 정말 삭제하시겠어요? 이 질문을 그대로 남겨두어\n 다른 사용자에게 도움이 될 수 있도록 도와주세요"
-            : "질문을 삭제했어요."}
-        </Modal.Description>
-        <Modal.ButtonLayout>
-          <Button
-            size="modal"
-            variant={isConfirm ? "danger" : "primary"}
-            onClick={isConfirm ? handleDeleteQuestion : handleSuccess}
-          >
-            {isConfirm ? "삭제" : "확인"}
-          </Button>
-          {isConfirm && <Modal.Cancelled onClick={handleClose} />}
-        </Modal.ButtonLayout>
-      </Modal>
-    );
-  };
-
   // 질문 상세 정보 조회
   useEffect(() => {
     const fetchQuestionDetail = async () => {
@@ -151,7 +123,6 @@ function UserQuestionDetailPage() {
 
         if (responseData) {
           setQuestionDetail(responseData);
-          setQuestionsMeta(createQuestionMetaRows(responseData));
         }
         setErrors(null);
       } catch (error) {
@@ -163,6 +134,15 @@ function UserQuestionDetailPage() {
 
     fetchQuestionDetail();
   }, [questionId, sessionId]);
+
+  if (!questionId || !sessionId) {
+    setErrors({
+      status: "400",
+      message: "유효하지 않은 세션 ID입니다.",
+    });
+
+    return null;
+  }
 
   const isMyQuestion = questionDetail.isMyQuestion; // 내 질문 여부
 
@@ -178,8 +158,14 @@ function UserQuestionDetailPage() {
           onClick={() => setErrors(null)}
         />
       )}
+
       {/* 삭제 확인 모달 */}
-      {renderStepModal()}
+      <QuestionDetailModal
+        modalState={modalState}
+        onClose={handleClose}
+        onSuccess={handleSuccess}
+        onDelete={handleDeleteQuestion}
+      />
 
       <div className="flex flex-col gap-5">
         <TitleSection
