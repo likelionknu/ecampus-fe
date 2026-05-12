@@ -3,9 +3,10 @@ import {
   RouterProvider,
   createBrowserRouter,
 } from "react-router-dom";
-import { AdminRoutes } from "@admin";
 import { BaseLayout } from "@shared/layouts";
-import { UserRoutes } from "@user";
+import UserRoutes from "./user/UserRoutes";
+import AdminRoutes from "./admin/AdminRoutes";
+
 import { lazy, Suspense, type ReactElement } from "react";
 import RequireAccess from "./auth/components/RequireAuth";
 

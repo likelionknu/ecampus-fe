@@ -1,14 +1,30 @@
 import { useMediaQuery } from "react-responsive";
-import { TitleSection, PageNationButton, PageNationFrame, PageNationMenu } from "@/shared/components";
+import {
+  TitleSection,
+  PageNationButton,
+  PageNationFrame,
+  PageNationMenu,
+} from "@/shared/components";
 import { TableEmptyState } from "@/shared/components/table";
 import { SessionsTableRows, SessionHeader } from "../components/session";
 import type { AdminSessionRow } from "../types";
-import { useCallback, useEffect, useState } from "react";
-import { CreateModal, ConfirmModal, DoneModal } from "../components/modal/sessions";
+import { useCallback, useState } from "react";
+import {
+  CreateModal,
+  ConfirmModal,
+  DoneModal,
+} from "../components/modal/sessions";
 import type { CreateConfirmDoneModalStep } from "@/shared/types";
 import { createSession, getSessions } from "../apis";
 import { getCommonErrorState, type CommonErrorState } from "@/shared/utils";
 import { ErrorModal } from "@/shared/components/modal";
+import { PAGE_SIZE } from "@/shared/constants";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 interface SessionsPageState {
   sessions: AdminSessionRow[];
@@ -22,47 +38,66 @@ interface SessionsPageState {
 const INITIAL_SESSIONS_PAGE_STATE: SessionsPageState = {
   sessions: [],
   page: 0,
-  size: 8,
+  size: PAGE_SIZE,
   totalElements: 0,
   totalPages: 0,
   hasNext: false,
 };
 
+const sessionQueryKey = () => ["sessions"] as const;
+
+const fetchSessions = async () => {
+  const res = await getSessions();
+
+  const responseData = res.data?.data;
+
+  return {
+    sessions: Array.isArray(responseData?.content) ? responseData.content : [],
+    page: responseData?.number ?? 0,
+    size: PAGE_SIZE,
+    totalElements: responseData?.totalElements ?? 0,
+    totalPages: responseData?.totalPages ?? 0,
+    hasNext: !(responseData?.last ?? true),
+  };
+};
+
 function AdminSessionsPage() {
-  const [sessionsPage, setSessionsPage] = useState<SessionsPageState>(
-    INITIAL_SESSIONS_PAGE_STATE,
-  );
-  const [refreshKey, setRefreshKey] = useState(0); // 세션 추가시 재조회
+  const queryClient = useQueryClient();
   const [errors, setErrors] = useState<CommonErrorState | null>(null); // 에러 상태
-  const [isLoading, setIsLoading] = useState(false); // 로딩 상태
   const [name, setName] = useState<string>(""); // 세션 추가 이름 상태
   const [step, setStep] = useState<CreateConfirmDoneModalStep | null>(null); // 모달 단계
   const isTablet = useMediaQuery({ maxWidth: 1023 });
-  const itemNum = sessionsPage.totalElements;
-  const itemSumNum = sessionsPage.size;
+
+  const { data: sessionsPage = INITIAL_SESSIONS_PAGE_STATE, isLoading } =
+    useQuery({
+      queryKey: sessionQueryKey(),
+      queryFn: () => fetchSessions(),
+      placeholderData: keepPreviousData,
+    });
+
+  const createSessionMutation = useMutation({
+    mutationFn: (sessionName: string) => createSession({ name: sessionName }),
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: sessionQueryKey() });
+      setErrors(null);
+      setStep("DONE");
+    },
+    onError: (error) => {
+      setErrors(getCommonErrorState(error));
+    },
+  });
 
   // 모달 비활성화
   const handleClose = useCallback(() => {
     setStep(null);
-
-    if (name) setName("");
-  }, [name]);
-
-  const handleDone = () => {
-    setRefreshKey((prev) => prev + 1);
-    handleClose();
-  };
+    setName("");
+  }, []);
 
   // 세션 추가
   const handleCreateSession = async () => {
-    if (!name) return;
+    if (!name.trim()) return;
 
-    try {
-      await createSession({ name: name });
-      setStep("DONE");
-    } catch (error) {
-      setErrors(getCommonErrorState(error));
-    }
+    createSessionMutation.mutate(name.trim());
   };
 
   const renderStepModal = () => {
@@ -81,40 +116,14 @@ function AdminSessionsPage() {
           <ConfirmModal onClose={handleClose} onClick={handleCreateSession} />
         );
       case "DONE":
-        return <DoneModal onClose={handleDone} />;
+        return <DoneModal onClose={handleClose} />;
       default:
         return null;
     }
   };
 
-  // 세션 조회
-  useEffect(() => {
-    const fetchSessions = async () => {
-      setIsLoading(true);
-
-      try {
-        const res = await getSessions();
-        const responseData = res.data?.data ?? res.data;
-
-        setSessionsPage({
-          sessions: Array.isArray(responseData?.content)
-            ? responseData.content
-            : [],
-          page: responseData?.number ?? 0,
-          size: responseData?.size ?? INITIAL_SESSIONS_PAGE_STATE.size,
-          totalElements: responseData?.totalElements ?? 0,
-          totalPages: responseData?.totalPages ?? 0,
-          hasNext: !(responseData?.last ?? true),
-        });
-      } catch (error) {
-        setErrors(getCommonErrorState(error));
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchSessions();
-  }, [refreshKey]);
+  const itemNum = sessionsPage.totalElements;
+  const itemSumNum = sessionsPage.size;
 
   return (
     <div className="text-ec-black mx-auto flex w-full max-w-87.5 flex-col gap-5 px-4 pt-7 pb-120 md:max-w-187.5 xl:max-w-251.5 xl:px-0">
