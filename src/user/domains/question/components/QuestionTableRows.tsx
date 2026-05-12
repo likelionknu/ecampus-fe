@@ -58,8 +58,7 @@ function QuestionTableRows({ isLoading, questions }: QuestionTableRowsProps) {
               {question.id}
             </span>
             <span className="text-body-2 text-ec-black min-w-0 truncate">
-              {sessionNameById[question.sessionId] ??
-                `세션 ${question.sessionId}`}
+              {sessionNameById[question.sessionId] ?? `${question.sessionName}`}
             </span>
             <span className="text-body-2 text-ec-black min-w-0 truncate">
               {question.title}
