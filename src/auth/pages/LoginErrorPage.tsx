@@ -1,8 +1,14 @@
-import { useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+// import { useState } from "react";
+import {
+  //  useNavigate,
+  useSearchParams,
+} from "react-router-dom";
 import { GoogleLoginButton } from "@auth/components";
-import { buildLoginErrorPath, normalizeAuthError, readAuthErrorFromSearchParams } from "@auth/utils";
-import { googleOAuth as GoogleLogin } from "@/auth/api";
+import {
+  // buildLoginErrorPath, normalizeAuthError,
+  readAuthErrorFromSearchParams,
+} from "@auth/utils";
+
 import NavLogo from "@shared/assets/NavLogo.png";
 import { LegalFooter, PageBackground } from "@shared/components";
 
@@ -10,23 +16,23 @@ const desktopSectionClassName =
   "relative hidden w-full flex-col lg:flex lg:min-h-screen lg:px-[clamp(2.5rem,3.8vw,3.5rem)] lg:pt-[clamp(3rem,4.5vw,3.75rem)] lg:pb-[clamp(2.5rem,4vw,3.125rem)]";
 
 function LoginErrorPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [isRedirecting, setIsRedirecting] = useState(false);
+  // const [isRedirecting, setIsRedirecting] = useState(false);
   const authError = readAuthErrorFromSearchParams(searchParams);
 
-  const handleGoogleLogin = () => {
-    setIsRedirecting(true);
+  // const handleGoogleLogin = () => {
+  //   setIsRedirecting(true);
 
-    try {
-      GoogleLogin();
-    } catch (error) {
-      setIsRedirecting(false);
-      navigate(buildLoginErrorPath(normalizeAuthError(error)), {
-        replace: true,
-      });
-    }
-  };
+  //   try {
+  //     GoogleLogin();
+  //   } catch (error) {
+  //     setIsRedirecting(false);
+  //     navigate(buildLoginErrorPath(normalizeAuthError(error)), {
+  //       replace: true,
+  //     });
+  //   }
+  // };
 
   return (
     <PageBackground variant="auth">
@@ -61,8 +67,8 @@ function LoginErrorPage() {
           </p>
 
           <GoogleLoginButton
-            onClick={handleGoogleLogin}
-            disabled={isRedirecting}
+            // onClick={handleGoogleLogin}
+            // disabled={isRedirecting}
             className="text-ec-blue border-ec-blue bg-ec-white font-pretendard hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue tracking-ec-normal mt-10 inline-flex h-13 w-full cursor-pointer items-center justify-center gap-2.5 rounded-xl border text-[14px]/[20px] font-medium transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
           />
         </div>
@@ -104,8 +110,8 @@ function LoginErrorPage() {
           </p>
 
           <GoogleLoginButton
-            onClick={handleGoogleLogin}
-            disabled={isRedirecting}
+            // onClick={handleGoogleLogin}
+            // disabled={isRedirecting}
             className="text-ec-blue rounded-ec-10 border-ec-blue bg-ec-white hover:bg-ec-blue hover:text-ec-white focus-visible:outline-ec-blue mt-10 inline-flex h-14 w-full max-w-96 cursor-pointer items-center justify-center gap-2.5 border transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2"
             labelClassName="typo-body-1"
           />
