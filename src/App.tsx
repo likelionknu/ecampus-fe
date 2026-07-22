@@ -9,7 +9,7 @@ import { UserRoutes } from "@user";
 import { lazy, Suspense, type ReactElement } from "react";
 import RequireAccess from "./auth/components/RequireAuth";
 
-const GoogleCallback = lazy(() => import("@auth/api/GoogleCallback"));
+const SsoCallbackPage = lazy(() => import("@auth/pages/SsoCallbackPage"));
 const LoginPage = lazy(() => import("@auth/pages/LoginPage"));
 const LoginErrorPage = lazy(() => import("@auth/pages/LoginErrorPage"));
 const ErrorPage = lazy(() => import("@shared/pages/ErrorPage"));
@@ -25,7 +25,7 @@ const withSuspense = (element: ReactElement) => (
 );
 
 const router = createBrowserRouter([
-  { path: "/", element: withSuspense(<GoogleCallback />) },
+  { path: "/", element: withSuspense(<SsoCallbackPage />) },
   {
     path: "/auth/login",
     element: withSuspense(<LoginPage />),

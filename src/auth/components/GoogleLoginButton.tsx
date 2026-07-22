@@ -5,7 +5,7 @@ interface GoogleLoginButtonProps {
   labelClassName?: string;
   disabled?: boolean;
   loadingLabel?: string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 function GoogleLoginButton({
