@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuthSessionStore } from "@auth/stores";
+
 import NavLogo from "@shared/assets/NavLogo.png";
 import NavSession from "@shared/assets/NavSession.svg";
 import NavGroup from "@shared/assets/NavGroup.svg";
@@ -8,6 +8,7 @@ import NavQuestion from "@shared/assets/NavQuestion.svg";
 import NavAdmin from "@shared/assets/NavAdmin.svg";
 import UserProfileImg from "@shared/assets/UserProfileImg.png";
 import Button from "../Button";
+import { useAuthSessionStore } from "@/auth/stores/authStore";
 
 interface NavItemsProps {
   iconSrc: string;

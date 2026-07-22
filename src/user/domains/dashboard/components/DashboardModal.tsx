@@ -4,19 +4,51 @@ import xBlack from "@user/domains/dashboard/assets/xBlack.png";
 import axios from "axios";
 import { formatKoreanDateTime12 } from "@/shared/utils";
 import { MarkdownRender } from "@/admin/domains/session/components/markdown";
-
-// --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
-const authData = JSON.parse(
-  localStorage.getItem("ecampus.auth.session") || "null",
-);
-const token = authData?.state?.session?.accessToken;
-
-// --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
+import type { DashboardDataType } from "../types/DashboardData";
+import { useAuthSessionStore } from "@/auth/stores/authStore";
 
 interface DashboardModalProps {
   onClose?: () => void;
   children?: ReactNode;
   title: string;
+}
+
+interface DashboarProfileModalProps {
+  dashboardData: DashboardDataType | null;
+  onClose?: () => void;
+}
+
+interface DashboarProfileModalItemProps {
+  label: string;
+  value?: ReactNode;
+}
+
+interface DashboardDemeritsModalProps {
+  onClose?: () => void;
+}
+
+interface DemeritsModalDataType {
+  reason: string;
+  createdAt: string;
+  demerit: number;
+  grantedUser: string | null;
+}
+
+interface DemeritsModalDataItemProps {
+  reason: string;
+  grantedAt?: ReactNode;
+  demerit?: ReactNode;
+}
+
+interface NotionSpecificModalDataTypeProps {
+  onClose?: () => void;
+  noticeId: number;
+}
+
+interface NotionSpecificModalDataType {
+  title: string;
+  createdAt: string;
+  content: string;
 }
 
 const USER_PART_LABELS: Record<string, string> = {
@@ -34,6 +66,14 @@ const DEMERIT_REASON_LABELS: Record<string, string> = {
   ASSIGNMENT_COPY: "과제 복사",
   ETC: "기타",
 };
+
+// --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
+const authData = JSON.parse(
+  localStorage.getItem("ecampus.auth.session") || "null",
+);
+const token = authData?.state?.session?.accessToken;
+
+// --------------------------------------토큰 로컬스토리지 부분 시작--------------------------------------
 
 export const DashboardModal = ({
   onClose,
@@ -84,22 +124,6 @@ export const DashboardModal = ({
 
 // -------------------------------- 사용자 상세 정보 컴포넌트 시작--------------------------------
 
-interface UserProfileDataType {
-  name: string;
-  email: string;
-  course: number;
-  part: string;
-}
-
-interface DashboarProfileModalProps {
-  onClose?: () => void;
-}
-
-interface DashboarProfileModalItemProps {
-  label: string;
-  value?: ReactNode;
-}
-
 const DashboarProfileModalItem = ({
   label,
   value,
@@ -121,64 +145,29 @@ const DashboarProfileModalItem = ({
 };
 
 export const DashboardProfileModal = ({
+  dashboardData,
   onClose,
 }: DashboarProfileModalProps) => {
-  const [UserProfileData, setUserProfileData] =
-    useState<UserProfileDataType | null>(null);
+  const email = useAuthSessionStore((state) => state.session?.email);
 
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/users/me/profile`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        const result = response.data;
-
-        if (result.data) {
-          setUserProfileData(result.data);
-        }
-      } catch (error) {
-        if (axios.isAxiosError(error)) {
-          console.error(
-            "서버 응답 에러:",
-            error.response?.status,
-            error.response?.data,
-          );
-        } else {
-          console.error("네트워크 통신 오류:", error);
-        }
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
   return (
     <DashboardModal title="사용자 상세 정보" onClose={onClose}>
       <div className="flex flex-col gap-5">
-        <DashboarProfileModalItem label="이름" value={UserProfileData?.name} />
-        <DashboarProfileModalItem
-          label="연결된 이메일 주소"
-          value={UserProfileData?.email}
-        />
+        <DashboarProfileModalItem label="이름" value={dashboardData?.name} />
+        <DashboarProfileModalItem label="연결된 이메일 주소" value={email} />
         <DashboarProfileModalItem
           label="기수"
           value={
-            UserProfileData?.course !== undefined
-              ? `${UserProfileData.course}기`
+            dashboardData?.course !== undefined
+              ? `${dashboardData.course}기`
               : ""
           }
         />
         <DashboarProfileModalItem
           label="파트(역할)"
           value={
-            UserProfileData?.part
-              ? (USER_PART_LABELS[UserProfileData.part] ?? UserProfileData.part)
+            dashboardData?.part
+              ? (USER_PART_LABELS[dashboardData.part] ?? dashboardData.part)
               : ""
           }
         />
@@ -189,23 +178,6 @@ export const DashboardProfileModal = ({
 
 // -------------------------------- 사용자 상세 정보 컴포넌트 끝 --------------------------------
 // -------------------------------- 벌점 컴포넌트 시작 --------------------------------
-
-interface DashboardDemeritsModalProps {
-  onClose?: () => void;
-}
-
-interface DemeritsModalDataType {
-  reason: string;
-  createdAt: string;
-  demerit: number;
-  grantedUser: string | null;
-}
-
-interface DemeritsModalDataItemProps {
-  reason: string;
-  grantedAt?: ReactNode;
-  demerit?: ReactNode;
-}
 
 const DashboardDemeritsModalComponent = ({
   reason,
@@ -281,17 +253,6 @@ export const DashboardDemeritsModal = ({
   );
 };
 // -------------------------------- 벌점 컴포넌트 끝--------------------------------
-
-interface NotionSpecificModalDataTypeProps {
-  onClose?: () => void;
-  noticeId: number;
-}
-
-interface NotionSpecificModalDataType {
-  title: string;
-  createdAt: string;
-  content: string;
-}
 
 export const NotionSpecificModal = ({
   onClose,

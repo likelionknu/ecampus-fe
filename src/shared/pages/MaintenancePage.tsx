@@ -11,7 +11,7 @@ function MaintenanceIllustration() {
       src="https://lottie.host/4ea59aff-3eb3-4b0d-8ae9-bc1874ee6153/9v9r0ir6mJ.lottie"
       loop
       autoplay
-      className="h-[9.4375rem] w-[9.4375rem] sm:h-44 sm:w-44 lg:h-[clamp(9.5rem,12vw,12rem)] lg:w-[clamp(9.5rem,12vw,12rem)]"
+      className="h-37.75 w-37.75 sm:h-44 sm:w-44 lg:h-[clamp(9.5rem,12vw,12rem)] lg:w-[clamp(9.5rem,12vw,12rem)]"
     />
   );
 }

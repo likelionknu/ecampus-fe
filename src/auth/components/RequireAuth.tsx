@@ -1,6 +1,6 @@
 // RequireAccess.tsx
 import { Navigate } from "react-router-dom";
-import { useAuthSessionStore } from "@/auth/stores";
+import { useAuthSessionStore } from "../stores/authStore";
 
 type Props = {
   children: React.ReactNode;

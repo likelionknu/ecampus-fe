@@ -16,6 +16,7 @@ export interface GoogleLoginRequest {
 
 export interface GoogleLoginResponseData {
   name: string;
+  email?: string;
   role: UserRole;
   access_token: string;
   refresh_token: string;
@@ -24,6 +25,7 @@ export interface GoogleLoginResponseData {
 
 export interface AuthSession {
   name: string;
+  email: string;
   role: UserRole;
   accessToken: string;
   refreshToken: string;

@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { getDefaultRouteByRole, useAuthSessionStore } from "../stores";
+import {
+  getDefaultRouteByRole,
+  useAuthSessionStore,
+} from "../stores/authStore";
 import { useEffect } from "react";
 import LoginLoadingPage from "./LoginLoadingPage";
 
@@ -18,6 +21,7 @@ function SsoCallbackPage() {
 
       const accessToken = hashParams.get("access_token");
       const refreshToken = hashParams.get("refresh_token");
+      const email = hashParams.get("email");
       const role = hashParams.get("role");
       const name = hashParams.get("name");
       const profileUrl = hashParams.get("profile_url");
@@ -30,6 +34,7 @@ function SsoCallbackPage() {
 
       setSession({
         name: name ?? "",
+        email: email ?? "",
         role,
         accessToken,
         refreshToken,

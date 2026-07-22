@@ -6,7 +6,8 @@ import {
 import { AdminRoutes } from "@admin";
 import { BaseLayout } from "@shared/layouts";
 import { UserRoutes } from "@user";
-import { lazy, Suspense, type ReactElement } from "react";
+import { lazy, Suspense, useEffect, type ReactElement } from "react";
+import { useAuthSessionStore } from "./auth/stores/authStore";
 // import RequireAccess from "./auth/components/RequireAuth";
 
 const SsoCallbackPage = lazy(() => import("@auth/pages/SsoCallbackPage"));
@@ -88,6 +89,20 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const setSession = useAuthSessionStore((state) => state.setSession);
+
+  useEffect(() => {
+    setSession({
+      name: "한종민",
+      email: "bergi4025@gmail.com",
+      role: "ADMIN",
+      accessToken: "",
+      refreshToken: "",
+      profileUrl:
+        "https://lh3.googleusercontent.com/a/ACg8ocI0OoVrT_R0oIstdfgMwxMP6I63vPq4QYR-lGwfNqZnfsV5Hbw=s96-c",
+    });
+  });
+
   return <RouterProvider router={router} />;
 }
 

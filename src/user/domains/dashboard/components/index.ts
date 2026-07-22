@@ -1,1 +1,13 @@
+export { default as DashboardMainComponent } from "./DashboardMainComponent";
+export * from "./DashboardMainComponent";
 export * from "./DashboardModal";
+export { default as DashboardProfileComponent } from "./DashboardProfileComponent";
+export * from "./DashboardProfileComponent";
+export { default as MissAlartComponent } from "./MissAlartComponent";
+export * from "./MissAlartComponent";
+export { default as MissAlartMoblieComponent } from "./MissAlartMoblieComponent";
+export * from "./MissAlartMoblieComponent";
+export { default as NotionComponent } from "./NotionComponent";
+export * from "./NotionComponent";
+export { default as NotionMoblieComponent } from "./NotionMoblieComponent";
+export * from "./NotionMoblieComponent";

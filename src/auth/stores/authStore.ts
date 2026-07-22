@@ -1,6 +1,10 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { AuthSession, GoogleLoginResponseData, UserRole } from "@auth/types";
+import type {
+  AuthSession,
+  GoogleLoginResponseData,
+  UserRole,
+} from "@auth/types";
 
 const AUTH_STORAGE_KEY = "ecampus.auth.session";
 
@@ -16,6 +20,7 @@ interface AuthSessionState {
 function toAuthSession(response: GoogleLoginResponseData): AuthSession {
   return {
     name: response.name,
+    email: response.email ?? "",
     role: response.role,
     accessToken: response.access_token,
     refreshToken: response.refresh_token,

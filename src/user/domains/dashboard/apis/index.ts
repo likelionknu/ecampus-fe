@@ -1,8 +1,8 @@
 import { api } from "@/shared/apis";
 import type { PageParams } from "@/user/shared/types/PagenationsParams";
 
-// 프로필 조회
-export const getProfile = async () => {
+// 대시보드 조회
+export const getDashboard = async () => {
   const res = await api.get("/ecampus/api/v1/users/me/dashboard");
 
   return res;
@@ -22,7 +22,7 @@ export const getNotices = async ({ page, size }: PageParams) => {
 
 // 알림 조회
 export const getNotifications = async ({ page, size }: PageParams) => {
-  const res = await api.get("/portal/api/v1/notifications", {
+  const res = await api.get("/portal/v1/notifications", {
     params: {
       page,
       size,
@@ -31,3 +31,6 @@ export const getNotifications = async ({ page, size }: PageParams) => {
 
   return res;
 };
+
+// 벌점 조회
+export const getDemerits = async () => {};
