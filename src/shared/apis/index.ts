@@ -1,17 +1,17 @@
 import axios, {
   AxiosHeaders,
   type AxiosError,
-  type InternalAxiosRequestConfig,
+  // type InternalAxiosRequestConfig,
 } from "axios";
 
-type PersistedAuthState = {
-  state?: {
-    session?: {
-      accessToken?: string;
-      refreshToken?: string;
-    } | null;
-  } | null;
-};
+// type PersistedAuthState = {
+//   state?: {
+//     session?: {
+//       accessToken?: string;
+//       refreshToken?: string;
+//     } | null;
+//   } | null;
+// };
 
 type ApiErrorResponse = {
   error?: {
@@ -19,83 +19,90 @@ type ApiErrorResponse = {
   } | null;
 };
 
-type ReissueApiResponse = {
-  data?: {
-    access_token?: string | null;
-    refresh_token?: string | null;
-  } | null;
-  error?: {
-    message?: string | null;
-  } | null;
-};
+// type ReissueApiResponse = {
+//   data?: {
+//     access_token?: string | null;
+//     refresh_token?: string | null;
+//   } | null;
+//   error?: {
+//     message?: string | null;
+//   } | null;
+// };
 
-type SessionTokens = {
-  accessToken: string;
-  refreshToken: string;
-};
+// type SessionTokens = {
+//   accessToken: string;
+//   refreshToken: string;
+// };
 
-type RetryableRequestConfig = InternalAxiosRequestConfig & {
-  _retry?: boolean;
-};
+// type RetryableRequestConfig = InternalAxiosRequestConfig & {
+//   _retry?: boolean;
+// };
 
 const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
-const AUTH_STORAGE_KEY = "ecampus.auth.session";
+// const AUTH_STORAGE_KEY = "ecampus.auth.session";
 
-function getStoredAuthState() {
-  if (typeof window === "undefined") {
-    return null;
-  }
+export const api = axios.create({
+  baseURL: BASE_API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+});
 
-  const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
+// function getStoredAuthState() {
+//   if (typeof window === "undefined") {
+//     return null;
+//   }
 
-  if (!raw) {
-    return null;
-  }
+//   const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
 
-  try {
-    return JSON.parse(raw) as PersistedAuthState;
-  } catch {
-    return null;
-  }
-}
+//   if (!raw) {
+//     return null;
+//   }
 
-function getStoredSessionTokens() {
-  const parsed = getStoredAuthState();
+//   try {
+//     return JSON.parse(raw) as PersistedAuthState;
+//   } catch {
+//     return null;
+//   }
+// }
 
-  return {
-    accessToken: parsed?.state?.session?.accessToken ?? null,
-    refreshToken: parsed?.state?.session?.refreshToken ?? null,
-  };
-}
+// function getStoredSessionTokens() {
+//   const parsed = getStoredAuthState();
 
-function setStoredSessionTokens(tokens: SessionTokens) {
-  if (typeof window === "undefined") {
-    return;
-  }
+//   return {
+//     accessToken: parsed?.state?.session?.accessToken ?? null,
+//     refreshToken: parsed?.state?.session?.refreshToken ?? null,
+//   };
+// }
 
-  const parsed = getStoredAuthState();
-  const nextState: PersistedAuthState = {
-    ...(parsed ?? {}),
-    state: {
-      ...(parsed?.state ?? {}),
-      session: {
-        ...(parsed?.state?.session ?? {}),
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      },
-    },
-  };
+// function setStoredSessionTokens(tokens: SessionTokens) {
+//   if (typeof window === "undefined") {
+//     return;
+//   }
 
-  window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextState));
-}
+//   const parsed = getStoredAuthState();
+//   const nextState: PersistedAuthState = {
+//     ...(parsed ?? {}),
+//     state: {
+//       ...(parsed?.state ?? {}),
+//       session: {
+//         ...(parsed?.state?.session ?? {}),
+//         accessToken: tokens.accessToken,
+//         refreshToken: tokens.refreshToken,
+//       },
+//     },
+//   };
 
-function clearStoredSession() {
-  if (typeof window === "undefined") {
-    return;
-  }
+//   window.localStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(nextState));
+// }
 
-  window.localStorage.removeItem(AUTH_STORAGE_KEY);
-}
+// function clearStoredSession() {
+//   if (typeof window === "undefined") {
+//     return;
+//   }
+
+//   window.localStorage.removeItem(AUTH_STORAGE_KEY);
+// }
 
 // function moveToLoginPage() {
 //   if (typeof window === "undefined") {
@@ -107,7 +114,7 @@ function clearStoredSession() {
 //   }
 // }
 
-let refreshPromise: Promise<SessionTokens> | null = null;
+/* let refreshPromise: Promise<SessionTokens> | null = null;
 
 const reissueAccessToken = async (): Promise<SessionTokens> => {
   if (refreshPromise) {
@@ -152,15 +159,15 @@ const reissueAccessToken = async (): Promise<SessionTokens> => {
     .catch((refreshError) => {
       // 재발급 실패 시: 스토리지 초기화 및 로그인 페이지로 강제 이동
       console.error("Session expired:", refreshError);
-      clearStoredSession();
+      // clearStoredSession();
 
-      if (typeof window !== "undefined") {
-        window.alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
-        if (window.location.pathname !== "/auth/login") {
-          window.location.assign("/auth/login");
-        }
-      }
-      throw refreshError;
+      // if (typeof window !== "undefined") {
+      //   window.alert("세션이 만료되었습니다. 다시 로그인해 주세요.");
+      //   if (window.location.pathname !== "/auth/login") {
+      //     window.location.assign("/auth/login");
+      //   }
+      // }
+      // throw refreshError;
     })
     .finally(() => {
       // 성공/실패 여부와 상관없이 Promise 상태 초기화
@@ -168,7 +175,7 @@ const reissueAccessToken = async (): Promise<SessionTokens> => {
     });
 
   return refreshPromise;
-};
+}; */
 
 // function isTokenError(error: AxiosError<ApiErrorResponse>) {
 //   const status = error.response?.status;
@@ -239,15 +246,9 @@ const reissueAccessToken = async (): Promise<SessionTokens> => {
 //   }
 // }
 
-export const api = axios.create({
-  baseURL: BASE_API_URL,
-  headers: {
-    "Content-Type": "application/json",
-  },
-});
-
 api.interceptors.request.use((config) => {
-  const { accessToken } = getStoredSessionTokens();
+  // const { accessToken } = getStoredSessionTokens();
+  const accessToken = import.meta.env.VITE_SSO_ACCESS_TOKEN;
   const headers = AxiosHeaders.from(config.headers);
 
   if (accessToken) {
@@ -273,6 +274,7 @@ api.interceptors.response.use(
     return response;
   },
   async (error: AxiosError<ApiErrorResponse>) => {
+    /*
     const originalRequest = error?.config as RetryableRequestConfig | undefined;
 
     const isReissueRequest =
@@ -307,6 +309,7 @@ api.interceptors.response.use(
         return Promise.reject(refreshError);
       }
     }
+    */
 
     return Promise.reject(error);
   },

@@ -29,6 +29,7 @@ import {
 import { SkeletonCell } from "@/shared/components/skeleton";
 
 import { formatDaysAgo, formatKoreanDateTime12 } from "@/shared/utils";
+import { getNotices, getNotifications, getProfile } from "../apis";
 
 function UserDashBoardPage() {
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
@@ -69,14 +70,8 @@ function UserDashBoardPage() {
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/users/me/dashboard`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await getProfile();
+        console.log(response);
 
         const result = response.data;
 
@@ -132,18 +127,10 @@ function UserDashBoardPage() {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const noticesResponse = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/notices`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            params: {
-              page: noticePage - 1,
-              size: NoticePageitemSumNum,
-            },
-          },
-        );
+        const noticesResponse = await getNotices({
+          page: noticePage - 1,
+          size: NoticePageitemSumNum,
+        });
 
         const noticesResult = noticesResponse.data;
 
@@ -205,18 +192,10 @@ function UserDashBoardPage() {
   useEffect(() => {
     const fetchNotices = async () => {
       try {
-        const NotificationsResponse = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/notifications`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            params: {
-              page: NotificationsPage - 1,
-              size: NotificationsPageitemSumNum,
-            },
-          },
-        );
+        const NotificationsResponse = await getNotifications({
+          page: NotificationsPage - 1,
+          size: NoticePageitemSumNum,
+        });
 
         const NotificationsResult = NotificationsResponse.data;
 

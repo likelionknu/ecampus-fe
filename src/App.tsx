@@ -7,10 +7,10 @@ import { AdminRoutes } from "@admin";
 import { BaseLayout } from "@shared/layouts";
 import { UserRoutes } from "@user";
 import { lazy, Suspense, type ReactElement } from "react";
-import RequireAccess from "./auth/components/RequireAuth";
+// import RequireAccess from "./auth/components/RequireAuth";
 
 const SsoCallbackPage = lazy(() => import("@auth/pages/SsoCallbackPage"));
-const LoginPage = lazy(() => import("@auth/pages/LoginPage"));
+// const LoginPage = lazy(() => import("@auth/pages/LoginPage"));
 const LoginErrorPage = lazy(() => import("@auth/pages/LoginErrorPage"));
 const ErrorPage = lazy(() => import("@shared/pages/ErrorPage"));
 const MaintenancePage = lazy(() => import("@shared/pages/MaintenancePage"));
@@ -26,11 +26,11 @@ const withSuspense = (element: ReactElement) => (
 
 const router = createBrowserRouter([
   { path: "/", element: withSuspense(<SsoCallbackPage />) },
-  {
-    path: "/auth/login",
-    element: withSuspense(<LoginPage />),
-    handle: { title: "Login" },
-  },
+  // {
+  //   path: "/auth/login",
+  //   element: withSuspense(<LoginPage />),
+  //   handle: { title: "Login" },
+  // },
   {
     path: "/auth/login-error",
     element: withSuspense(<LoginErrorPage />),
@@ -59,9 +59,9 @@ const router = createBrowserRouter([
   {
     path: "/user",
     element: (
-      <RequireAccess>
-        <BaseLayout />
-      </RequireAccess>
+      // <RequireAccess>
+      <BaseLayout />
+      // </RequireAccess>
     ),
     children: [
       { index: true, element: <Navigate to="dashboard" replace /> },
@@ -71,9 +71,9 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: (
-      <RequireAccess requiredRole="ADMIN">
-        <BaseLayout />
-      </RequireAccess>
+      // <RequireAccess requiredRole="ADMIN">
+      <BaseLayout />
+      // </RequireAccess>
     ),
     children: [
       { index: true, element: <Navigate to="sessions" replace /> },

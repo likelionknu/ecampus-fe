@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SkeletonCell } from "@/shared/components/skeleton";
 import { useSessionStore } from "@/shared/stores/sessionStore";
 import { useNavigate } from "react-router-dom";
+import { getSessions } from "../apis/session";
 
 interface SessionItemData {
   sessionId: number;
@@ -78,14 +79,7 @@ const UserSessionSelect = () => {
   useEffect(() => {
     const fetchSessions = async () => {
       try {
-        const response = await axios.get(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/sessions`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
+        const response = await getSessions();
 
         const result = response.data;
 
