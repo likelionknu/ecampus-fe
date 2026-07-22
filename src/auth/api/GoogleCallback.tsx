@@ -12,8 +12,6 @@ import type { ApiResponse, GoogleLoginResponseData } from "@auth/types";
 import { getDefaultRouteByRole, useAuthSessionStore } from "@/auth/stores";
 import { validateGoogleOAuthState } from "@auth/api/googleOAuth";
 
-const PLATFORM = "LOCAL";
-
 const GoogleCallback = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -47,7 +45,7 @@ const GoogleCallback = () => {
         validateGoogleOAuthState(state);
         const encodedCode = encodeURIComponent(code);
         const response = await fetch(
-          `${import.meta.env.VITE_BASE_API_URL}/v1/auth/login?code=${encodedCode}&platform=${PLATFORM}`,
+          `${import.meta.env.VITE_BASE_API_URL}/v1/auth/login?code=${encodedCode}`,
           {
             method: "POST",
             headers: { "Content-Type": "application/json" },
